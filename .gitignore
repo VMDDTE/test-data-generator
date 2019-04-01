@@ -1,0 +1,8 @@
+.idea/
+.vscode
+.vscode/
+node_modules/
+build/
+local-storage/
+.vs
+logs
