@@ -1,0 +1,26 @@
+{
+  "name": "data-generator",
+  "version": "0.0.1",
+  "description": "Generates test data",
+  "main": "index.js",
+  "scripts": {
+    "start-development": "run-script-os",
+    "start-development:win32": "SET NODE_ENV=development&& node index.js",
+    "start-development:darwin:linux": "export NODE_ENV=development; node index.js",
+    "start-local": "run-script-os",
+    "start-local:win32": "SET NODE_ENV=local&& node index.js",
+    "start-local:darwin:linux": "export NODE_ENV=local; node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.6.2",
+    "axios": "^0.18.0",
+    "dotenv": "^6.2.0",
+    "joi": "13.7.0",
+    "node-persist": "^3.0.4",
+    "run-script-os": "^1.0.5",
+    "simple-node-logger": "^18.12.21"
+  },
+  "devDependencies": {}
+}
