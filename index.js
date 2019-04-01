@@ -1,13 +1,17 @@
 const config = require('./config')
+global.log = require('./logging').setupLogging('data-generator', config)
+const generator = require('./controller/generate-controller')
 
-var main = async function () { 
-    console.log('Running data generator')
-    global.log = require('./logging').setupLogging('data-generator', config)
-    global.log.info('Data generator starting')
-    const generator = require('./controller/generate-controller')
-    await generator.generate('../end-to-end/data-generator/TDG-1000_Test_Create.json')
-} 
-
-if (require.main === module) { 
-    main(); 
+async function generate(featureName) {
+    const dataFileName = `${featureName}.json`
+    console.log(`Running data generator using input [${dataFileName}]`)
+    await generator.generate(`./test-data/${dataFileName}`, featureName)
 }
+
+async function tearDown(featureName) {
+    console.log(`Tearing down [${featureName}] ...`)
+    await generator.tearDown(featureName)
+}
+
+module.exports.generate = generate
+module.exports.tearDown = tearDown

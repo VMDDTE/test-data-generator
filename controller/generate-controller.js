@@ -2,17 +2,22 @@ var async = require("async");
 const createActionProcessor = require('../action-processor/create-action')
 const roleActionProcessor = require('../action-processor/assign-role-action')
 const actions = require('../common/constants')
-const fs = require('fs');
+const fs = require('fs-extra')
 const storage = require('node-persist')
 const log = global.log
 const CONTROLLER_NAME = 'generate-controller'
 
-async function generate(filename) {
+async function generate(filename, storageDir) {
     log.info('Generating ...')
-    await setupLocalStorage()
+    await setupLocalStorage(storageDir)
     let rawdata = fs.readFileSync(filename)
     let jsonData = JSON.parse(rawdata)
     await processActions(jsonData)
+}
+
+async function tearDown(storageDir) {
+    log.info('Tearing down ...')
+    await tearDownLocalStorage(storageDir)
 }
 
 async function processActions(actionJson) {
@@ -42,9 +47,9 @@ async function processActions(actionJson) {
     console.log(await storage.keys())
 }
 
-async function setupLocalStorage() {
+async function setupLocalStorage(storageDir) {
     await storage.init({
-        dir: 'local-storage',
+        dir: `local-storage/${storageDir}`,
         stringify: JSON.stringify,
         parse: JSON.parse,
         encoding: 'utf8',
@@ -57,4 +62,10 @@ async function setupLocalStorage() {
     })
 }
 
+async function tearDownLocalStorage(storageDir) {
+    await storage.clear()
+    fs.removeSync(`./local-storage/${storageDir}`)
+}
+
 module.exports.generate = generate
+module.exports.tearDown = tearDown
