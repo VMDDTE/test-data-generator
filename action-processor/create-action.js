@@ -41,6 +41,7 @@ async function createVetPractice(action) {
         vetPracticeIdList = []
     }
     vetPracticeIdList.push(responseData.id)
+    await storage.setItem('vetPracticeIdList', vetPracticeIdList)
 }
 
 async function createVet(action) {
@@ -59,6 +60,7 @@ async function createVet(action) {
         vetIdList = []
     }
     vetIdList.push(responseData.Id)
+    await storage.setItem('vetIdList', vetIdList)
 }
 
 module.exports.process = process
