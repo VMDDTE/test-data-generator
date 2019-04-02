@@ -52,7 +52,7 @@ async function processActions(actionJson) {
 async function setupLocalStorage(storageDir) {
     log.info(`${CONTROLLER_NAME}::setupLocalStorage:${storageDir}`)
     await storage.init({
-        dir: `local-storage/${storageDir}`,
+        dir: `${storageDir}`,
         stringify: JSON.stringify,
         parse: JSON.parse,
         encoding: 'utf8',
@@ -74,7 +74,7 @@ async function tearDownLocalStorage(storageDir) {
     log.info(`${CONTROLLER_NAME}::tearDownLocalStorage:${storageDir}`)
     await storage.clear()
     try {
-        await fs.remove(`./local-storage/${storageDir}`)
+        await fs.remove(`./${storageDir}`)
         console.log('success!')
     } catch (err) {
         console.error(err)
