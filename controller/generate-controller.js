@@ -27,7 +27,7 @@ async function processActions(actionJson) {
 
     for (const action of actionRecords) {
         // Save a copy of each action for later reference
-        await storage.setItem(action.label, action)
+        storage.setItemSync(action.label, action)
 
         switch (action.action) {
             case actions.ACTION_CREATE:
