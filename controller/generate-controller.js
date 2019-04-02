@@ -27,7 +27,7 @@ async function processActions(actionJson) {
 
     for (const action of actionRecords) {
         // Save a copy of each action for later reference
-        storage.setItemSync(action.label, action)
+        await storage.setItem(action.label, action)
 
         switch (action.action) {
             case actions.ACTION_CREATE:
@@ -66,22 +66,24 @@ async function setupLocalStorage(storageDir) {
 }
 
 async function tearDownEntities(storageDir) {
-    await tearDownVetPractice()
-    await tearDownVet()
+    log.info(`${CONTROLLER_NAME}::tearDownEntities:${storageDir}`)
+    await tearDownVetPractice(storageDir)
+    await tearDownVet(storageDir)
 }
 
 async function tearDownLocalStorage(storageDir) {
     log.info(`${CONTROLLER_NAME}::tearDownLocalStorage:${storageDir}`)
     await storage.clear()
-    try {
-        await fs.remove(`./${storageDir}`)
-        console.log('success!')
-    } catch (err) {
-        console.error(err)
-    }
+    // try {
+    //     await fs.remove(`./${storageDir}`)
+    //     console.log('success!')
+    // } catch (err) {
+    //     console.error(err)
+    // }
 }
 
-async function tearDownVetPractice() {
+async function tearDownVetPractice(storageDir) {
+    log.info(`${CONTROLLER_NAME}::tearDownVetPractice:${storageDir}`)
     const vetPracticeIdList = await storage.getItem('vetPracticeIdList')
     if (vetPracticeIdList) {
         for (id of vetPracticeIdList) {
@@ -91,7 +93,8 @@ async function tearDownVetPractice() {
     }
 }
 
-async function tearDownVet() {
+async function tearDownVet(storageDir) {
+    log.info(`${CONTROLLER_NAME}::tearDownVetPractice:${storageDir}`)
     const vetIdList = await storage.getItem('vetIdList')
     if (vetIdList) {
         for (id of vetIdList) {

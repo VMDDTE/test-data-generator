@@ -35,13 +35,13 @@ async function createVetPractice(action) {
     var savedAction = await storage.getItem(action.label)
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createVetPractice, saved action ${JSON.stringify(savedAction)}`)
-    storage.setItemSync(action.label, savedAction)
+    await storage.setItem(action.label, savedAction)
     var vetPracticeIdList = await storage.getItem('vetPracticeIdList')
     if (!vetPracticeIdList) {
         vetPracticeIdList = []
     }
     vetPracticeIdList.push(responseData.id)
-    storage.setItemSync('vetPracticeIdList', vetPracticeIdList)
+    await storage.setItem('vetPracticeIdList', vetPracticeIdList)
 }
 
 async function createVet(action) {
@@ -54,13 +54,13 @@ async function createVet(action) {
     var savedAction = await storage.getItem(action.label)
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createVet, saved action ${JSON.stringify(savedAction)}`)
-    storage.setItemSync(action.label, savedAction)
+    await storage.setItem(action.label, savedAction)
     var vetIdList = await storage.getItem('vetIdList')
     if (!vetIdList) {
         vetIdList = []
     }
     vetIdList.push(responseData.Id)
-    storage.setItemSync('vetIdList', vetIdList)
+    await storage.setItem('vetIdList', vetIdList)
 }
 
 module.exports.process = process
