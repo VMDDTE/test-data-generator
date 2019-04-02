@@ -71,6 +71,7 @@ async function tearDownEntities(storageDir) {
 }
 
 async function tearDownLocalStorage(storageDir) {
+    log.info(`${CONTROLLER_NAME}::tearDownLocalStorage:${storageDir}`)
     await storage.clear()
     fs.removeSync(`./local-storage/${storageDir}`)
 }
