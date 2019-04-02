@@ -1,4 +1,3 @@
-var async = require("async");
 const createActionProcessor = require('../action-processor/create-action')
 const roleActionProcessor = require('../action-processor/assign-role-action')
 const actions = require('../common/constants')
@@ -51,6 +50,7 @@ async function processActions(actionJson) {
 }
 
 async function setupLocalStorage(storageDir) {
+    log.info(`${CONTROLLER_NAME}::setupLocalStorage:${storageDir}`)
     await storage.init({
         dir: `local-storage/${storageDir}`,
         stringify: JSON.stringify,
