@@ -36,7 +36,7 @@ async function createVetPractice(action) {
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createVetPractice, saved action ${JSON.stringify(savedAction)}`)
     await storage.setItem(action.label, savedAction)
-    const vetPracticeIdList = await storage.getItem('vetPracticeIdList')
+    var vetPracticeIdList = await storage.getItem('vetPracticeIdList')
     if (!vetPracticeIdList) {
         vetPracticeIdList = []
     }
@@ -54,7 +54,7 @@ async function createVet(action) {
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createVet, saved action ${JSON.stringify(savedAction)}`)
     await storage.setItem(action.label, savedAction)
-    const vetIdList = await storage.getItem('vetIdList')
+    var vetIdList = await storage.getItem('vetIdList')
     if (!vetIdList) {
         vetIdList = []
     }
