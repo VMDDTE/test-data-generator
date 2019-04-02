@@ -36,6 +36,11 @@ async function createVetPractice(action) {
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createVetPractice, saved action ${JSON.stringify(savedAction)}`)
     await storage.setItem(action.label, savedAction)
+    const vetPracticeIdList = await storage.getItem('vetPracticeIdList')
+    if (!vetPracticeIdList) {
+        vetPracticeIdList = []
+    }
+    vetPracticeIdList.push(responseData.id)
 }
 
 async function createVet(action) {
@@ -49,6 +54,11 @@ async function createVet(action) {
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createVet, saved action ${JSON.stringify(savedAction)}`)
     await storage.setItem(action.label, savedAction)
+    const vetIdList = await storage.getItem('vetIdList')
+    if (!vetIdList) {
+        vetIdList = []
+    }
+    vetIdList.push(responseData.Id)
 }
 
 module.exports.process = process

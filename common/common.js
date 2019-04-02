@@ -1,3 +1,4 @@
+const storage = require('node-persist')
 const log = global.log
 
 function validateAction(actionJson) {

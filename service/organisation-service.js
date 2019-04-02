@@ -24,5 +24,17 @@ async function updateOrganisation (payload) {
   }
 }
 
+async function deleteOrganisation (orgId) {
+  try {
+    let url = ADMIN_BASE_API_URL + `/organisations/${orgId}`
+    log.info(`${SERVICE_NAME}::url:${url}`)
+    return axios.delete(url)
+  } catch (error) {
+    log.error(error)
+  }
+}
+
+
 module.exports.createOrganisation = createOrganisation
 module.exports.updateOrganisation = updateOrganisation
+module.exports.deleteOrganisation = deleteOrganisation
