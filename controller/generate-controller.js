@@ -3,6 +3,7 @@ const roleActionProcessor = require('../action-processor/assign-role-action')
 const actions = require('../common/constants')
 const fs = require('fs-extra')
 const storage = require('node-persist')
+var localStorage = require('node-localstorage').LocalStorage
 const organisationService = require('../service/organisation-service')
 const userService = require('../service/user-service')
 const log = global.log
@@ -27,7 +28,7 @@ async function processActions(actionJson) {
 
     for (const action of actionRecords) {
         // Save a copy of each action for later reference
-        await storage.setItem(action.label, action)
+        localStorage.setItem(action.label, action)
 
         switch (action.action) {
             case actions.ACTION_CREATE:
@@ -51,18 +52,20 @@ async function processActions(actionJson) {
 
 async function setupLocalStorage(storageDir) {
     log.info(`${CONTROLLER_NAME}::setupLocalStorage:${storageDir}`)
-    await storage.init({
-        dir: `${storageDir}`,
-        stringify: JSON.stringify,
-        parse: JSON.parse,
-        encoding: 'utf8',
-        logging: false,  // can also be custom logging function
-        ttl: false, // ttl* [NEW], can be true for 24h default or a number in MILLISECONDS or a valid Javascript Date object
-        expiredInterval: 20 * 60 * 1000, // every 2 minutes the process will clean-up the expired cache
-        // in some cases, you (or some other service) might add non-valid storage files to your
-        // storage dir, i.e. Google Drive, make this true if you'd like to ignore these files and not throw an error
-        forgiveParseErrors: false
-    })
+    // await storage.init({
+    //     dir: `${storageDir}`,
+    //     stringify: JSON.stringify,
+    //     parse: JSON.parse,
+    //     encoding: 'utf8',
+    //     logging: false,  // can also be custom logging function
+    //     ttl: false, // ttl* [NEW], can be true for 24h default or a number in MILLISECONDS or a valid Javascript Date object
+    //     expiredInterval: 20 * 60 * 1000, // every 2 minutes the process will clean-up the expired cache
+    //     // in some cases, you (or some other service) might add non-valid storage files to your
+    //     // storage dir, i.e. Google Drive, make this true if you'd like to ignore these files and not throw an error
+    //     forgiveParseErrors: false
+    // })
+
+      localStorage = new LocalStorage(`./${storageDir}`)
 }
 
 async function tearDownEntities(storageDir) {
@@ -73,7 +76,7 @@ async function tearDownEntities(storageDir) {
 
 async function tearDownLocalStorage(storageDir) {
     log.info(`${CONTROLLER_NAME}::tearDownLocalStorage:${storageDir}`)
-    await storage.clear()
+    localStorage.clear()
     // try {
     //     await fs.remove(`./${storageDir}`)
     //     console.log('success!')
@@ -84,7 +87,7 @@ async function tearDownLocalStorage(storageDir) {
 
 async function tearDownVetPractice(storageDir) {
     log.info(`${CONTROLLER_NAME}::tearDownVetPractice:${storageDir}`)
-    const vetPracticeIdList = await storage.getItem('vetPracticeIdList')
+    const vetPracticeIdList = localStorage.getItem('vetPracticeIdList')
     if (vetPracticeIdList) {
         for (id of vetPracticeIdList) {
             log.info(`${CONTROLLER_NAME}::about to teardown vet practice with id ${id}`)
@@ -94,8 +97,8 @@ async function tearDownVetPractice(storageDir) {
 }
 
 async function tearDownVet(storageDir) {
-    log.info(`${CONTROLLER_NAME}::tearDownVetPractice:${storageDir}`)
-    const vetIdList = await storage.getItem('vetIdList')
+    log.info(`${CONTROLLER_NAME}::tearDownVet:${storageDir}`)
+    const vetIdList = localStorage.getItem('vetIdList')
     if (vetIdList) {
         for (id of vetIdList) {
             log.info(`${CONTROLLER_NAME}::about to teardown vet with id ${id}`)
