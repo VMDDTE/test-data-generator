@@ -46,7 +46,7 @@ async function processActions(actionJson) {
                 break
         }
     }
-    console.log(await storage.keys())
+    //console.log(await storage.keys())
 }
 
 async function setupLocalStorage(storageDir) {
