@@ -1,4 +1,3 @@
-const storage = require('node-persist')
 const actionTypes = require('../common/constants')
 const roleNames = require('../common/constants')
 const organisationService = require('../service/organisation-service')

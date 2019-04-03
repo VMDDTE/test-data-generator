@@ -2,7 +2,6 @@ const createActionProcessor = require('../action-processor/create-action')
 const roleActionProcessor = require('../action-processor/assign-role-action')
 const actions = require('../common/constants')
 const fs = require('fs-extra')
-const storage = require('node-persist')
 var localStorage = require('node-localstorage').LocalStorage
 const organisationService = require('../service/organisation-service')
 const userService = require('../service/user-service')
