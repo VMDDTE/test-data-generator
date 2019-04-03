@@ -57,7 +57,7 @@ async function tearDownEntities(namespace) {
 
 async function tearDownLocalStorage(namespace) {
     log.info(`${CONTROLLER_NAME}::tearDownLocalStorage:${namespace}`)
-    localStorage.clear()
+    localStorage.clear(namespace)
 }
 
 async function tearDownVetPractice(namespace) {
