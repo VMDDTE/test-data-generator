@@ -1,7 +1,7 @@
 const config = require('./config')
 global.log = require('./logging').setupLogging('data-generator', config)
 const generator = require('./controller/generate-controller')
-const localStorage = require('../service/local-storage-service')
+const localStorage = require('./service/local-storage-service')
 
 async function generate(featureName) {
     const dataFileName = `${featureName}.json`
