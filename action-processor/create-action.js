@@ -2,6 +2,7 @@ const actionTypes = require('../common/constants')
 const orgTypes = require('../common/constants')
 const userTypes = require('../common/constants')
 const organisationService = require('../service/organisation-service')
+const localStorage = require('../service/local-storage-service')
 const userService = require('../service/user-service')
 const log = global.log
 
@@ -31,16 +32,16 @@ async function createVetPractice(action) {
     let response = await organisationService.createOrganisation(orgTypes.ORG_TYPE_VET_PRACTICE, vetPracticeData)
     let responseData = response.data
     log.info(`${SERVICE_NAME}::createVetPractice::${action.label}::created:${JSON.stringify(responseData)}`)
-    var savedAction = global.localStorage.getItem(action.label)
+    var savedAction = localStorage.getItem(action.label)
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createVetPractice, saved action ${JSON.stringify(savedAction)}`)
-    global.localStorage.setItem(action.label, savedAction)
-    var vetPracticeIdList = global.localStorage.getItem('vetPracticeIdList')
+    localStorage.setItem(action.label, savedAction)
+    var vetPracticeIdList = localStorage.getItem('vetPracticeIdList')
     if (!vetPracticeIdList) {
         vetPracticeIdList = []
     }
     vetPracticeIdList.push(responseData.id)
-    global.localStorage.setItem('vetPracticeIdList', vetPracticeIdList)
+    localStorage.setItem('vetPracticeIdList', vetPracticeIdList)
 }
 
 async function createVet(action) {
@@ -50,16 +51,16 @@ async function createVet(action) {
     let response = await userService.createUser(userTypes.USER_TYPE_VET, vetData)
     let responseData = response.data
     log.info(`${SERVICE_NAME}::createVet::${action.label}::created:${JSON.stringify(responseData)}`)
-    var savedAction = global.localStorage.getItem(action.label)
+    var savedAction = localStorage.getItem(action.label)
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createVet, saved action ${JSON.stringify(savedAction)}`)
-    global.localStorage.setItem(action.label, savedAction)
-    var vetIdList = global.localStorage.getItem('vetIdList')
+    localStorage.setItem(action.label, savedAction)
+    var vetIdList = localStorage.getItem('vetIdList')
     if (!vetIdList) {
         vetIdList = []
     }
     vetIdList.push(responseData.Id)
-    global.localStorage.setItem('vetIdList', vetIdList)
+    localStorage.setItem('vetIdList', vetIdList)
 }
 
 module.exports.process = process
