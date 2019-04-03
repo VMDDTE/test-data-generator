@@ -5,9 +5,9 @@ var localStorage = null
 
 function init(storageDir) {
     log.info(`${SERVICE_NAME}::init:${storageDir}`)
-
+    log.debug(`${SERVICE_NAME}::init:${localStorage}`)
+    
     if (typeof localStorage === "undefined" || localStorage === null) {
-        log.debug(`${SERVICE_NAME}::init:${localStorage}`)
         var LocalStorage = require('node-localstorage').JSONStorage
         localStorage = new LocalStorage(`./${storageDir}`)
       }
