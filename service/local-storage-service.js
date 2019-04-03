@@ -19,7 +19,7 @@ function setItem(key, value) {
         localStorage = new LocalStorage(`./${storageDir}`)
       }
       
-      localStorage.setItem(key, JSON.stringify(value))
+      localStorage.setItem(key, value)
 }
 
 function getItem(key) {
