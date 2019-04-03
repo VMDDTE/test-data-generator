@@ -57,13 +57,7 @@ async function tearDownEntities(namespace) {
 
 async function tearDownLocalStorage(namespace) {
     log.info(`${CONTROLLER_NAME}::tearDownLocalStorage:${namespace}`)
-    //global.localStorage.clear()
-    // try {
-    //     await fs.remove(`./${storageDir}`)
-    //     console.log('success!')
-    // } catch (err) {
-    //     console.error(err)
-    // }
+    localStorage.clear()
 }
 
 async function tearDownVetPractice(namespace) {

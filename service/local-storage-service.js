@@ -21,6 +21,14 @@ function getItem(namespace, key) {
     return localStorage.getItem(`${namespace}_${key}`)
 }
 
+function clear(namespace) {
+    const keys = localStorage._keys
+    for (key of keys) {
+        log.info(`${SERVICE_NAME}::clear:key:${namespace}, ${key}`)
+    }
+}
+
 module.exports.init = init
 module.exports.setItem = setItem
 module.exports.getItem = getItem
+module.exports.clear = clear
