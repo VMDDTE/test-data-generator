@@ -7,7 +7,7 @@ function init(storageDir) {
     log.info(`${SERVICE_NAME}::init:${storageDir}`)
 
     if (typeof localStorage === "undefined" || localStorage === null) {
-        var LocalStorage = require('node-localstorage').LocalStorage
+        var LocalStorage = require('node-localstorage').JSONStorage
         localStorage = new LocalStorage(`./${storageDir}`)
       }
 }
@@ -15,7 +15,7 @@ function init(storageDir) {
 function setItem(key, value) {
     log.info(`${SERVICE_NAME}::setItem:key:${key}, value:${value}`)
     if (typeof localStorage === "undefined" || localStorage === null) {
-        var LocalStorage = require('node-localstorage').LocalStorage
+        var LocalStorage = require('node-localstorage').JSONStorage
         localStorage = new LocalStorage(`./${storageDir}`)
       }
       
@@ -25,7 +25,7 @@ function setItem(key, value) {
 function getItem(key) {
     log.info(`${SERVICE_NAME}::getItem:key:${key}`)
     if (typeof localStorage === "undefined" || localStorage === null) {
-        var LocalStorage = require('node-localstorage').LocalStorage
+        var LocalStorage = require('node-localstorage').JSONStorage
         localStorage = new LocalStorage(`./${storageDir}`)
       }
       
