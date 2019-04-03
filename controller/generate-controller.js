@@ -2,7 +2,7 @@ const createActionProcessor = require('../action-processor/create-action')
 const roleActionProcessor = require('../action-processor/assign-role-action')
 const actions = require('../common/constants')
 const fs = require('fs-extra')
-var localStorage = require('node-localstorage').LocalStorage
+global.localStorage = new require('node-localstorage').LocalStorage('./scratch');
 const organisationService = require('../service/organisation-service')
 const userService = require('../service/user-service')
 const log = global.log
@@ -27,7 +27,7 @@ async function processActions(actionJson) {
 
     for (const action of actionRecords) {
         // Save a copy of each action for later reference
-        localStorage.setItem(action.label, action)
+        global.localStorage.setItem(action.label, action)
 
         switch (action.action) {
             case actions.ACTION_CREATE:
@@ -75,7 +75,7 @@ async function tearDownEntities(storageDir) {
 
 async function tearDownLocalStorage(storageDir) {
     log.info(`${CONTROLLER_NAME}::tearDownLocalStorage:${storageDir}`)
-    localStorage.clear()
+    global.localStorage.clear()
     // try {
     //     await fs.remove(`./${storageDir}`)
     //     console.log('success!')
@@ -86,7 +86,7 @@ async function tearDownLocalStorage(storageDir) {
 
 async function tearDownVetPractice(storageDir) {
     log.info(`${CONTROLLER_NAME}::tearDownVetPractice:${storageDir}`)
-    const vetPracticeIdList = localStorage.getItem('vetPracticeIdList')
+    const vetPracticeIdList = global.localStorage.getItem('vetPracticeIdList')
     if (vetPracticeIdList) {
         for (id of vetPracticeIdList) {
             log.info(`${CONTROLLER_NAME}::about to teardown vet practice with id ${id}`)
@@ -97,7 +97,7 @@ async function tearDownVetPractice(storageDir) {
 
 async function tearDownVet(storageDir) {
     log.info(`${CONTROLLER_NAME}::tearDownVet:${storageDir}`)
-    const vetIdList = localStorage.getItem('vetIdList')
+    const vetIdList = global.localStorage.getItem('vetIdList')
     if (vetIdList) {
         for (id of vetIdList) {
             log.info(`${CONTROLLER_NAME}::about to teardown vet with id ${id}`)
