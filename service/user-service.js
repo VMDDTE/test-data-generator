@@ -14,4 +14,15 @@ async function createUser (userType, payload) {
   }
 }
 
+async function deleteUser (id) {
+  try {
+    let url = ADMIN_BASE_API_URL + `/users/${id}`
+    log.info(`${SERVICE_NAME}::url:${url}`)
+    return axios.delete(url)
+  } catch (error) {
+    log.error(error)
+  }
+}
+
 module.exports.createUser = createUser
+module.exports.deleteUser = deleteUser

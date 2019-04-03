@@ -1,4 +1,3 @@
-const storage = require('node-persist')
 const actionTypes = require('../common/constants')
 const roleNames = require('../common/constants')
 const organisationService = require('../service/organisation-service')
@@ -20,19 +19,19 @@ async function process(action) {
     }
 }
 
-async function createRole(action) {
+async function createRole(namespace, action) {
     let roleType = action.type
     log.debug(`${SERVICE_NAME}::createRole::type:${roleType}:${JSON.stringify(action)}`)
     let roleData = action.data
     let users = roleData.users
     let orgIdLabel = roleData.orgId
-    let savedAction = await storage.getItem(orgIdLabel)
+    let savedAction = await storage.getItem(namespace, orgIdLabel)
     let response = savedAction.response
     let orgId = response.id
 
     var userList = []
     for (const userLabel of users) {
-        let savedAction = await storage.getItem(userLabel)
+        let savedAction = await storage.getItem(namespace, userLabel)
         let response = savedAction.response
         let userId = response.Id
         log.info(`${SERVICE_NAME}::createRole::assigning role ${roleType} to ${userId} for organisation with id ${orgId}`)
