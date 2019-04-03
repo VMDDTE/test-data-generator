@@ -8,26 +8,26 @@ const userService = require('../service/user-service')
 const log = global.log
 const CONTROLLER_NAME = 'generate-controller'
 
-async function generate(filename, storageDir) {
-    log.info('Generating ...')
-    localStorage.init(storageDir)
+async function generate(filename, namespace) {
+    log.info(`Generating ... ${namespace}`)
+    localStorage.init()
     let rawdata = fs.readFileSync(filename)
     let jsonData = JSON.parse(rawdata)
-    await processActions(jsonData)
+    await processActions(namespace, jsonData)
 }
 
-async function tearDown(storageDir) {
-    log.info('Tearing down ...')
-    await tearDownEntities(storageDir)
-    await tearDownLocalStorage(storageDir)
+async function tearDown(namespace) {
+    log.info(`Tearing down ... ${namespace}`)
+    await tearDownEntities(namespace)
+    await tearDownLocalStorage(namespace)
 }
 
-async function processActions(actionJson) {
+async function processActions(namespace, actionJson) {
     let actionRecords = actionJson.actions
 
     for (const action of actionRecords) {
         // Save a copy of each action for later reference
-        localStorage.setItem(action.label, action)
+        localStorage.setItem(namespace, action.label, action)
 
         switch (action.action) {
             case actions.ACTION_CREATE:
@@ -49,32 +49,14 @@ async function processActions(actionJson) {
     //console.log(await storage.keys())
 }
 
-async function setupLocalStorage(storageDir) {
-    log.info(`${CONTROLLER_NAME}::setupLocalStorage:${storageDir}`)
-    // await storage.init({
-    //     dir: `${storageDir}`,
-    //     stringify: JSON.stringify,
-    //     parse: JSON.parse,
-    //     encoding: 'utf8',
-    //     logging: false,  // can also be custom logging function
-    //     ttl: false, // ttl* [NEW], can be true for 24h default or a number in MILLISECONDS or a valid Javascript Date object
-    //     expiredInterval: 20 * 60 * 1000, // every 2 minutes the process will clean-up the expired cache
-    //     // in some cases, you (or some other service) might add non-valid storage files to your
-    //     // storage dir, i.e. Google Drive, make this true if you'd like to ignore these files and not throw an error
-    //     forgiveParseErrors: false
-    // })
-
-      localStorage = new LocalStorage(`./${storageDir}`)
+async function tearDownEntities(namespace) {
+    log.info(`${CONTROLLER_NAME}::tearDownEntities:${namespace}`)
+    await tearDownVetPractice(namespace)
+    await tearDownVet(namespace)
 }
 
-async function tearDownEntities(storageDir) {
-    log.info(`${CONTROLLER_NAME}::tearDownEntities:${storageDir}`)
-    await tearDownVetPractice(storageDir)
-    await tearDownVet(storageDir)
-}
-
-async function tearDownLocalStorage(storageDir) {
-    log.info(`${CONTROLLER_NAME}::tearDownLocalStorage:${storageDir}`)
+async function tearDownLocalStorage(namespace) {
+    log.info(`${CONTROLLER_NAME}::tearDownLocalStorage:${namespace}`)
     //global.localStorage.clear()
     // try {
     //     await fs.remove(`./${storageDir}`)
@@ -84,9 +66,9 @@ async function tearDownLocalStorage(storageDir) {
     // }
 }
 
-async function tearDownVetPractice(storageDir) {
-    log.info(`${CONTROLLER_NAME}::tearDownVetPractice:${storageDir}`)
-    const vetPracticeIdList = localStorage.getItem('vetPracticeIdList')
+async function tearDownVetPractice(namespace) {
+    log.info(`${CONTROLLER_NAME}::tearDownVetPractice:${namespace}`)
+    const vetPracticeIdList = localStorage.getItem(namespace, 'vetPracticeIdList')
     if (vetPracticeIdList) {
         for (id of vetPracticeIdList) {
             log.info(`${CONTROLLER_NAME}::about to teardown vet practice with id ${id}`)
@@ -95,9 +77,9 @@ async function tearDownVetPractice(storageDir) {
     }
 }
 
-async function tearDownVet(storageDir) {
-    log.info(`${CONTROLLER_NAME}::tearDownVet:${storageDir}`)
-    const vetIdList = localStorage.getItem('vetIdList')
+async function tearDownVet(namespace) {
+    log.info(`${CONTROLLER_NAME}::tearDownVet:${namespace}`)
+    const vetIdList = localStorage.getItem(namespace, 'vetIdList')
     if (vetIdList) {
         for (id of vetIdList) {
             log.info(`${CONTROLLER_NAME}::about to teardown vet with id ${id}`)
