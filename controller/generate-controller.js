@@ -32,14 +32,14 @@ async function processActions(namespace, actionJson) {
         switch (action.action) {
             case actions.ACTION_CREATE:
                 log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
-                await createActionProcessor.process(action)
+                await createActionProcessor.process(namespace, action)
                 break
             case actions.ACTION_UPDATE:
                 log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
                 break
             case actions.ACTION_ASSIGN_ROLE:
                 log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
-                await roleActionProcessor.process(action)
+                await roleActionProcessor.process(namespace, action)
                 break
             default:
                 log.debug(`${CONTROLLER_NAME}::unrecognised action ${action.action}`)
