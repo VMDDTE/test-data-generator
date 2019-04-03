@@ -33,7 +33,17 @@ function clear(namespace) {
 }
 
 function clearAll() {
+    log.info(`${SERVICE_NAME}::clearAll:`)
+    var keys = localStorage._keys
+    for (key of keys) {
+        log.info(`${SERVICE_NAME}::clear:key:${key}`)
+    }
     localStorage.clear()
+    log.info(`${SERVICE_NAME}::after clear:`)
+    keys = localStorage._keys
+    for (key of keys) {
+        log.info(`${SERVICE_NAME}::clear:key:${key}`)
+    }
 }
 
 module.exports.init = init
