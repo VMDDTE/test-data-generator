@@ -25,7 +25,7 @@ function clear(namespace) {
     const keys = localStorage._keys
     for (key of keys) {
         log.info(`${SERVICE_NAME}::clear:key:${namespace}, ${key}`)
-        if (key.startswith(namespace)) {
+        if (key.startsWith(namespace)) {
             log.info(`${SERVICE_NAME}::clearing:key:${namespace}, ${key}`)
             localStorage.removeItem(key)
         }
