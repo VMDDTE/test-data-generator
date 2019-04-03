@@ -1,6 +1,7 @@
 const config = require('./config')
 global.log = require('./logging').setupLogging('data-generator', config)
 const generator = require('./controller/generate-controller')
+const localStorage = require('../service/local-storage-service')
 
 async function generate(featureName) {
     const dataFileName = `${featureName}.json`
@@ -13,5 +14,11 @@ async function tearDown(featureName) {
     await generator.tearDown(featureName)
 }
 
+async function onComplete() {
+    console.log(`onComplete ...`)
+    await localStorage.clearAll()
+}
+
 module.exports.generate = generate
 module.exports.tearDown = tearDown
+module.exports.onComplete = onComplete

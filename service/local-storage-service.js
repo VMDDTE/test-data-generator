@@ -32,7 +32,12 @@ function clear(namespace) {
     }
 }
 
+function clearAll() {
+    localStorage.clear()
+}
+
 module.exports.init = init
 module.exports.setItem = setItem
 module.exports.getItem = getItem
 module.exports.clear = clear
+module.exports.clearAll = clearAll
