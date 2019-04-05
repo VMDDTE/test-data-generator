@@ -35,14 +35,10 @@ function clear(namespace) {
 function clearAll() {
     log.info(`${SERVICE_NAME}::clearAll`)
     if (typeof localStorage === "undefined" || localStorage === null) {
-        return
+        var LocalStorage = require('node-localstorage').JSONStorage
+        localStorage = new LocalStorage('./local-storage')
     }
     localStorage.clear()
-    log.info(`${SERVICE_NAME}::after clear:`)
-    keys = localStorage._keys
-    for (key of keys) {
-        log.info(`${SERVICE_NAME}::clear:key:${key}`)
-    }
 }
 
 module.exports.init = init
