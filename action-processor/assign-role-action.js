@@ -26,8 +26,8 @@ async function createRole(namespace, action) {
     let roleData = action.data
     let users = roleData.users
     let orgIdLabel = roleData.orgId
-    let savedAction = await localStorage.getItem(namespace, orgIdLabel)
-    let response = savedAction.response
+    let savedOrgAction = await localStorage.getItem(namespace, orgIdLabel)
+    let response = savedOrgAction.response
     let orgId = response.id
 
     var userList = []
@@ -39,7 +39,7 @@ async function createRole(namespace, action) {
         userList.push(userId)
     }
 
-    var updatePayload = {}
+    var updatePayload = savedOrgAction.data
     var roleProperties = {}
     switch (roleType) {
         case actionTypes.TYPE_VET_ROLE:
