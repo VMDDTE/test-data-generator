@@ -27,7 +27,7 @@ function getItem(namespace, key) {
 }
 
 function clear(namespace) {
-    const keys = localStorage._keys
+    const keys = JSON.parse(JSON.stringify(localStorage._keys));
     for (key of keys) {
         log.info(`${SERVICE_NAME}::clear:key:${namespace}, ${key}`)
         if (key.startsWith(namespace)) {
