@@ -34,6 +34,9 @@ function clear(namespace) {
 
 function clearAll() {
     log.info(`${SERVICE_NAME}::clearAll:`)
+    if (typeof localStorage === "undefined" || localStorage === null) {
+        return
+    }
     var keys = localStorage._keys
     for (key of keys) {
         log.info(`${SERVICE_NAME}::clear:key:${key}`)
