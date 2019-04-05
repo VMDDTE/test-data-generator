@@ -39,7 +39,8 @@ function clearAll() {
     }
     var keys = localStorage._keys
     for (key of keys) {
-        log.info(`${SERVICE_NAME}::clear:key:${key}`)
+        log.info(`${SERVICE_NAME}::remove:key:${key}`)
+        localStorage.removeItem(key)
     }
     localStorage.clear()
     log.info(`${SERVICE_NAME}::after clear:`)
