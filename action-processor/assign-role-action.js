@@ -53,7 +53,7 @@ async function createRole(namespace, action) {
     updatePayload["Properties"] = roleProperties
     log.debug(`${SERVICE_NAME}::createRole::properties ${JSON.stringify(updatePayload)}`)
 
-    organisationService.updateOrganisation(updatePayload)
+    await organisationService.updateOrganisation(updatePayload)
 }
 
 
