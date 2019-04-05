@@ -21,5 +21,4 @@ async function clearAll() {
 
 module.exports.generate = generate
 module.exports.tearDown = tearDown
-module.exports.onComplete = onComplete
 module.exports.clearAll = clearAll
