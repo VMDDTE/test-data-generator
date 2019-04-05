@@ -1,6 +1,7 @@
 const actionTypes = require('../common/constants')
 const roleNames = require('../common/constants')
 const organisationService = require('../service/organisation-service')
+const localStorage = require('../service/local-storage-service')
 const log = global.log
 
 const SERVICE_NAME = 'assign-role-action-processor'
@@ -25,13 +26,13 @@ async function createRole(namespace, action) {
     let roleData = action.data
     let users = roleData.users
     let orgIdLabel = roleData.orgId
-    let savedAction = await storage.getItem(namespace, orgIdLabel)
+    let savedAction = await localStorage.getItem(namespace, orgIdLabel)
     let response = savedAction.response
     let orgId = response.id
 
     var userList = []
     for (const userLabel of users) {
-        let savedAction = await storage.getItem(namespace, userLabel)
+        let savedAction = await localStorage.getItem(namespace, userLabel)
         let response = savedAction.response
         let userId = response.Id
         log.info(`${SERVICE_NAME}::createRole::assigning role ${roleType} to ${userId} for organisation with id ${orgId}`)
