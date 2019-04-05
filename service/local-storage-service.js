@@ -3,6 +3,7 @@ const SERVICE_NAME = 'local-storage-service'
 const fs = require('fs')
 const path = require('path')
 const dirNames = require('../common/constants')
+const localStorageDir = `./${dirNames.LOCAL_STORAGE_NAME}`
 var localStorage = null
 
 
@@ -11,7 +12,7 @@ function init() {
 
     if (typeof localStorage === "undefined" || localStorage === null) {
         var LocalStorage = require('node-localstorage').JSONStorage
-        localStorage = new LocalStorage(`./${dirNames.LOCAL_STORAGE_NAME}`)
+        localStorage = new LocalStorage(localStorageDir)
     }
 }
 
@@ -38,10 +39,10 @@ function clear(namespace) {
 
 function clearAll() {
     log.info(`${SERVICE_NAME}::clearAll`)
-    fs.readdir(`./${dirNames.LOCAL_STORAGE_NAME}`, (err, files) => {
+    fs.readdir(localStorageDir, (err, files) => {
         if (err) throw err;
         for (const file of files) {
-            fs.unlink(path.join(directory, file), err => {
+            fs.unlink(path.join(localStorageDir, file), err => {
                 if (err) throw err;
             })
         }
