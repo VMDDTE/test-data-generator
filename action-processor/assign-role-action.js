@@ -5,13 +5,13 @@ const log = global.log
 
 const SERVICE_NAME = 'assign-role-action-processor'
 
-async function process(action) {
-    log.debug(`${SERVICE_NAME}::process`)
+async function process(namespace, action) {
+    log.debug(`${SERVICE_NAME}::${namespace}::process`)
     switch (action.type) {
         case actionTypes.TYPE_VET_ROLE:
         case actionTypes.TYPE_VET_PRIMARY_ADMIN_ROLE:
             log.info(`${SERVICE_NAME}::processing ${action.type}`)
-            await createRole(action)
+            await createRole(namespace, action)
             break
         default:
             log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
