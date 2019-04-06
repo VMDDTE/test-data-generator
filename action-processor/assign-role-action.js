@@ -25,8 +25,10 @@ async function createRole(namespace, action) {
     log.debug(`${SERVICE_NAME}::createRole::type:${roleType}:${JSON.stringify(action)}`)
     let roleData = action.data
     let users = roleData.users
+    let roleLabel = roleData.label
     let orgIdLabel = roleData.orgId
-    let savedOrgAction = await localStorage.getItem(namespace, orgIdLabel)
+    let savedOrgAction = localStorage.getItem(namespace, orgIdLabel)
+    let savedRoleProperties = localStorage.getItem(namespace, roleLabel)
     let response = savedOrgAction.response
     let orgId = response.id
 
@@ -41,14 +43,25 @@ async function createRole(namespace, action) {
 
     var updatePayload = savedOrgAction.data
     var roleProperties = {}
+    if (savedRoleProperties) {
+        roleProperties = savedRoleProperties
+    }
     switch (roleType) {
         case actionTypes.TYPE_VET_ROLE:
-            roleProperties[roleNames.ROLE_NAME_VET] = userList
+            if (roleProperties[roleNames.ROLE_NAME_VET]) {
+                roleProperties[roleNames.ROLE_NAME_VET].push(...userList)
+            } else {
+                roleProperties[roleNames.ROLE_NAME_VET] = userList
+            }
             break
         case actionTypes.TYPE_VET_PRIMARY_ADMIN_ROLE:
+            if (roleProperties[roleNames.ROLE_NAME_VET_PRIMARY_ADMIN]) {
+                roleProperties[roleNames.ROLE_NAME_VET_PRIMARY_ADMIN].push(...userList)
+            }
             roleProperties[roleNames.ROLE_NAME_VET_PRIMARY_ADMIN] = userList
             break
     }
+    localStorage.setItem(namespace, roleLabel, roleProperties)
     updatePayload["Id"] = orgId
     updatePayload["Properties"] = roleProperties
     log.debug(`${SERVICE_NAME}::createRole::properties ${JSON.stringify(updatePayload)}`)
