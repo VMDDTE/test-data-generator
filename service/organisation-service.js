@@ -16,7 +16,7 @@ async function createOrganisation (orgType, payload) {
 
 async function updateOrganisation (payload) {
   try {
-    let url = ADMIN_BASE_API_URL + '/organisations/vetPractices/sample'
+    let url = ADMIN_BASE_API_URL + '/organisations/vetPractices'
     log.info(`${SERVICE_NAME}::updateOrganisation:url:${url}`)
     return axios.put(url, payload)
   } catch (error) {

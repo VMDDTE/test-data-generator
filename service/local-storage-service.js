@@ -1,14 +1,19 @@
 const log = global.log
 const SERVICE_NAME = 'local-storage-service'
+const fs = require('fs')
+const path = require('path')
+const dirNames = require('../common/constants')
+const localStorageDir = `./${dirNames.LOCAL_STORAGE_NAME}`
 var localStorage = null
+
 
 function init() {
     log.info(`${SERVICE_NAME}::init:`)
 
     if (typeof localStorage === "undefined" || localStorage === null) {
         var LocalStorage = require('node-localstorage').JSONStorage
-        localStorage = new LocalStorage('./local-storage')
-      }
+        localStorage = new LocalStorage(localStorageDir)
+    }
 }
 
 function setItem(namespace, key, value) {
@@ -22,7 +27,7 @@ function getItem(namespace, key) {
 }
 
 function clear(namespace) {
-    const keys = localStorage._keys
+    const keys = JSON.parse(JSON.stringify(localStorage._keys));
     for (key of keys) {
         log.info(`${SERVICE_NAME}::clear:key:${namespace}, ${key}`)
         if (key.startsWith(namespace)) {
@@ -33,17 +38,16 @@ function clear(namespace) {
 }
 
 function clearAll() {
-    log.info(`${SERVICE_NAME}::clearAll:`)
-    var keys = localStorage._keys
-    for (key of keys) {
-        log.info(`${SERVICE_NAME}::clear:key:${key}`)
-    }
-    localStorage.clear()
-    log.info(`${SERVICE_NAME}::after clear:`)
-    keys = localStorage._keys
-    for (key of keys) {
-        log.info(`${SERVICE_NAME}::clear:key:${key}`)
-    }
+    log.info(`${SERVICE_NAME}::clearAll`)
+    fs.readdir(localStorageDir, (err, files) => {
+        if (err) throw err;
+        for (const file of files) {
+            log.info(`deleting file ${file}`)
+            fs.unlink(path.join(localStorageDir, file), err => {
+                if (err) throw err
+            })
+        }
+    })
 }
 
 module.exports.init = init

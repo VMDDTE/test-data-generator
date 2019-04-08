@@ -14,11 +14,11 @@ async function tearDown(featureName) {
     await generator.tearDown(featureName)
 }
 
-async function onComplete() {
-    console.log(`onComplete ...`)
-    await localStorage.clearAll()
+async function clearAll() {
+    console.log(`clear all ...`)
+    localStorage.clearAll()
 }
 
 module.exports.generate = generate
 module.exports.tearDown = tearDown
-module.exports.onComplete = onComplete
+module.exports.clearAll = clearAll
