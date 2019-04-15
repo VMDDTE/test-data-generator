@@ -40,12 +40,13 @@ function clear(namespace) {
 function clearAll() {
     log.info(`${SERVICE_NAME}::clearAll`)
     fs.readdir(localStorageDir, (err, files) => {
-        if (err) throw err;
-        for (const file of files) {
-            log.info(`deleting file ${file}`)
-            fs.unlink(path.join(localStorageDir, file), err => {
-                if (err) throw err
-            })
+        if (!err) {
+            for (const file of files) {
+                log.info(`deleting file ${file}`)
+                fs.unlink(path.join(localStorageDir, file), err => {
+                    if (err) throw err
+                })
+            }
         }
     })
 }
