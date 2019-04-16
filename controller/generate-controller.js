@@ -5,6 +5,7 @@ const fs = require('fs-extra')
 const localStorage = require('../service/local-storage-service')
 const organisationService = require('../service/organisation-service')
 const userService = require('../service/user-service')
+const productService = require('../service/product-service')
 const log = global.log
 const CONTROLLER_NAME = 'generate-controller'
 
@@ -46,13 +47,13 @@ async function processActions(namespace, actionJson) {
                 break
         }
     }
-    //console.log(await storage.keys())
 }
 
 async function tearDownEntities(namespace) {
     log.info(`${CONTROLLER_NAME}::tearDownEntities:${namespace}`)
     await tearDownVetPractice(namespace)
     await tearDownVet(namespace)
+    await tearDownProduct(namespace)
 }
 
 async function tearDownLocalStorage(namespace) {
@@ -78,6 +79,17 @@ async function tearDownVet(namespace) {
         for (id of vetIdList) {
             log.info(`${CONTROLLER_NAME}::about to teardown vet with id ${id}`)
             await userService.deleteUser(id)
+        }
+    }
+}
+
+async function tearDownProduct(namespace) {
+    log.info(`${CONTROLLER_NAME}::tearDownProduct:${namespace}`)
+    const productList = localStorage.getItem(namespace, 'productList')
+    if (productList) {
+        for (productNo of productList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown product with product no. ${productNo}`)
+            await productService.deleteProduct(productNo)
         }
     }
 }
