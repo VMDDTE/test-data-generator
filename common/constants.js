@@ -2,7 +2,7 @@ const TYPE_VET = 'VetRecord'
 const TYPE_VET_PRACTICE_RECORD = 'VetPracticeRecord'
 const TYPE_VET_ROLE = 'VetRole'
 const TYPE_VET_PRIMARY_ADMIN_ROLE = 'VetPrimaryAdminRole'
-const TYPE_PRODUCT = 'Product'
+const TYPE_PRODUCT = 'ProductRecord'
 
 const ACTION_CREATE = 'create'
 const ACTION_UPDATE = 'update'
