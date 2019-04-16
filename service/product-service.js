@@ -16,7 +16,7 @@ async function createProduct (payload) {
 
 async function deleteProduct (productNo) {
   try {
-    let url = ADMIN_BASE_API_URL + `/products/${productNo}`
+    let url = ADMIN_BASE_API_URL + `/products/productNo/${productNo}`
     log.info(`${SERVICE_NAME}::deleteProduct:url:${url}`)
     return axios.delete(url)
   } catch (error) {
