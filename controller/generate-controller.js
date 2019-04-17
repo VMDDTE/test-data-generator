@@ -6,6 +6,7 @@ const localStorage = require('../service/local-storage-service')
 const organisationService = require('../service/organisation-service')
 const userService = require('../service/user-service')
 const productService = require('../service/product-service')
+const speciesService = require('../service/species-service')
 const log = global.log
 const CONTROLLER_NAME = 'generate-controller'
 
@@ -54,6 +55,7 @@ async function tearDownEntities(namespace) {
     await tearDownVetPractice(namespace)
     await tearDownVet(namespace)
     await tearDownProduct(namespace)
+    await tearDownSpecies(namespace)
 }
 
 async function tearDownLocalStorage(namespace) {
@@ -90,6 +92,17 @@ async function tearDownProduct(namespace) {
         for (productNo of productList) {
             log.info(`${CONTROLLER_NAME}::about to teardown product with product no. ${productNo}`)
             await productService.deleteProduct(productNo)
+        }
+    }
+}
+
+async function tearDownSpecies(namespace) {
+    log.info(`${CONTROLLER_NAME}::tearDownSpecies:${namespace}`)
+    const speciesList = localStorage.getItem(namespace, 'speciesList')
+    if (speciesList) {
+        for (productNo of speciesList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown species for product with product no. ${productNo}`)
+            await speciesService.deleteSpecies(productNo)
         }
     }
 }
