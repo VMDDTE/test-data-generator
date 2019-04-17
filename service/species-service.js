@@ -24,5 +24,5 @@ async function deleteSpecies (productNo) {
   }
 }
 
-module.exports.createProduct = createSpecies
-module.exports.deleteProduct = deleteSpecies
+module.exports.createSpecies = createSpecies
+module.exports.deleteSpecies = deleteSpecies
