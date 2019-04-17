@@ -5,6 +5,7 @@ const organisationService = require('../service/organisation-service')
 const localStorage = require('../service/local-storage-service')
 const userService = require('../service/user-service')
 const productService = require('../service/product-service')
+const speciesService = require('../service/species-service')
 const log = global.log
 
 const SERVICE_NAME = 'create-action-processor'
@@ -23,6 +24,10 @@ async function process(namespace, action) {
         case actionTypes.TYPE_PRODUCT:
             log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_PRODUCT}`)
             await createProduct(namespace, action)
+            break
+        case actionTypes.TYPE_SPECIES:
+            log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIES}`)
+            await createSpecies(namespace, action)
             break
         default:
             log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
@@ -85,6 +90,25 @@ async function createProduct(namespace, action) {
     }
     productList.push(responseData.ProductNo)
     localStorage.setItem(namespace, 'productList', productList)
+}
+
+async function createSpecies(namespace, action) {
+    log.debug(`${SERVICE_NAME}::createSpecies`)
+    let speciesData = action.data
+    log.info(`${SERVICE_NAME}::createSpecies::${action.label}::creating species from ${JSON.stringify(speciesData)}`)
+    let response = await speciesService.createSpecies(speciesData)
+    let responseData = response.data
+    log.info(`${SERVICE_NAME}::createSpecies::${action.label}::created:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(namespace, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createSpecies, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(namespace, action.label, savedAction)
+    var speciesList = localStorage.getItem(namespace, 'speciesList')
+    if (!speciesList) {
+        speciesList = []
+    }
+    speciesList.push(responseData.ProductNo)
+    localStorage.setItem(namespace, 'speciesList', speciesList)
 }
 
 

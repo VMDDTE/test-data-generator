@@ -6,6 +6,7 @@ const localStorage = require('../service/local-storage-service')
 const organisationService = require('../service/organisation-service')
 const userService = require('../service/user-service')
 const productService = require('../service/product-service')
+const speciesService = require('../service/species-service')
 const log = global.log
 const CONTROLLER_NAME = 'generate-controller'
 
@@ -54,6 +55,7 @@ async function tearDownEntities(namespace) {
     await tearDownVetPractice(namespace)
     await tearDownVet(namespace)
     await tearDownProduct(namespace)
+    await tearDownSpecies(namespace)
 }
 
 async function tearDownLocalStorage(namespace) {
@@ -90,6 +92,25 @@ async function tearDownProduct(namespace) {
         for (productNo of productList) {
             log.info(`${CONTROLLER_NAME}::about to teardown product with product no. ${productNo}`)
             await productService.deleteProduct(productNo)
+        }
+    }
+}
+
+async function tearDownSpecies(namespace) {
+    log.info(`${CONTROLLER_NAME}::tearDownSpecies:${namespace}`)
+    const speciesList = localStorage.getItem(namespace, 'speciesList')
+    var deleted = []
+    if (speciesList) {
+        for (productNo of speciesList) {
+            if (deleted.indexOf(productNo) == -1) {
+                log.info(`${CONTROLLER_NAME}::about to teardown all species for product with product no. ${productNo}`)
+                // Will delete ALL species for a specific product.
+                await speciesService.deleteSpecies(productNo)
+                // Track the species we have deleted for each product, in case the test data contained
+                // multiple species for the same product. Otherwise, we will try and delete species for a
+                // product that have already been deleted, causing an error.
+                deleted.push(productNo)
+            }
         }
     }
 }
