@@ -56,6 +56,7 @@ async function tearDownEntities(namespace) {
     await tearDownVet(namespace)
     await tearDownProduct(namespace)
     await tearDownSpecies(namespace)
+    await tearDownManufacturer(namespace)
 }
 
 async function tearDownLocalStorage(namespace) {
@@ -114,6 +115,18 @@ async function tearDownSpecies(namespace) {
         }
     }
 }
+
+async function tearDownManufacturer(namespace) {
+    log.info(`${CONTROLLER_NAME}::tearDownManufacturer:${namespace}`)
+    const manufacturerIdList = localStorage.getItem(namespace, 'manufacturerIdList')
+    if (manufacturerIdList) {
+        for (id of manufacturerIdList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown manufacturer with id ${id}`)
+            await organisationService.deleteOrganisation(id)
+        }
+    }
+}
+
 
 module.exports.generate = generate
 module.exports.tearDown = tearDown

@@ -29,6 +29,10 @@ async function process(namespace, action) {
             log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIES}`)
             await createSpecies(namespace, action)
             break
+        case actionTypes.TYPE_MANUFACTURER:
+            log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_MANUFACTURER}`)
+            await createManufacturer(namespace, action)
+            break
         default:
             log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
             break
@@ -109,6 +113,25 @@ async function createSpecies(namespace, action) {
     }
     speciesList.push(responseData.ProductNo)
     localStorage.setItem(namespace, 'speciesList', speciesList)
+}
+
+async function createManufacturer(namespace, action) {
+    log.debug(`${SERVICE_NAME}::createManufacturer`)
+    let manufacturerData = action.data
+    log.info(`${SERVICE_NAME}::createManufacturer::${action.label}::creating manufacturer from ${JSON.stringify(manufacturerData)}`)
+    let response = await organisationService.createOrganisation(orgTypes.ORG_TYPE_MANUFACTURER, manufacturerData)
+    let responseData = response.data
+    log.info(`${SERVICE_NAME}::createManufacturer::${action.label}::created:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(namespace, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createManufacturer, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(namespace, action.label, savedAction)
+    var manufacturerIdList = localStorage.getItem(namespace, 'manufacturerIdList')
+    if (!manufacturerIdList) {
+        manufacturerIdList = []
+    }
+    manufacturerIdList.push(responseData.id)
+    localStorage.setItem(namespace, 'manufacturerIdList', manufacturerIdList)
 }
 
 
