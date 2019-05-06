@@ -10,7 +10,7 @@ async function generate(filename, namespace) {
         featureName = `${filename}-${namespace}`
     }
     console.log(`Running data generator using input [${dataFileName}] and featureName [${featureName}]`)
-    await generator.generate(`./test-data/${dataFileName}`, featureName)
+    await generator.generate(`./test-data/${dataFileName}`, featureName, namespace)
 }
 
 async function tearDown(filename, namespace) {
