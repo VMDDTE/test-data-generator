@@ -14,12 +14,10 @@ async function generate(filename, featureName, namespace) {
     log.info(`Generating ... ${featureName}`)
     localStorage.init()
     let rawdata = fs.readFileSync(filename)
-    var jsonData = ""
+    var jsonData = JSON.parse(rawdata)
     if (namespace) {
-        jsonData = JSON.parse(JSON.stringify(rawdata).replace("${namespace}", namespace))
-    } else {
-        jsonData = JSON.parse(rawdata)
-    }
+        jsonData = JSON.parse(JSON.stringify(jsonData).replace("${namespace}", namespace))
+    } 
     console.dir(jsonData)
     await processActions(featureName, jsonData)
 }
