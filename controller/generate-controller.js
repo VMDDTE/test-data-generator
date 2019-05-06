@@ -10,38 +10,41 @@ const speciesService = require('../service/species-service')
 const log = global.log
 const CONTROLLER_NAME = 'generate-controller'
 
-async function generate(filename, namespace) {
-    log.info(`Generating ... ${namespace}`)
+async function generate(filename, featureName, namespace) {
+    log.info(`Generating ... ${featureName}`)
     localStorage.init()
     let rawdata = fs.readFileSync(filename)
-    let jsonData = JSON.parse(rawdata)
-    await processActions(namespace, jsonData)
+    var jsonData = JSON.parse(rawdata)
+    if (namespace) {
+        jsonData = JSON.parse(JSON.stringify(jsonData).replace(/\$\{namespace\}/g, namespace))
+    } 
+    await processActions(featureName, jsonData)
 }
 
-async function tearDown(namespace) {
-    log.info(`Tearing down ... ${namespace}`)
-    await tearDownEntities(namespace)
-    await tearDownLocalStorage(namespace)
+async function tearDown(featureName) {
+    log.info(`Tearing down ... ${featureName}`)
+    await tearDownEntities(featureName)
+    await tearDownLocalStorage(featureName)
 }
 
-async function processActions(namespace, actionJson) {
+async function processActions(featureName, actionJson) {
     let actionRecords = actionJson.actions
 
     for (const action of actionRecords) {
         // Save a copy of each action for later reference
-        localStorage.setItem(namespace, action.label, action)
+        localStorage.setItem(featureName, action.label, action)
 
         switch (action.action) {
             case actions.ACTION_CREATE:
                 log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
-                await createActionProcessor.process(namespace, action)
+                await createActionProcessor.process(featureName, action)
                 break
             case actions.ACTION_UPDATE:
                 log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
                 break
             case actions.ACTION_ASSIGN_ROLE:
                 log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
-                await roleActionProcessor.process(namespace, action)
+                await roleActionProcessor.process(featureName, action)
                 break
             default:
                 log.debug(`${CONTROLLER_NAME}::unrecognised action ${action.action}`)
@@ -50,23 +53,23 @@ async function processActions(namespace, actionJson) {
     }
 }
 
-async function tearDownEntities(namespace) {
-    log.info(`${CONTROLLER_NAME}::tearDownEntities:${namespace}`)
-    await tearDownVetPractice(namespace)
-    await tearDownVet(namespace)
-    await tearDownProduct(namespace)
-    await tearDownSpecies(namespace)
-    await tearDownManufacturer(namespace)
+async function tearDownEntities(featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownEntities:${featureName}`)
+    await tearDownVetPractice(featureName)
+    await tearDownVet(featureName)
+    await tearDownProduct(featureName)
+    await tearDownSpecies(featureName)
+    await tearDownManufacturer(featureName)
 }
 
-async function tearDownLocalStorage(namespace) {
-    log.info(`${CONTROLLER_NAME}::tearDownLocalStorage:${namespace}`)
-    localStorage.clear(namespace)
+async function tearDownLocalStorage(featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownLocalStorage:${featureName}`)
+    localStorage.clear(featureName)
 }
 
-async function tearDownVetPractice(namespace) {
-    log.info(`${CONTROLLER_NAME}::tearDownVetPractice:${namespace}`)
-    const vetPracticeIdList = localStorage.getItem(namespace, 'vetPracticeIdList')
+async function tearDownVetPractice(featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownVetPractice:${featureName}`)
+    const vetPracticeIdList = localStorage.getItem(featureName, 'vetPracticeIdList')
     if (vetPracticeIdList) {
         for (id of vetPracticeIdList) {
             log.info(`${CONTROLLER_NAME}::about to teardown vet practice with id ${id}`)
@@ -75,9 +78,9 @@ async function tearDownVetPractice(namespace) {
     }
 }
 
-async function tearDownVet(namespace) {
-    log.info(`${CONTROLLER_NAME}::tearDownVet:${namespace}`)
-    const vetIdList = localStorage.getItem(namespace, 'vetIdList')
+async function tearDownVet(featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownVet:${featureName}`)
+    const vetIdList = localStorage.getItem(featureName, 'vetIdList')
     if (vetIdList) {
         for (id of vetIdList) {
             log.info(`${CONTROLLER_NAME}::about to teardown vet with id ${id}`)
@@ -86,9 +89,9 @@ async function tearDownVet(namespace) {
     }
 }
 
-async function tearDownProduct(namespace) {
-    log.info(`${CONTROLLER_NAME}::tearDownProduct:${namespace}`)
-    const productList = localStorage.getItem(namespace, 'productList')
+async function tearDownProduct(featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownProduct:${featureName}`)
+    const productList = localStorage.getItem(featureName, 'productList')
     if (productList) {
         for (productNo of productList) {
             log.info(`${CONTROLLER_NAME}::about to teardown product with product no. ${productNo}`)
@@ -97,9 +100,9 @@ async function tearDownProduct(namespace) {
     }
 }
 
-async function tearDownSpecies(namespace) {
-    log.info(`${CONTROLLER_NAME}::tearDownSpecies:${namespace}`)
-    const speciesList = localStorage.getItem(namespace, 'speciesList')
+async function tearDownSpecies(featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownSpecies:${featureName}`)
+    const speciesList = localStorage.getItem(featureName, 'speciesList')
     var deleted = []
     if (speciesList) {
         for (productNo of speciesList) {
@@ -116,9 +119,9 @@ async function tearDownSpecies(namespace) {
     }
 }
 
-async function tearDownManufacturer(namespace) {
-    log.info(`${CONTROLLER_NAME}::tearDownManufacturer:${namespace}`)
-    const manufacturerIdList = localStorage.getItem(namespace, 'manufacturerIdList')
+async function tearDownManufacturer(featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownManufacturer:${featureName}`)
+    const manufacturerIdList = localStorage.getItem(featureName, 'manufacturerIdList')
     if (manufacturerIdList) {
         for (id of manufacturerIdList) {
             log.info(`${CONTROLLER_NAME}::about to teardown manufacturer with id ${id}`)
@@ -126,7 +129,6 @@ async function tearDownManufacturer(namespace) {
         }
     }
 }
-
 
 module.exports.generate = generate
 module.exports.tearDown = tearDown
