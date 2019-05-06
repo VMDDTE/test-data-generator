@@ -16,7 +16,7 @@ async function generate(filename, featureName, namespace) {
     let rawdata = fs.readFileSync(filename)
     var jsonData = JSON.parse(rawdata)
     if (namespace) {
-        jsonData = JSON.parse(JSON.stringify(jsonData).replace("${namespace}", namespace))
+        jsonData = JSON.parse(JSON.stringify(jsonData).replace(/\$\{namespace\}/g, namespace))
     } 
     console.dir(jsonData)
     await processActions(featureName, jsonData)
