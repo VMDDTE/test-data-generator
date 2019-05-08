@@ -6,7 +6,7 @@ const SERVICE_NAME = 'product-service'
 
 async function createProduct (payload) {
   try {
-    let url = ADMIN_BASE_API_URL + '/products/product'
+    let url = ADMIN_BASE_API_URL + '/products'
     log.info(`${SERVICE_NAME}::createProduct:url:${url}`)
     return axios.post(url, payload)
   } catch (error) {

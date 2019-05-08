@@ -6,7 +6,7 @@ const SERVICE_NAME = 'species-service'
 
 async function createSpecies (payload) {
   try {
-    let url = ADMIN_BASE_API_URL + '/species/product'
+    let url = ADMIN_BASE_API_URL + '/species'
     log.info(`${SERVICE_NAME}::createSpecies:url:${url}`)
     return axios.post(url, payload)
   } catch (error) {
