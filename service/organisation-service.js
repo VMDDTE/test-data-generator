@@ -6,7 +6,7 @@ const SERVICE_NAME = 'organisation-service'
 
 async function createOrganisation (orgType, payload) {
   try {
-    let url = ADMIN_BASE_API_URL + '/organisations/organisations/' + orgType
+    let url = ADMIN_BASE_API_URL + '/organisations/create/' + orgType
     log.info(`${SERVICE_NAME}::createOrganisation:url:${url}`)
     return axios.post(url, payload)
   } catch (error) {
@@ -16,7 +16,7 @@ async function createOrganisation (orgType, payload) {
 
 async function updateOrganisation (payload) {
   try {
-    let url = ADMIN_BASE_API_URL + '/organisations/vetPractices'
+    let url = ADMIN_BASE_API_URL + '/organisations/updateVetPractice'
     log.info(`${SERVICE_NAME}::updateOrganisation:url:${url}`)
     return axios.put(url, payload)
   } catch (error) {

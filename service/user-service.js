@@ -6,7 +6,7 @@ const SERVICE_NAME = 'user-service'
 
 async function createUser (userType, payload) {
   try {
-    let url = ADMIN_BASE_API_URL + '/users/users/' + userType
+    let url = ADMIN_BASE_API_URL + '/users/' + userType
     log.info(`${SERVICE_NAME}::createUser:url:${url}`)
     return axios.post(url, payload)
   } catch (error) {
