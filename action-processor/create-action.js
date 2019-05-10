@@ -54,7 +54,7 @@ async function createVetPractice(namespace, action) {
     if (!vetPracticeIdList) {
         vetPracticeIdList = []
     }
-    vetPracticeIdList.push(responseData.id)
+    vetPracticeIdList.push(responseData.Id)
     localStorage.setItem(namespace, 'vetPracticeIdList', vetPracticeIdList)
 }
 
@@ -130,7 +130,7 @@ async function createManufacturer(namespace, action) {
     if (!manufacturerIdList) {
         manufacturerIdList = []
     }
-    manufacturerIdList.push(responseData.id)
+    manufacturerIdList.push(responseData.Id)
     localStorage.setItem(namespace, 'manufacturerIdList', manufacturerIdList)
 }
 
