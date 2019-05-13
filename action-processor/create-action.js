@@ -80,7 +80,7 @@ async function createVet(featureName, action) {
     if (vetData.Email == '{usergen}' && responseData.Email) {
         let email = responseData.Email
         log.info(`${SERVICE_NAME}::createVet::${action.label}::saving test user ${email}`)
-        localStorage.setItem(featureName, 'testuser', { 'email': email, 'password': constants.DEFAULT_USER_PASSWORD })
+        localStorage.setItem(featureName, 'testuser', { 'Email': email, 'Password': constants.DEFAULT_USER_PASSWORD })
     }
 }
 
