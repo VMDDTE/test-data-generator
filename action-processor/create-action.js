@@ -55,8 +55,8 @@ async function createVetPractice(featureName, action) {
     if (!vetPracticeIdList) {
         vetPracticeIdList = []
     }
-    vetPracticeIdList.push(responseData.id)
-    localStorage.setItem(featureName, 'vetPracticeIdList', vetPracticeIdList)
+    vetPracticeIdList.push(responseData.Id)
+    localStorage.setItem(namespace, 'vetPracticeIdList', vetPracticeIdList)
 }
 
 async function createVet(featureName, action) {
@@ -137,8 +137,8 @@ async function createManufacturer(featureName, action) {
     if (!manufacturerIdList) {
         manufacturerIdList = []
     }
-    manufacturerIdList.push(responseData.id)
-    localStorage.setItem(featureName, 'manufacturerIdList', manufacturerIdList)
+    manufacturerIdList.push(responseData.Id)
+    localStorage.setItem(namespace, 'manufacturerIdList', manufacturerIdList)
 }
 
 
