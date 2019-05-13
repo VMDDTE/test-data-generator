@@ -56,7 +56,7 @@ async function createVetPractice(featureName, action) {
         vetPracticeIdList = []
     }
     vetPracticeIdList.push(responseData.Id)
-    localStorage.setItem(namespace, 'vetPracticeIdList', vetPracticeIdList)
+    localStorage.setItem(featureName, 'vetPracticeIdList', vetPracticeIdList)
 }
 
 async function createVet(featureName, action) {
@@ -138,7 +138,7 @@ async function createManufacturer(featureName, action) {
         manufacturerIdList = []
     }
     manufacturerIdList.push(responseData.Id)
-    localStorage.setItem(namespace, 'manufacturerIdList', manufacturerIdList)
+    localStorage.setItem(featureName, 'manufacturerIdList', manufacturerIdList)
 }
 
 
