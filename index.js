@@ -34,7 +34,7 @@ async function getTestUser(filename, namespace) {
     }
     const testuser = localStorage.getItem(featureName, 'testuser')
     if (testuser) {
-        console.log(`Running with Test User [${testuser.userId}] ...`)
+        console.log(`Running with Test User [${testuser.Email}] ...`)
         return testuser
     }
     console.log('Test User not defined')
