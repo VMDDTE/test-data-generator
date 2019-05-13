@@ -6,6 +6,7 @@ const localStorage = require('../service/local-storage-service')
 const userService = require('../service/user-service')
 const productService = require('../service/product-service')
 const speciesService = require('../service/species-service')
+const constants = require('../common/constants')
 const log = global.log
 
 const SERVICE_NAME = 'create-action-processor'
@@ -76,14 +77,10 @@ async function createVet(featureName, action) {
     vetIdList.push(responseData.Id)
     localStorage.setItem(featureName, 'vetIdList', vetIdList)
 
-    let userId = responseData.UserId
-    let password = responseData.Password
-    if (userId && password) {
-        let user = {
-            'userId': userId,
-            'password': password
-        }
-        localStorage.setItem(featureName, 'testuser', user)
+    if (vetData.Email == '{usergen}' && responseData.Email) {
+        let email = responseData.Email
+        log.info(`${SERVICE_NAME}::createVet::${action.label}::saving test user ${email}`)
+        localStorage.setItem(featureName, 'testuser', { 'email': email, 'password': constants.DEFAULT_USER_PASSWORD })
     }
 }
 
