@@ -77,7 +77,7 @@ async function createVet(featureName, action) {
     vetIdList.push(responseData.Id)
     localStorage.setItem(featureName, 'vetIdList', vetIdList)
 
-    if (vetData.Email == '{usergen}' && responseData.Email) {
+    if (action.testUser == 'true' && responseData.Email) {
         let email = responseData.Email
         log.info(`${SERVICE_NAME}::createVet::${action.label}::saving test user ${email}`)
         localStorage.setItem(featureName, 'testuser', { 'Email': email, 'Password': constants.DEFAULT_USER_PASSWORD })
