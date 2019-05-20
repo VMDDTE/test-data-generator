@@ -6,6 +6,7 @@ const localStorage = require('../service/local-storage-service')
 const userService = require('../service/user-service')
 const productService = require('../service/product-service')
 const speciesService = require('../service/species-service')
+const jobService = require('../service/job-service')
 const log = global.log
 
 const SERVICE_NAME = 'create-action-processor'
@@ -32,6 +33,10 @@ async function process(namespace, action) {
         case actionTypes.TYPE_MANUFACTURER:
             log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_MANUFACTURER}`)
             await createManufacturer(namespace, action)
+            break
+        case actionTypes.TYPE_SPECIAL_IMPORT_APPLICATION:
+            log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIAL_IMPORT_APPLICATION}`)
+            await createSpecialImportApplication(namespace, action)
             break
         default:
             log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
@@ -134,5 +139,25 @@ async function createManufacturer(namespace, action) {
     localStorage.setItem(namespace, 'manufacturerIdList', manufacturerIdList)
 }
 
+async function createSpecialImportApplication(namespace, action) {
+    log.debug(`${SERVICE_NAME}::createSpecialImportApplication`)
+    let specialImportApplicationData = action.data
+    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::creating specialImportApplication from ${JSON.stringify(specialImportApplicationData)}`)
+    let response = await jobService.createJob('import', 'SpecialImports')
+    let responseData = response.data
+    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::created:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(namespace, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createSpecialImportApplication, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(namespace, action.label, savedAction)
+    /*
+    var specialImportApplicationIdList = localStorage.getItem(namespace, 'specialImportApplicationIdList')
+    if (!specialImportApplicationIdList) {
+        specialImportApplicationIdList = []
+    }
+    specialImportApplicationIdList.push(responseData.id)
+    localStorage.setItem(namespace, 'specialImportApplicationIdList', specialImportApplicationIdList)
+    */
+}
 
 module.exports.process = process
