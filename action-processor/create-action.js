@@ -7,32 +7,33 @@ const userService = require('../service/user-service')
 const productService = require('../service/product-service')
 const speciesService = require('../service/species-service')
 const jobService = require('../service/job-service')
+const constants = require('../common/constants')
 const log = global.log
 
 const SERVICE_NAME = 'create-action-processor'
 
-async function process(namespace, action) {
-    log.debug(`${SERVICE_NAME}::${namespace}::process`)
+async function process(featureName, action) {
+    log.debug(`${SERVICE_NAME}::${featureName}::process`)
     switch (action.type) {
         case actionTypes.TYPE_VET:
             log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_VET}`)
-            await createVet(namespace, action)
+            await createVet(featureName, action)
             break
         case actionTypes.TYPE_VET_PRACTICE_RECORD:
             log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_VET_PRACTICE_RECORD}`)
-            await createVetPractice(namespace, action)
+            await createVetPractice(featureName, action)
             break
         case actionTypes.TYPE_PRODUCT:
             log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_PRODUCT}`)
-            await createProduct(namespace, action)
+            await createProduct(featureName, action)
             break
         case actionTypes.TYPE_SPECIES:
             log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIES}`)
-            await createSpecies(namespace, action)
+            await createSpecies(featureName, action)
             break
         case actionTypes.TYPE_MANUFACTURER:
             log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_MANUFACTURER}`)
-            await createManufacturer(namespace, action)
+            await createManufacturer(featureName, action)
             break
         case actionTypes.TYPE_SPECIAL_IMPORT_APPLICATION:
             log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIAL_IMPORT_APPLICATION}`)
@@ -44,99 +45,105 @@ async function process(namespace, action) {
     }
 }
 
-async function createVetPractice(namespace, action) {
+async function createVetPractice(featureName, action) {
     log.debug(`${SERVICE_NAME}::createVetPractice`)
     let vetPracticeData = action.data
     log.info(`${SERVICE_NAME}::createVetPractice::${action.label}::creating vet practice from ${JSON.stringify(vetPracticeData)}`)
     let response = await organisationService.createOrganisation(orgTypes.ORG_TYPE_VET_PRACTICE, vetPracticeData)
     let responseData = response.data
     log.info(`${SERVICE_NAME}::createVetPractice::${action.label}::created:${JSON.stringify(responseData)}`)
-    var savedAction = localStorage.getItem(namespace, action.label)
+    var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createVetPractice, saved action ${JSON.stringify(savedAction)}`)
-    localStorage.setItem(namespace, action.label, savedAction)
-    var vetPracticeIdList = localStorage.getItem(namespace, 'vetPracticeIdList')
+    localStorage.setItem(featureName, action.label, savedAction)
+    var vetPracticeIdList = localStorage.getItem(featureName, 'vetPracticeIdList')
     if (!vetPracticeIdList) {
         vetPracticeIdList = []
     }
-    vetPracticeIdList.push(responseData.id)
-    localStorage.setItem(namespace, 'vetPracticeIdList', vetPracticeIdList)
+    vetPracticeIdList.push(responseData.Id)
+    localStorage.setItem(featureName, 'vetPracticeIdList', vetPracticeIdList)
 }
 
-async function createVet(namespace, action) {
+async function createVet(featureName, action) {
     log.debug(`${SERVICE_NAME}::createVet`)
     let vetData = action.data
     log.info(`${SERVICE_NAME}::createVet::${action.label}::creating vet from ${JSON.stringify(vetData)}`)
     let response = await userService.createUser(userTypes.USER_TYPE_VET, vetData)
     let responseData = response.data
     log.info(`${SERVICE_NAME}::createVet::${action.label}::created:${JSON.stringify(responseData)}`)
-    var savedAction = localStorage.getItem(namespace, action.label)
+    var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createVet, saved action ${JSON.stringify(savedAction)}`)
-    localStorage.setItem(namespace, action.label, savedAction)
-    var vetIdList = localStorage.getItem(namespace, 'vetIdList')
+    localStorage.setItem(featureName, action.label, savedAction)
+    var vetIdList = localStorage.getItem(featureName, 'vetIdList')
     if (!vetIdList) {
         vetIdList = []
     }
     vetIdList.push(responseData.Id)
-    localStorage.setItem(namespace, 'vetIdList', vetIdList)
+    localStorage.setItem(featureName, 'vetIdList', vetIdList)
+
+    if (action.testUser == 'true' && responseData.Email) {
+        let email = responseData.Email
+        log.info(`${SERVICE_NAME}::createVet::${action.label}::saving test user ${email}`)
+        localStorage.setItem(featureName, 'testuser', { 'Email': email, 'Password': constants.DEFAULT_USER_PASSWORD })
+    }
 }
 
-async function createProduct(namespace, action) {
+async function createProduct(featureName, action) {
     log.debug(`${SERVICE_NAME}::createProduct`)
     let productData = action.data
     log.info(`${SERVICE_NAME}::createProduct::${action.label}::creating product from ${JSON.stringify(productData)}`)
     let response = await productService.createProduct(productData)
     let responseData = response.data
     log.info(`${SERVICE_NAME}::createProduct::${action.label}::created:${JSON.stringify(responseData)}`)
-    var savedAction = localStorage.getItem(namespace, action.label)
+    var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createProduct, saved action ${JSON.stringify(savedAction)}`)
-    localStorage.setItem(namespace, action.label, savedAction)
-    var productList = localStorage.getItem(namespace, 'productList')
+    localStorage.setItem(featureName, action.label, savedAction)
+    var productList = localStorage.getItem(featureName, 'productList')
     if (!productList) {
         productList = []
     }
     productList.push(responseData.ProductNo)
-    localStorage.setItem(namespace, 'productList', productList)
+    localStorage.setItem(featureName, 'productList', productList)
 }
 
-async function createSpecies(namespace, action) {
+async function createSpecies(featureName, action) {
     log.debug(`${SERVICE_NAME}::createSpecies`)
     let speciesData = action.data
     log.info(`${SERVICE_NAME}::createSpecies::${action.label}::creating species from ${JSON.stringify(speciesData)}`)
     let response = await speciesService.createSpecies(speciesData)
     let responseData = response.data
     log.info(`${SERVICE_NAME}::createSpecies::${action.label}::created:${JSON.stringify(responseData)}`)
-    var savedAction = localStorage.getItem(namespace, action.label)
+    var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createSpecies, saved action ${JSON.stringify(savedAction)}`)
-    localStorage.setItem(namespace, action.label, savedAction)
-    var speciesList = localStorage.getItem(namespace, 'speciesList')
+    localStorage.setItem(featureName, action.label, savedAction)
+    var speciesList = localStorage.getItem(featureName, 'speciesList')
     if (!speciesList) {
         speciesList = []
     }
     speciesList.push(responseData.ProductNo)
-    localStorage.setItem(namespace, 'speciesList', speciesList)
+    localStorage.setItem(featureName, 'speciesList', speciesList)
 }
 
-async function createManufacturer(namespace, action) {
+async function createManufacturer(featureName, action) {
     log.debug(`${SERVICE_NAME}::createManufacturer`)
     let manufacturerData = action.data
     log.info(`${SERVICE_NAME}::createManufacturer::${action.label}::creating manufacturer from ${JSON.stringify(manufacturerData)}`)
     let response = await organisationService.createOrganisation(orgTypes.ORG_TYPE_MANUFACTURER, manufacturerData)
     let responseData = response.data
     log.info(`${SERVICE_NAME}::createManufacturer::${action.label}::created:${JSON.stringify(responseData)}`)
-    var savedAction = localStorage.getItem(namespace, action.label)
+    var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createManufacturer, saved action ${JSON.stringify(savedAction)}`)
-    localStorage.setItem(namespace, action.label, savedAction)
-    var manufacturerIdList = localStorage.getItem(namespace, 'manufacturerIdList')
+    localStorage.setItem(featureName, action.label, savedAction)
+    var manufacturerIdList = localStorage.getItem(featureName, 'manufacturerIdList')
     if (!manufacturerIdList) {
         manufacturerIdList = []
     }
-    manufacturerIdList.push(responseData.id)
-    localStorage.setItem(namespace, 'manufacturerIdList', manufacturerIdList)
+    manufacturerIdList.push(responseData.Id)
+    localStorage.setItem(featureName, 'manufacturerIdList', manufacturerIdList)
 }
 
 async function createSpecialImportApplication(namespace, action) {

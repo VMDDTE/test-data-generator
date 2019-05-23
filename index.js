@@ -27,6 +27,21 @@ async function clearAll() {
     localStorage.clearAll()
 }
 
+async function getTestUser(filename, namespace) {
+    var featureName = filename
+    if (namespace) {
+        featureName = `${filename}-${namespace}`
+    }
+    const testuser = localStorage.getItem(featureName, 'testuser')
+    if (testuser) {
+        console.log(`Running with Test User [${testuser.Email}] ...`)
+        return testuser
+    }
+    console.log('Test User not defined')
+    return null
+}
+
 module.exports.generate = generate
 module.exports.tearDown = tearDown
 module.exports.clearAll = clearAll
+module.exports.getTestUser = getTestUser

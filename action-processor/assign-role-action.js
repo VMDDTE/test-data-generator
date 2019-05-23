@@ -30,7 +30,7 @@ async function createRole(namespace, action) {
     let savedOrgAction = localStorage.getItem(namespace, orgIdLabel)
     let savedRoleProperties = localStorage.getItem(namespace, roleLabel)
     let response = savedOrgAction.response
-    let orgId = response.id
+    let orgId = response.Id
 
     var userList = []
     for (const userLabel of users) {
