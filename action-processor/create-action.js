@@ -7,6 +7,7 @@ const userService = require('../service/user-service')
 const productService = require('../service/product-service')
 const speciesService = require('../service/species-service')
 const jobService = require('../service/job-service')
+const sisService = require('../service/sis-service')
 const constants = require('../common/constants')
 const log = global.log
 
@@ -18,6 +19,10 @@ async function process(featureName, action) {
         case actionTypes.TYPE_VET:
             log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_VET}`)
             await createVet(featureName, action)
+            break
+        case actionTypes.TYPE_INTERNAL_USER:
+            log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_INTERNAL_USER}`)
+            await createInternalUser(featureName, action)
             break
         case actionTypes.TYPE_VET_PRACTICE_RECORD:
             log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_VET_PRACTICE_RECORD}`)
@@ -37,7 +42,7 @@ async function process(featureName, action) {
             break
         case actionTypes.TYPE_SPECIAL_IMPORT_APPLICATION:
             log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIAL_IMPORT_APPLICATION}`)
-            await createSpecialImportApplication(namespace, action)
+            await createSpecialImportApplication(featureName, action)
             break
         default:
             log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
@@ -87,6 +92,25 @@ async function createVet(featureName, action) {
         log.info(`${SERVICE_NAME}::createVet::${action.label}::saving test user ${email}`)
         localStorage.setItem(featureName, 'testuser', { 'Email': email, 'Password': constants.DEFAULT_USER_PASSWORD })
     }
+}
+
+async function createInternalUser(featureName, action) {
+    log.debug(`${SERVICE_NAME}::createInternalUser`)
+    let data = action.data
+    log.info(`${SERVICE_NAME}::createInternalUser::${action.label}::creating internal user from ${JSON.stringify(data)}`)
+    let response = await userService.createUser(userTypes.USER_TYPE_INTERNAL, data)
+    let responseData = response.data
+    log.info(`${SERVICE_NAME}::createInternalUser::${action.label}::created:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(featureName, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createInternalUser, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(featureName, action.label, savedAction)
+    var internalUsersIdList = localStorage.getItem(featureName, 'internalUsersIdList')
+    if (!internalUsersIdList) {
+        internalUsersIdList = []
+    }
+    internalUsersIdList.push(responseData.Id)
+    localStorage.setItem(featureName, 'internalUsersIdList', internalUsersIdList)
 }
 
 async function createProduct(featureName, action) {
@@ -150,21 +174,42 @@ async function createSpecialImportApplication(namespace, action) {
     log.debug(`${SERVICE_NAME}::createSpecialImportApplication`)
     let specialImportApplicationData = action.data
     log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::creating specialImportApplication from ${JSON.stringify(specialImportApplicationData)}`)
+
+    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::about to create job`)
     let response = await jobService.createJob('import', 'SpecialImports')
     let responseData = response.data
     log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(namespace, action.label)
-    savedAction.response = responseData
+    savedAction.createJobResponse = responseData
     log.debug(`${SERVICE_NAME}::createSpecialImportApplication, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(namespace, action.label, savedAction)
-    /*
+    let jobIdentifier = responseData.Identifier
+    let jobId = responseData.Id
+
+    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::about to update job state`)
+    response = await jobService.updateJobStatus(jobIdentifier, specialImportApplicationData.JobState)
+    responseData = response.data
+    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::created:${JSON.stringify(responseData)}`)
+    savedAction = localStorage.getItem(namespace, action.label)
+    savedAction.updateJobStateResponse = responseData
+    log.debug(`${SERVICE_NAME}::createSpecialImportApplication, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(namespace, action.label, savedAction)
+
+    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::about to update SIS record`)
+    response = await sisService.update(jobId, specialImportApplicationData.JobUpdatedBy, specialImportApplicationData)
+    responseData = response.data
+    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::updated:${JSON.stringify(responseData)}`)
+    savedAction = localStorage.getItem(namespace, action.label)
+    savedAction.updateSisRecordResponse = responseData
+    log.debug(`${SERVICE_NAME}::createSpecialImportApplication, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(namespace, action.label, savedAction)
+
     var specialImportApplicationIdList = localStorage.getItem(namespace, 'specialImportApplicationIdList')
     if (!specialImportApplicationIdList) {
         specialImportApplicationIdList = []
     }
-    specialImportApplicationIdList.push(responseData.id)
+    specialImportApplicationIdList.push(jobIdentifier)
     localStorage.setItem(namespace, 'specialImportApplicationIdList', specialImportApplicationIdList)
-    */
 }
 
 module.exports.process = process

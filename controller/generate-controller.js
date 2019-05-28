@@ -61,6 +61,7 @@ async function tearDownEntities(featureName) {
     await tearDownProduct(featureName)
     await tearDownSpecies(featureName)
     await tearDownManufacturer(featureName)
+    await tearDownSpecialImportApplication(featureName)
 }
 
 async function tearDownLocalStorage(featureName) {
@@ -133,11 +134,11 @@ async function tearDownManufacturer(featureName) {
 
 async function tearDownSpecialImportApplication(featureName) {
     log.info(`${CONTROLLER_NAME}::tearDownSpecialImportApplication:${featureName}`)
-    const jobIdList = localStorage.getItem(featureName, 'jobIdList')
-    if (jobIdList) {
-        for (id of jobIdList) {
-            log.info(`${CONTROLLER_NAME}::about to teardown special-import-application with id ${id}`)
-            await jobService.deleteJob(id)
+    const jobIdentifierList = localStorage.getItem(featureName, 'specialImportApplicationIdList')
+    if (jobIdentifierList) {
+        for (identifier of jobIdentifierList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown special-import-application with id ${identifier}`)
+            await jobService.deleteJob(identifier)
         }
     }
 }

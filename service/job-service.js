@@ -18,7 +18,7 @@ async function updateJobStatus (jobIdentifier, newStatus) {
   try {
     let url = `${JOB_API_URL}/updateStatus/${jobIdentifier}/${newStatus}`
     log.info(`${SERVICE_NAME}::updateJobStatus:url:${url}`)
-    return axios.put(url, payload)
+    return axios.put(url)
   } catch (error) {
     log.error(error)
   }
