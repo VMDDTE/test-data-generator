@@ -7,6 +7,7 @@ const organisationService = require('../service/organisation-service')
 const userService = require('../service/user-service')
 const productService = require('../service/product-service')
 const speciesService = require('../service/species-service')
+const jobService = require('../service/job-service')
 const log = global.log
 const CONTROLLER_NAME = 'generate-controller'
 
@@ -60,6 +61,7 @@ async function tearDownEntities(featureName) {
     await tearDownProduct(featureName)
     await tearDownSpecies(featureName)
     await tearDownManufacturer(featureName)
+    await tearDownSpecialImportApplication(featureName)
 }
 
 async function tearDownLocalStorage(featureName) {
@@ -126,6 +128,17 @@ async function tearDownManufacturer(featureName) {
         for (id of manufacturerIdList) {
             log.info(`${CONTROLLER_NAME}::about to teardown manufacturer with id ${id}`)
             await organisationService.deleteOrganisation(id)
+        }
+    }
+}
+
+async function tearDownSpecialImportApplication(featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownSpecialImportApplication:${featureName}`)
+    const jobIdentifierList = localStorage.getItem(featureName, 'specialImportApplicationIdList')
+    if (jobIdentifierList) {
+        for (identifier of jobIdentifierList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown special-import-application with id ${identifier}`)
+            await jobService.deleteJob(identifier)
         }
     }
 }
