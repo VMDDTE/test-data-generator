@@ -14,7 +14,7 @@ async function update (jobId, updatedBy, payload) {
         return response.data
     })
     .catch(error => {
-        log.error(`sis-service::update::error: ${error}`)
+        log.error(`${SERVICE_NAME}::update:error: ${error}`)
     })
 }
 

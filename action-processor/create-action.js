@@ -54,8 +54,7 @@ async function createVetPractice(featureName, action) {
     log.debug(`${SERVICE_NAME}::createVetPractice`)
     let vetPracticeData = action.data
     log.info(`${SERVICE_NAME}::createVetPractice::${action.label}::creating vet practice from ${JSON.stringify(vetPracticeData)}`)
-    let response = await organisationService.createOrganisation(orgTypes.ORG_TYPE_VET_PRACTICE, vetPracticeData)
-    let responseData = response.data
+    let responseData = await organisationService.createOrganisation(orgTypes.ORG_TYPE_VET_PRACTICE, vetPracticeData)
     log.info(`${SERVICE_NAME}::createVetPractice::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
@@ -73,8 +72,7 @@ async function createVet(featureName, action) {
     log.debug(`${SERVICE_NAME}::createVet`)
     let vetData = action.data
     log.info(`${SERVICE_NAME}::createVet::${action.label}::creating vet from ${JSON.stringify(vetData)}`)
-    let response = await userService.createUser(userTypes.USER_TYPE_VET, vetData)
-    let responseData = response.data
+    let responseData = await userService.createUser(userTypes.USER_TYPE_VET, vetData)
     log.info(`${SERVICE_NAME}::createVet::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
@@ -98,8 +96,7 @@ async function createInternalUser(featureName, action) {
     log.debug(`${SERVICE_NAME}::createInternalUser`)
     let data = action.data
     log.info(`${SERVICE_NAME}::createInternalUser::${action.label}::creating internal user from ${JSON.stringify(data)}`)
-    let response = await userService.createUser(userTypes.USER_TYPE_INTERNAL, data)
-    let responseData = response.data
+    let responseData = await userService.createUser(userTypes.USER_TYPE_INTERNAL, data)
     log.info(`${SERVICE_NAME}::createInternalUser::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
@@ -117,8 +114,7 @@ async function createProduct(featureName, action) {
     log.debug(`${SERVICE_NAME}::createProduct`)
     let productData = action.data
     log.info(`${SERVICE_NAME}::createProduct::${action.label}::creating product from ${JSON.stringify(productData)}`)
-    let response = await productService.createProduct(productData)
-    let responseData = response.data
+    let responseData = await productService.createProduct(productData)
     log.info(`${SERVICE_NAME}::createProduct::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
@@ -136,8 +132,7 @@ async function createSpecies(featureName, action) {
     log.debug(`${SERVICE_NAME}::createSpecies`)
     let speciesData = action.data
     log.info(`${SERVICE_NAME}::createSpecies::${action.label}::creating species from ${JSON.stringify(speciesData)}`)
-    let response = await speciesService.createSpecies(speciesData)
-    let responseData = response.data
+    let responseData = await speciesService.createSpecies(speciesData)
     log.info(`${SERVICE_NAME}::createSpecies::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
@@ -155,8 +150,7 @@ async function createManufacturer(featureName, action) {
     log.debug(`${SERVICE_NAME}::createManufacturer`)
     let manufacturerData = action.data
     log.info(`${SERVICE_NAME}::createManufacturer::${action.label}::creating manufacturer from ${JSON.stringify(manufacturerData)}`)
-    let response = await organisationService.createOrganisation(orgTypes.ORG_TYPE_MANUFACTURER, manufacturerData)
-    let responseData = response.data
+    let responseData = await organisationService.createOrganisation(orgTypes.ORG_TYPE_MANUFACTURER, manufacturerData)
     log.info(`${SERVICE_NAME}::createManufacturer::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
@@ -176,8 +170,7 @@ async function createSpecialImportApplication(namespace, action) {
     log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::creating specialImportApplication from ${JSON.stringify(specialImportApplicationData)}`)
 
     log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::about to create job`)
-    let response = await jobService.createJob('import', 'SpecialImports')
-    let responseData = response.data
+    let responseData = await jobService.createJob('import', 'SpecialImports')
     log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(namespace, action.label)
     savedAction.createJobResponse = responseData
@@ -187,8 +180,7 @@ async function createSpecialImportApplication(namespace, action) {
     let jobId = responseData.Id
 
     log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::about to update job state`)
-    response = await jobService.updateJobStatus(jobIdentifier, specialImportApplicationData.JobState)
-    responseData = response.data
+    responseData = await jobService.updateJobStatus(jobIdentifier, specialImportApplicationData.JobState)
     log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::created:${JSON.stringify(responseData)}`)
     savedAction = localStorage.getItem(namespace, action.label)
     savedAction.updateJobStateResponse = responseData
@@ -196,8 +188,7 @@ async function createSpecialImportApplication(namespace, action) {
     localStorage.setItem(namespace, action.label, savedAction)
 
     log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::about to update SIS record`)
-    response = await sisService.update(jobId, specialImportApplicationData.JobUpdatedBy, specialImportApplicationData)
-    responseData = response.data
+    responseData = await sisService.update(jobId, specialImportApplicationData.JobUpdatedBy, specialImportApplicationData)
     log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::updated:${JSON.stringify(responseData)}`)
     savedAction = localStorage.getItem(namespace, action.label)
     savedAction.updateSisRecordResponse = responseData
