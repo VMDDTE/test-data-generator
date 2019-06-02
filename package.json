@@ -9,10 +9,20 @@
     "start-development:darwin:linux": "export NODE_ENV=development; node index.js",
     "start-local": "run-script-os",
     "start-local:win32": "SET NODE_ENV=local&& node index.js",
-    "start-local:darwin:linux": "export NODE_ENV=local; node index.js"
+    "start-local:darwin:linux": "export NODE_ENV=local; node index.js",
+    "lint": "standardx",
+    "lint-fix": "standardx --fix"
   },
   "author": "",
   "license": "ISC",
+  "eslintConfig": {
+    "rules": {
+      "indent": [
+        "error",
+        4
+      ]
+    }
+  },
   "dependencies": {
     "async": "^2.6.2",
     "axios": "^0.18.0",
@@ -23,5 +33,7 @@
     "run-script-os": "^1.0.5",
     "simple-node-logger": "^18.12.21"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "standardx": "^3.0.1"
+  }
 }
