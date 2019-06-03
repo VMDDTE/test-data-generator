@@ -1,12 +1,12 @@
 const log = global.log
 
-function validateAction(actionJson) {
+function validateAction (actionJson) {
     if (!actionJson) {
-        log.error("Action section can not be empty")
+        log.error('Action section can not be empty')
         return false
     }
     if (!actionJson.actions) {
-        log.error("Actions can not be empty")
+        log.error('Actions can not be empty')
         return false
     }
     let actions = actionJson.actions
@@ -24,7 +24,7 @@ function validateAction(actionJson) {
             log.error('Data can not be empty')
             return false
         }
-    });
+    })
     return true
 }
 

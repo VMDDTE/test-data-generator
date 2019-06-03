@@ -13,44 +13,44 @@ const log = global.log
 
 const SERVICE_NAME = 'create-action-processor'
 
-async function process(featureName, action) {
+async function process (featureName, action) {
     log.debug(`${SERVICE_NAME}::${featureName}::process`)
     switch (action.type) {
-        case actionTypes.TYPE_VET:
-            log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_VET}`)
-            await createVet(featureName, action)
-            break
-        case actionTypes.TYPE_INTERNAL_USER:
-            log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_INTERNAL_USER}`)
-            await createInternalUser(featureName, action)
-            break
-        case actionTypes.TYPE_VET_PRACTICE_RECORD:
-            log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_VET_PRACTICE_RECORD}`)
-            await createVetPractice(featureName, action)
-            break
-        case actionTypes.TYPE_PRODUCT:
-            log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_PRODUCT}`)
-            await createProduct(featureName, action)
-            break
-        case actionTypes.TYPE_SPECIES:
-            log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIES}`)
-            await createSpecies(featureName, action)
-            break
-        case actionTypes.TYPE_MANUFACTURER:
-            log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_MANUFACTURER}`)
-            await createManufacturer(featureName, action)
-            break
-        case actionTypes.TYPE_SPECIAL_IMPORT_APPLICATION:
-            log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIAL_IMPORT_APPLICATION}`)
-            await createSpecialImportApplication(featureName, action)
-            break
-        default:
-            log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
-            break
+    case actionTypes.TYPE_VET:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_VET}`)
+        await createVet(featureName, action)
+        break
+    case actionTypes.TYPE_INTERNAL_USER:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_INTERNAL_USER}`)
+        await createInternalUser(featureName, action)
+        break
+    case actionTypes.TYPE_VET_PRACTICE_RECORD:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_VET_PRACTICE_RECORD}`)
+        await createVetPractice(featureName, action)
+        break
+    case actionTypes.TYPE_PRODUCT:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_PRODUCT}`)
+        await createProduct(featureName, action)
+        break
+    case actionTypes.TYPE_SPECIES:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIES}`)
+        await createSpecies(featureName, action)
+        break
+    case actionTypes.TYPE_MANUFACTURER:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_MANUFACTURER}`)
+        await createManufacturer(featureName, action)
+        break
+    case actionTypes.TYPE_SPECIAL_IMPORT_APPLICATION:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIAL_IMPORT_APPLICATION}`)
+        await createSpecialImportApplication(featureName, action)
+        break
+    default:
+        log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
+        break
     }
 }
 
-async function createVetPractice(featureName, action) {
+async function createVetPractice (featureName, action) {
     log.debug(`${SERVICE_NAME}::createVetPractice`)
     let vetPracticeData = action.data
     log.info(`${SERVICE_NAME}::createVetPractice::${action.label}::creating vet practice from ${JSON.stringify(vetPracticeData)}`)
@@ -68,7 +68,7 @@ async function createVetPractice(featureName, action) {
     localStorage.setItem(featureName, 'vetPracticeIdList', vetPracticeIdList)
 }
 
-async function createVet(featureName, action) {
+async function createVet (featureName, action) {
     log.debug(`${SERVICE_NAME}::createVet`)
     let vetData = action.data
     log.info(`${SERVICE_NAME}::createVet::${action.label}::creating vet from ${JSON.stringify(vetData)}`)
@@ -85,14 +85,14 @@ async function createVet(featureName, action) {
     vetIdList.push(responseData.Id)
     localStorage.setItem(featureName, 'vetIdList', vetIdList)
 
-    if (action.testUser == 'true' && responseData.Email) {
+    if (action.testUser === 'true' && responseData.Email) {
         let email = responseData.Email
         log.info(`${SERVICE_NAME}::createVet::${action.label}::saving test user ${email}`)
         localStorage.setItem(featureName, 'testuser', { 'Email': email, 'Password': constants.DEFAULT_USER_PASSWORD })
     }
 }
 
-async function createInternalUser(featureName, action) {
+async function createInternalUser (featureName, action) {
     log.debug(`${SERVICE_NAME}::createInternalUser`)
     let data = action.data
     log.info(`${SERVICE_NAME}::createInternalUser::${action.label}::creating internal user from ${JSON.stringify(data)}`)
@@ -110,7 +110,7 @@ async function createInternalUser(featureName, action) {
     localStorage.setItem(featureName, 'internalUsersIdList', internalUsersIdList)
 }
 
-async function createProduct(featureName, action) {
+async function createProduct (featureName, action) {
     log.debug(`${SERVICE_NAME}::createProduct`)
     let productData = action.data
     log.info(`${SERVICE_NAME}::createProduct::${action.label}::creating product from ${JSON.stringify(productData)}`)
@@ -128,7 +128,7 @@ async function createProduct(featureName, action) {
     localStorage.setItem(featureName, 'productList', productList)
 }
 
-async function createSpecies(featureName, action) {
+async function createSpecies (featureName, action) {
     log.debug(`${SERVICE_NAME}::createSpecies`)
     let speciesData = action.data
     log.info(`${SERVICE_NAME}::createSpecies::${action.label}::creating species from ${JSON.stringify(speciesData)}`)
@@ -146,7 +146,7 @@ async function createSpecies(featureName, action) {
     localStorage.setItem(featureName, 'speciesList', speciesList)
 }
 
-async function createManufacturer(featureName, action) {
+async function createManufacturer (featureName, action) {
     log.debug(`${SERVICE_NAME}::createManufacturer`)
     let manufacturerData = action.data
     log.info(`${SERVICE_NAME}::createManufacturer::${action.label}::creating manufacturer from ${JSON.stringify(manufacturerData)}`)
@@ -164,7 +164,7 @@ async function createManufacturer(featureName, action) {
     localStorage.setItem(featureName, 'manufacturerIdList', manufacturerIdList)
 }
 
-async function createSpecialImportApplication(namespace, action) {
+async function createSpecialImportApplication (namespace, action) {
     log.debug(`${SERVICE_NAME}::createSpecialImportApplication`)
     let specialImportApplicationData = action.data
     log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::creating specialImportApplication from ${JSON.stringify(specialImportApplicationData)}`)
