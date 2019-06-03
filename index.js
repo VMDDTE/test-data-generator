@@ -3,7 +3,7 @@ global.log = require('./logging').setupLogging('data-generator', config)
 const generator = require('./controller/generate-controller')
 const localStorage = require('./service/local-storage-service')
 
-async function generate(filename, namespace) {
+async function generate (filename, namespace) {
     const dataFileName = `${filename}.json`
     var featureName = filename
     if (namespace) {
@@ -13,7 +13,7 @@ async function generate(filename, namespace) {
     await generator.generate(`./test-data/${dataFileName}`, featureName, namespace)
 }
 
-async function tearDown(filename, namespace) {
+async function tearDown (filename, namespace) {
     var featureName = filename
     if (namespace) {
         featureName = `${filename}-${namespace}`
@@ -22,12 +22,12 @@ async function tearDown(filename, namespace) {
     await generator.tearDown(featureName)
 }
 
-async function clearAll() {
+async function clearAll () {
     console.log(`clear all ...`)
     localStorage.clearAll()
 }
 
-async function getTestUser(filename, namespace) {
+async function getTestUser (filename, namespace) {
     var featureName = filename
     if (namespace) {
         featureName = `${filename}-${namespace}`

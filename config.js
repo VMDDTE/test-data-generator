@@ -1,29 +1,29 @@
 const settings = require('dotenv').config({ path: `./settings/${process.env.NODE_ENV}.env` })
 
 if (settings.error) {
-  throw settings.error
+    throw settings.error
 }
 
 const joi = require('joi')
 
 // Define config schema
 const schema = {
-  env: joi.string().valid('local', 'development', 'test', 'production').default('development')
+    env: joi.string().valid('local', 'development', 'test', 'production').default('development')
 }
 
 // Build config
 const config = {
-  env: process.env.NODE_ENV
+    env: process.env.NODE_ENV
 }
 
 // Validate config
 const result = joi.validate(config, schema, {
-  abortEarly: false
+    abortEarly: false
 })
 
 // Throw if config is invalid
 if (result.error) {
-  throw new Error(`The server config is invalid. ${result.error.message}`)
+    throw new Error(`The server config is invalid. ${result.error.message}`)
 }
 
 // Use the joi validated value
