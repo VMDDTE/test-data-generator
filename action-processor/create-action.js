@@ -6,6 +6,7 @@ const localStorage = require('../service/local-storage-service')
 const userService = require('../service/user-service')
 const productService = require('../service/product-service')
 const speciesService = require('../service/species-service')
+const speciesQualifyingService = require('../service/species-qualifying-service')
 const jobService = require('../service/job-service')
 const sisService = require('../service/sis-service')
 const constants = require('../common/constants')
@@ -35,6 +36,10 @@ async function process (featureName, action) {
     case actionTypes.TYPE_SPECIES:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIES}`)
         await createSpecies(featureName, action)
+        break
+    case actionTypes.TYPE_SPECIES_QUALIFYING:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIES_QUALIFYING}`)
+        await createSpeciesQualifying(featureName, action)
         break
     case actionTypes.TYPE_MANUFACTURER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_MANUFACTURER}`)
@@ -144,6 +149,24 @@ async function createSpecies (featureName, action) {
     }
     speciesList.push(responseData.ProductNo)
     localStorage.setItem(featureName, 'speciesList', speciesList)
+}
+
+async function createSpeciesQualifying (featureName, action) {
+    log.debug(`${SERVICE_NAME}::createSpeciesQualifying`)
+    let speciesQualifyingData = action.data
+    log.info(`${SERVICE_NAME}::createSpeciesQualifying::${action.label}::creating species qualifying from ${JSON.stringify(speciesQualifyingData)}`)
+    let responseData = await speciesQualifyingService.createSpecies(speciesQualifyingData)
+    log.info(`${SERVICE_NAME}::createSpeciesQualifying::${action.label}::created:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(featureName, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createSpeciesQualifying, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(featureName, action.label, savedAction)
+    var speciesQualifyingList = localStorage.getItem(featureName, 'speciesQualifyingList')
+    if (!speciesQualifyingList) {
+        speciesQualifyingList = []
+    }
+    speciesQualifyingList.push(responseData.Id)
+    localStorage.setItem(featureName, 'speciesQualifyingList', speciesQualifyingList)
 }
 
 async function createManufacturer (featureName, action) {

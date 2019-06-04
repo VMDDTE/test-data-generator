@@ -7,6 +7,7 @@ const organisationService = require('../service/organisation-service')
 const userService = require('../service/user-service')
 const productService = require('../service/product-service')
 const speciesService = require('../service/species-service')
+const speciesQualifyingService = require('../service/species-qualifying-service')
 const jobService = require('../service/job-service')
 const log = global.log
 const CONTROLLER_NAME = 'generate-controller'
@@ -60,6 +61,7 @@ async function tearDownEntities (featureName) {
     await tearDownVet(featureName)
     await tearDownProduct(featureName)
     await tearDownSpecies(featureName)
+    await tearDownSpeciesQualifying(featureName)
     await tearDownManufacturer(featureName)
     await tearDownSpecialImportApplication(featureName)
 }
@@ -117,6 +119,17 @@ async function tearDownSpecies (featureName) {
                 // product that have already been deleted, causing an error.
                 deleted.push(productNo)
             }
+        }
+    }
+}
+
+async function tearDownSpeciesQualifying (featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownSpeciesQualifying:${featureName}`)
+    const speciesQualifyingList = localStorage.getItem(featureName, 'speciesQualifyingList')
+    if (speciesQualifyingList) {
+        for (let id of speciesQualifyingList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown species qualifying with id ${id}`)
+            await speciesQualifyingService.deleteSpeciesQualifying(id)
         }
     }
 }
