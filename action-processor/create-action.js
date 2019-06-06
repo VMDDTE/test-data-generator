@@ -194,7 +194,7 @@ async function createSubstance (featureName, action) {
     if (!substanceList) {
         substanceList = []
     }
-    substanceList.push(responseData.Id)
+    substanceList.push(responseData.ProductNo)
     localStorage.setItem(featureName, 'substanceList', substanceList)
 }
 
