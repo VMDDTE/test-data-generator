@@ -6,6 +6,8 @@ const TYPE_VET_PRIMARY_ADMIN_ROLE = 'VetPrimaryAdminRole'
 const TYPE_PRODUCT = 'ProductRecord'
 const TYPE_SPECIES = 'SpeciesRecord'
 const TYPE_SPECIES_QUALIFYING = 'SpeciesQualifyingRecord'
+const TYPE_SUBSTANCE = 'SubstanceRecord'
+const TYPE_SUBSTANCE_QUALIFIER = 'SubstanceQualifierRecord'
 const TYPE_MANUFACTURER = 'ManufacturerRecord'
 const TYPE_SPECIAL_IMPORT_APPLICATION = 'SpecialImportApplicationRecord'
 
@@ -37,6 +39,8 @@ module.exports = {
     TYPE_PRODUCT,
     TYPE_SPECIES,
     TYPE_SPECIES_QUALIFYING,
+    TYPE_SUBSTANCE,
+    TYPE_SUBSTANCE_QUALIFIER,
     TYPE_MANUFACTURER,
     TYPE_SPECIAL_IMPORT_APPLICATION,
     ACTION_CREATE,

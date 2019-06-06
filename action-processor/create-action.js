@@ -7,6 +7,8 @@ const userService = require('../service/user-service')
 const productService = require('../service/product-service')
 const speciesService = require('../service/species-service')
 const speciesQualifyingService = require('../service/species-qualifying-service')
+const substanceService = require('../service/substance-service')
+const substanceQualifierService = require('../service/substance-qualifier-service')
 const jobService = require('../service/job-service')
 const sisService = require('../service/sis-service')
 const constants = require('../common/constants')
@@ -41,6 +43,15 @@ async function process (featureName, action) {
         log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIES_QUALIFYING}`)
         await createSpeciesQualifying(featureName, action)
         break
+    case actionTypes.TYPE_SUBSTANCE:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SUBSTANCE}`)
+        await createSubstance(featureName, action)
+        break
+    case actionTypes.TYPE_SUBSTANCE_QUALIFIER:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SUBSTANCE_QUALIFIER}`)
+        await createSubstanceQualifier(featureName, action)
+        break
+
     case actionTypes.TYPE_MANUFACTURER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_MANUFACTURER}`)
         await createManufacturer(featureName, action)
@@ -167,6 +178,42 @@ async function createSpeciesQualifying (featureName, action) {
     }
     speciesQualifyingList.push(responseData.Id)
     localStorage.setItem(featureName, 'speciesQualifyingList', speciesQualifyingList)
+}
+
+async function createSubstance (featureName, action) {
+    log.debug(`${SERVICE_NAME}::createSubstance`)
+    let substanceData = action.data
+    log.info(`${SERVICE_NAME}::createSubstance::${action.label}::creating substance from ${JSON.stringify(substanceData)}`)
+    let responseData = await substanceService.createSubstance(substanceData)
+    log.info(`${SERVICE_NAME}::createSubstance::${action.label}::created:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(featureName, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createSubstance, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(featureName, action.label, savedAction)
+    var substanceList = localStorage.getItem(featureName, 'substanceList')
+    if (!substanceList) {
+        substanceList = []
+    }
+    substanceList.push(responseData.ProductNo)
+    localStorage.setItem(featureName, 'substanceList', substanceList)
+}
+
+async function createSubstanceQualifier (featureName, action) {
+    log.debug(`${SERVICE_NAME}::createSubstanceQualifier`)
+    let substanceQualifierData = action.data
+    log.info(`${SERVICE_NAME}::createSubstanceQualifier::${action.label}::creating substance qualifier from ${JSON.stringify(substanceQualifierData)}`)
+    let responseData = await substanceQualifierService.createSubstanceQualifier(substanceQualifierData)
+    log.info(`${SERVICE_NAME}::createSubstanceQualifier::${action.label}::created:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(featureName, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createSubstanceQualifier, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(featureName, action.label, savedAction)
+    var substanceQualifierList = localStorage.getItem(featureName, 'substanceQualifierList')
+    if (!substanceQualifierList) {
+        substanceQualifierList = []
+    }
+    substanceQualifierList.push(responseData.Id)
+    localStorage.setItem(featureName, 'substanceQualifierList', substanceQualifierList)
 }
 
 async function createManufacturer (featureName, action) {

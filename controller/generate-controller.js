@@ -8,6 +8,8 @@ const userService = require('../service/user-service')
 const productService = require('../service/product-service')
 const speciesService = require('../service/species-service')
 const speciesQualifyingService = require('../service/species-qualifying-service')
+const substanceService = require('../service/substance-service')
+const substanceQualifierService = require('../service/substance-qualifier-service')
 const jobService = require('../service/job-service')
 const log = global.log
 const CONTROLLER_NAME = 'generate-controller'
@@ -62,6 +64,8 @@ async function tearDownEntities (featureName) {
     await tearDownProduct(featureName)
     await tearDownSpecies(featureName)
     await tearDownSpeciesQualifying(featureName)
+    await tearDownSubstance(featureName)
+    await tearDownSubstanceQualifier(featureName)
     await tearDownManufacturer(featureName)
     await tearDownSpecialImportApplication(featureName)
 }
@@ -134,6 +138,35 @@ async function tearDownSpeciesQualifying (featureName) {
     }
 }
 
+async function tearDownSubstance (featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownSubstance:${featureName}`)
+    const substanceList = localStorage.getItem(featureName, 'substanceList')
+    var deleted = []
+    if (substanceList) {
+        for (let productNo of substanceList) {
+            if (deleted.indexOf(productNo) === -1) {
+                log.info(`${CONTROLLER_NAME}::about to teardown all substances for product with product no. ${productNo}`)
+                // Will delete ALL substance for a specific product.
+                await substanceService.deleteSubstances(productNo)
+                // Track the substance we have deleted for each product, in case the test data contained
+                // multiple substance for the same product. Otherwise, we will try and delete substance for a
+                // product that have already been deleted, causing an error.
+                deleted.push(productNo)
+            }
+        }
+    }
+}
+
+async function tearDownSubstanceQualifier (featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownSubstanceQualifier:${featureName}`)
+    const substanceQualifierList = localStorage.getItem(featureName, 'substanceQualifierList')
+    if (substanceQualifierList) {
+        for (let id of substanceQualifierList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown substance qualifier with id ${id}`)
+            await substanceQualifierService.deleteSubstanceQualifier(id)
+        }
+    }
+}
 async function tearDownManufacturer (featureName) {
     log.info(`${CONTROLLER_NAME}::tearDownManufacturer:${featureName}`)
     const manufacturerIdList = localStorage.getItem(featureName, 'manufacturerIdList')
