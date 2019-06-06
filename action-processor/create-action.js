@@ -155,7 +155,7 @@ async function createSpeciesQualifying (featureName, action) {
     log.debug(`${SERVICE_NAME}::createSpeciesQualifying`)
     let speciesQualifyingData = action.data
     log.info(`${SERVICE_NAME}::createSpeciesQualifying::${action.label}::creating species qualifying from ${JSON.stringify(speciesQualifyingData)}`)
-    let responseData = await speciesQualifyingService.createSpecies(speciesQualifyingData)
+    let responseData = await speciesQualifyingService.createSpeciesQualifying(speciesQualifyingData)
     log.info(`${SERVICE_NAME}::createSpeciesQualifying::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
