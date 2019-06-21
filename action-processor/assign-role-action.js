@@ -11,6 +11,9 @@ async function process (namespace, action) {
     switch (action.type) {
     case actionTypes.TYPE_VET_ROLE:
     case actionTypes.TYPE_VET_PRIMARY_ADMIN_ROLE:
+    case actionTypes.TYPE_USER_AUTHORISED_ROLE:
+    case actionTypes.TYPE_USER_ADMIN_ROLE:
+    case actionTypes.TYPE_USER_PRIMARY_ADMIN_ROLE:
         log.info(`${SERVICE_NAME}::processing ${action.type}`)
         await createRole(namespace, action)
         break
