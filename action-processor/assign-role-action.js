@@ -54,6 +54,27 @@ async function createRole (namespace, action) {
             roleProperties[roleNames.ROLE_NAME_VET] = userList
         }
         break
+    case actionTypes.TYPE_USER_ADMIN_ROLE:
+        if (roleProperties[roleNames.ROLE_NAME_ADMIN]) {
+            roleProperties[roleNames.ROLE_NAME_ADMIN].push(...userList)
+        } else {
+            roleProperties[roleNames.ROLE_NAME_ADMIN] = userList
+        }
+        break
+    case actionTypes.TYPE_USER_PRIMARY_ADMIN_ROLE:
+        if (roleProperties[roleNames.ROLE_NAME_PRIMARY_ADMIN]) {
+            roleProperties[roleNames.ROLE_NAME_PRIMARY_ADMIN].push(...userList)
+        } else {
+            roleProperties[roleNames.ROLE_NAME_PRIMARY_ADMIN] = userList
+        }
+        break
+    case actionTypes.TYPE_USER_AUTHORISED_ROLE:
+        if (roleProperties[roleNames.ROLE_NAME_AUTHORISED_USER]) {
+            roleProperties[roleNames.ROLE_NAME_AUTHORISED_USER].push(...userList)
+        } else {
+            roleProperties[roleNames.ROLE_NAME_AUTHORISED_USER] = userList
+        }
+        break
     case actionTypes.TYPE_VET_PRIMARY_ADMIN_ROLE:
         if (roleProperties[roleNames.ROLE_NAME_VET_PRIMARY_ADMIN]) {
             roleProperties[roleNames.ROLE_NAME_VET_PRIMARY_ADMIN].push(...userList)
