@@ -11,7 +11,7 @@ async function process (namespace, action) {
     switch (action.type) {
     case actionTypes.TYPE_VET_ROLE:
     case actionTypes.TYPE_VET_PRIMARY_ADMIN_ROLE:
-    case actionTypes.TYPE_USER_AUTHORISED_ROLE:
+    case actionTypes.TYPE_USER_AUTHORISED_USER_ROLE:
     case actionTypes.TYPE_USER_ADMIN_ROLE:
     case actionTypes.TYPE_USER_PRIMARY_ADMIN_ROLE:
         log.info(`${SERVICE_NAME}::processing ${action.type}`)
@@ -71,7 +71,7 @@ async function createRole (namespace, action) {
             roleProperties[roleNames.ROLE_NAME_PRIMARY_ADMIN] = userList
         }
         break
-    case actionTypes.TYPE_USER_AUTHORISED_ROLE:
+    case actionTypes.TYPE_USER_AUTHORISED_USER_ROLE:
         if (roleProperties[roleNames.ROLE_NAME_AUTHORISED_USER]) {
             roleProperties[roleNames.ROLE_NAME_AUTHORISED_USER].push(...userList)
         } else {

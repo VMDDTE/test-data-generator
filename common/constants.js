@@ -5,7 +5,7 @@ const TYPE_VET_ROLE = 'VetRole'
 const TYPE_VET_PRIMARY_ADMIN_ROLE = 'VetPrimaryAdminRole'
 const TYPE_USER_ADMIN_ROLE = 'UserAdminRole'
 const TYPE_USER_PRIMARY_ADMIN_ROLE = 'UserPrimaryAdminRole'
-const TYPE_USER_AUTHORISED_ROLE = 'UserAuthorisedRole'
+const TYPE_USER_AUTHORISED_USER_ROLE = 'UserAuthorisedRole'
 const TYPE_PRODUCT = 'ProductRecord'
 const TYPE_SPECIES = 'SpeciesRecord'
 const TYPE_SPECIES_QUALIFYING = 'SpeciesQualifyingRecord'
@@ -45,7 +45,7 @@ module.exports = {
     TYPE_VET_PRIMARY_ADMIN_ROLE,
     TYPE_USER_ADMIN_ROLE,
     TYPE_USER_PRIMARY_ADMIN_ROLE,
-    TYPE_USER_AUTHORISED_ROLE,
+    TYPE_USER_AUTHORISED_ROLE: TYPE_USER_AUTHORISED_USER_ROLE,
     TYPE_PRODUCT,
     TYPE_SPECIES,
     TYPE_SPECIES_QUALIFYING,
