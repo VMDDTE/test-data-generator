@@ -88,8 +88,10 @@ async function createRole (namespace, action) {
         roleName = roleNames.ROLE_NAME_PRIMARY_ADMIN
         break
     }
-    localStorage.setItem(namespace, roleLabel, roleProperties)
+    //localStorage.setItem(namespace, roleLabel, roleProperties)
     for (userId of userList) {
+        log.info(`${SERVICE_NAME}::createRole::about to assign role ${roleName} to ${userId} for organisation with id ${orgId}`)
+
         await organisationService.assignRoleToOrganisationForUser (orgId, userId, roleName)
     }
 }
