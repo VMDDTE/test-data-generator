@@ -11,6 +11,9 @@ async function process (namespace, action) {
     switch (action.type) {
     case actionTypes.TYPE_VET_ROLE:
     case actionTypes.TYPE_VET_PRIMARY_ADMIN_ROLE:
+    case actionTypes.TYPE_PRIMARY_ADMIN_ROLE:
+    case actionTypes.TYPE_ADMIN_ROLE:
+    case actionTypes.TYPE_AUTHORISED_ROLE:
         log.info(`${SERVICE_NAME}::processing ${action.type}`)
         await createRole(namespace, action)
         break
@@ -59,6 +62,24 @@ async function createRole (namespace, action) {
             roleProperties[roleNames.ROLE_NAME_VET_PRIMARY_ADMIN].push(...userList)
         }
         roleProperties[roleNames.ROLE_NAME_VET_PRIMARY_ADMIN] = userList
+        break
+    case actionTypes.TYPE_ADMIN_ROLE:
+        if (roleProperties[roleNames.ROLE_NAME_ADMIN]) {
+            roleProperties[roleNames.ROLE_NAME_ADMIN].push(...userList)
+        }
+        roleProperties[roleNames.ROLE_NAME_ADMIN] = userList
+        break
+    case actionTypes.TYPE_AUTHORISED_ROLE:
+        if (roleProperties[roleNames.ROLE_NAME_AUTHORISED_USER]) {
+            roleProperties[roleNames.ROLE_NAME_AUTHORISED_USER].push(...userList)
+        }
+        roleProperties[roleNames.ROLE_NAME_AUTHORISED_USER] = userList
+        break
+    case actionTypes.TYPE_PRIMARY_ADMIN_ROLE:
+        if (roleProperties[roleNames.ROLE_NAME_PRIMARY_ADMIN]) {
+            roleProperties[roleNames.ROLE_NAME_PRIMARY_ADMIN].push(...userList)
+        }
+        roleProperties[roleNames.ROLE_NAME_PRIMARY_ADMIN] = userList
         break
     }
     localStorage.setItem(namespace, roleLabel, roleProperties)
