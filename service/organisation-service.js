@@ -48,7 +48,7 @@ async function assignRoleToOrganisationForUser (orgId, userId, roleName) {
     let url = `${ADMIN_BASE_API_URL}/organisations/${orgId}/assignrole/${userId}/${roleName}`
     log.info(`${SERVICE_NAME}::assignRoleToOrganisationForUser:url:${url}`)
 
-    return axios.put(url, payload)
+    return axios.put(url)
         .then((response) => {
             return response.data
         })
