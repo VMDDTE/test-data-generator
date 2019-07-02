@@ -14,6 +14,7 @@ const TYPE_SUBSTANCE_QUALIFIER = 'SubstanceQualifierRecord'
 const TYPE_MANUFACTURER = 'ManufacturerRecord'
 const TYPE_ORGANISATION = 'OrganisationRecord'
 const TYPE_SPECIAL_IMPORT_APPLICATION = 'SpecialImportApplicationRecord'
+const TYPE_EXTERNAL_USER = 'ExternalUserRecord'
 
 const ACTION_CREATE = 'create'
 const ACTION_UPDATE = 'update'
@@ -54,6 +55,7 @@ module.exports = {
     TYPE_MANUFACTURER,
     TYPE_ORGANISATION,
     TYPE_SPECIAL_IMPORT_APPLICATION,
+    TYPE_EXTERNAL_USER,
     ACTION_CREATE,
     ACTION_UPDATE,
     ACTION_ASSIGN_ROLE,
