@@ -21,6 +21,18 @@ async function createUser (userType, payload) {
         })
 }
 
+async function createExternalUser (payload) {
+    let url = `${ADMIN_BASE_API_URL}/users/External`
+    log.info(`${SERVICE_NAME}::createExternalUser:url:${url}`)
+    return axios.post(url, payload)
+        .then((response) => {
+            return response.data
+        })
+        .catch(error => {
+            log.error(`${SERVICE_NAME}::createExternalUser:error: ${error}`)
+        })
+}
+
 async function deleteUser (id) {
     let url = ADMIN_BASE_API_URL + `/users/${id}`
     log.info(`${SERVICE_NAME}::deleteUser:url:${url}`)
@@ -35,3 +47,4 @@ async function deleteUser (id) {
 
 module.exports.createUser = createUser
 module.exports.deleteUser = deleteUser
+module.exports.createExternalUser = createExternalUser

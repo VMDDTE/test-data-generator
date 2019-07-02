@@ -10,6 +10,7 @@ const TYPE_SUBSTANCE = 'SubstanceRecord'
 const TYPE_SUBSTANCE_QUALIFIER = 'SubstanceQualifierRecord'
 const TYPE_MANUFACTURER = 'ManufacturerRecord'
 const TYPE_SPECIAL_IMPORT_APPLICATION = 'SpecialImportApplicationRecord'
+const TYPE_EXTERNAL_USER = 'ExternalUserRecord'
 
 const ACTION_CREATE = 'create'
 const ACTION_UPDATE = 'update'
@@ -43,6 +44,7 @@ module.exports = {
     TYPE_SUBSTANCE_QUALIFIER,
     TYPE_MANUFACTURER,
     TYPE_SPECIAL_IMPORT_APPLICATION,
+    TYPE_EXTERNAL_USER,
     ACTION_CREATE,
     ACTION_UPDATE,
     ACTION_ASSIGN_ROLE,
@@ -52,6 +54,7 @@ module.exports = {
     ORG_TYPE_VMD,
     USER_TYPE_VET,
     USER_TYPE_INTERNAL,
+    USER_TYPE_EXTERNAL,
     ROLE_NAME_VET,
     ROLE_NAME_VET_PRIMARY_ADMIN,
     LOCAL_STORAGE_NAME,
