@@ -45,7 +45,7 @@ async function deleteOrganisation (orgId) {
 
 
 async function assignRoleToOrganisationForUser (orgId, userId, roleName) {
-    let url = `${ADMIN_BASE_API_URL}/organisations/${orgId}/assignrole/${userid}/${roleName}`
+    let url = `${ADMIN_BASE_API_URL}/organisations/${orgId}/assignrole/${userId}/${roleName}`
     log.info(`${SERVICE_NAME}::assignRoleToOrganisationForUser:url:${url}`)
 
     return axios.put(url, payload)
