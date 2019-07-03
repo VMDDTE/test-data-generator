@@ -3,9 +3,9 @@ const TYPE_INTERNAL_USER = 'UserRecord'
 const TYPE_VET_PRACTICE_RECORD = 'VetPracticeRecord'
 const TYPE_VET_ROLE = 'VetRole'
 const TYPE_VET_PRIMARY_ADMIN_ROLE = 'VetPrimaryAdminRole'
-const TYPE_USER_ADMIN_ROLE = 'UserAdminRole'
-const TYPE_USER_PRIMARY_ADMIN_ROLE = 'UserPrimaryAdminRole'
-const TYPE_USER_AUTHORISED_USER_ROLE = 'UserAuthorisedRole'
+const TYPE_PRIMARY_ADMIN_ROLE = 'PrimaryAdminRole'
+const TYPE_ADMIN_ROLE = 'AdminRole'
+const TYPE_AUTHORISED_ROLE = 'AuthorisedRole'
 const TYPE_PRODUCT = 'ProductRecord'
 const TYPE_SPECIES = 'SpeciesRecord'
 const TYPE_SPECIES_QUALIFYING = 'SpeciesQualifyingRecord'
@@ -31,8 +31,8 @@ const USER_TYPE_INTERNAL = 1
 const ROLE_NAME_VET = 'vet'
 const ROLE_NAME_VET_PRIMARY_ADMIN = 'vetPrimaryAdmin'
 const ROLE_NAME_PRIMARY_ADMIN = 'PrimaryAdmin'
-const ROLE_NAME_ADMIN = 'Admin'
 const ROLE_NAME_AUTHORISED_USER = 'AuthorisedUser'
+const ROLE_NAME_ADMIN = 'Admin'
 
 const LOCAL_STORAGE_NAME = 'local-storage'
 
@@ -44,9 +44,9 @@ module.exports = {
     TYPE_VET_PRACTICE_RECORD,
     TYPE_VET_ROLE,
     TYPE_VET_PRIMARY_ADMIN_ROLE,
-    TYPE_USER_ADMIN_ROLE,
-    TYPE_USER_PRIMARY_ADMIN_ROLE,
-    TYPE_USER_AUTHORISED_ROLE: TYPE_USER_AUTHORISED_USER_ROLE,
+    TYPE_PRIMARY_ADMIN_ROLE,
+    TYPE_AUTHORISED_ROLE,
+    TYPE_ADMIN_ROLE,
     TYPE_PRODUCT,
     TYPE_SPECIES,
     TYPE_SPECIES_QUALIFYING,
@@ -67,9 +67,9 @@ module.exports = {
     USER_TYPE_INTERNAL,
     ROLE_NAME_VET,
     ROLE_NAME_VET_PRIMARY_ADMIN,
-    ROLE_NAME_PRIMARY_ADMIN,
     ROLE_NAME_ADMIN,
     ROLE_NAME_AUTHORISED_USER,
+    ROLE_NAME_PRIMARY_ADMIN,
     LOCAL_STORAGE_NAME,
     DEFAULT_USER_PASSWORD
 }

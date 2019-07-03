@@ -11,9 +11,9 @@ async function process (namespace, action) {
     switch (action.type) {
     case actionTypes.TYPE_VET_ROLE:
     case actionTypes.TYPE_VET_PRIMARY_ADMIN_ROLE:
-    case actionTypes.TYPE_USER_AUTHORISED_USER_ROLE:
-    case actionTypes.TYPE_USER_ADMIN_ROLE:
-    case actionTypes.TYPE_USER_PRIMARY_ADMIN_ROLE:
+    case actionTypes.TYPE_PRIMARY_ADMIN_ROLE:
+    case actionTypes.TYPE_ADMIN_ROLE:
+    case actionTypes.TYPE_AUTHORISED_ROLE:
         log.info(`${SERVICE_NAME}::processing ${action.type}`)
         await createRole(namespace, action)
         break
@@ -28,10 +28,8 @@ async function createRole (namespace, action) {
     log.debug(`${SERVICE_NAME}::createRole::type:${roleType}:${JSON.stringify(action)}`)
     let roleData = action.data
     let users = roleData.users
-    let roleLabel = roleData.label
     let orgIdLabel = roleData.orgId
     let savedOrgAction = localStorage.getItem(namespace, orgIdLabel)
-    let savedRoleProperties = localStorage.getItem(namespace, roleLabel)
     let response = savedOrgAction.response
     let orgId = response.Id
 
@@ -44,18 +42,10 @@ async function createRole (namespace, action) {
         userList.push(userId)
     }
 
-    var updatePayload = savedOrgAction.data
-    var roleProperties = {}
-    if (savedRoleProperties) {
-        roleProperties = savedRoleProperties
-    }
+    var roleName = ""
     switch (roleType) {
     case actionTypes.TYPE_VET_ROLE:
-        if (roleProperties[roleNames.ROLE_NAME_VET]) {
-            roleProperties[roleNames.ROLE_NAME_VET].push(...userList)
-        } else {
-            roleProperties[roleNames.ROLE_NAME_VET] = userList
-        }
+        roleName = roleNames.ROLE_NAME_VET
         break
     case actionTypes.TYPE_USER_ADMIN_ROLE:
         if (roleProperties[roleNames.ROLE_NAME_ADMIN]) {
@@ -79,18 +69,22 @@ async function createRole (namespace, action) {
         }
         break
     case actionTypes.TYPE_VET_PRIMARY_ADMIN_ROLE:
-        if (roleProperties[roleNames.ROLE_NAME_VET_PRIMARY_ADMIN]) {
-            roleProperties[roleNames.ROLE_NAME_VET_PRIMARY_ADMIN].push(...userList)
-        }
-        roleProperties[roleNames.ROLE_NAME_VET_PRIMARY_ADMIN] = userList
+        roleName = roleNames.ROLE_NAME_VET_PRIMARY_ADMIN
+        break
+    case actionTypes.TYPE_ADMIN_ROLE:
+        roleName = roleNames.ROLE_NAME_ADMIN
+        break
+    case actionTypes.TYPE_AUTHORISED_ROLE:
+        roleName = roleNames.ROLE_NAME_AUTHORISED_USER
+        break
+    case actionTypes.TYPE_PRIMARY_ADMIN_ROLE:
+        roleName = roleNames.ROLE_NAME_PRIMARY_ADMIN
         break
     }
-    localStorage.setItem(namespace, roleLabel, roleProperties)
-    updatePayload['Id'] = orgId
-    updatePayload['Properties'] = roleProperties
-    log.debug(`${SERVICE_NAME}::createRole::properties ${JSON.stringify(updatePayload)}`)
-
-    await organisationService.updateOrganisation(updatePayload)
+    for (userId of userList) {
+        log.info(`${SERVICE_NAME}::assignRoleToOrganisationForUser::about to assign role ${roleName} to ${userId} for organisation with id ${orgId}`)
+        await organisationService.assignRoleToOrganisationForUser (orgId, userId, roleName)
+    }
 }
 
 module.exports.process = process

@@ -43,6 +43,21 @@ async function deleteOrganisation (orgId) {
         })
 }
 
+
+async function assignRoleToOrganisationForUser (orgId, userId, roleName) {
+    let url = `${ADMIN_BASE_API_URL}/organisations/${orgId}/assignrole/${userId}/${roleName}`
+    log.info(`${SERVICE_NAME}::assignRoleToOrganisationForUser:url:${url}`)
+
+    return axios.put(url)
+        .then((response) => {
+            return response.data
+        })
+        .catch(error => {
+            log.error(`${SERVICE_NAME}::assignRoleToOrganisationForUser:error: ${error}`)
+        })
+}{}
+
 module.exports.createOrganisation = createOrganisation
 module.exports.updateOrganisation = updateOrganisation
 module.exports.deleteOrganisation = deleteOrganisation
+module.exports.assignRoleToOrganisationForUser = assignRoleToOrganisationForUser
