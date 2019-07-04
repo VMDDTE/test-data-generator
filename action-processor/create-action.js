@@ -293,6 +293,12 @@ async function createExternalUser (featureName, action) {
     }
     externalUsersIdList.push(responseData.Id)
     localStorage.setItem(featureName, 'externalUsersIdList', externalUsersIdList)
+
+    if (action.testUser === 'true' && responseData.Email) {
+        let email = responseData.Email
+        log.info(`${SERVICE_NAME}::createVet::${action.label}::saving test user ${email}`)
+        localStorage.setItem(featureName, 'testuser', { 'Email': email, 'Password': constants.DEFAULT_USER_PASSWORD })
+    }
 }
 
 
