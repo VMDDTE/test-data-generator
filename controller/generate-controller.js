@@ -70,6 +70,18 @@ async function tearDownEntities (featureName) {
     await tearDownManufacturer(featureName)
     await tearDownSpecialImportApplication(featureName)
     await tearDownMarketingAuthorisation(featureName)
+    await tearDownExternalUser(featureName)
+}
+
+async function tearDownExternalUser (featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownExternalUser:${featureName}`)
+    const externalUsersIdList = localStorage.getItem(featureName, 'externalUsersIdList')
+    if (externalUsersIdList) {
+        for (let id of externalUsersIdList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown external user with id ${id}`)
+            await userService.deleteUser(id)
+        }
+    }
 }
 
 async function tearDownLocalStorage (featureName) {

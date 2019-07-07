@@ -28,6 +28,10 @@ async function process (featureName, action) {
         log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_INTERNAL_USER}`)
         await createInternalUser(featureName, action)
         break
+    case actionTypes.TYPE_EXTERNAL_USER:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_EXTERNAL_USER}`)
+        await createExternalUser(featureName, action)
+        break
     case actionTypes.TYPE_VET_PRACTICE_RECORD:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_VET_PRACTICE_RECORD}`)
         await createVetPractice(featureName, action)
@@ -109,7 +113,7 @@ async function createVet (featureName, action) {
     if (action.testUser === 'true' && responseData.Email) {
         let email = responseData.Email
         log.info(`${SERVICE_NAME}::createVet::${action.label}::saving test user ${email}`)
-        localStorage.setItem(featureName, 'testuser', { 'Email': email, 'Password': constants.DEFAULT_USER_PASSWORD })
+        localStorage.setItem(createInternalUserfeatureName, 'testuser', { 'Email': email, 'Password': constants.DEFAULT_USER_PASSWORD })
     }
 }
 
@@ -295,5 +299,30 @@ async function createMarketingAuthorisation (featureName, action) {
     maList.push(responseData.Id)
     localStorage.setItem(featureName, 'maList', maList)
 }
+
+async function createExternalUser (featureName, action) {
+    log.debug(`${SERVICE_NAME}::createExternalUser`)
+    let data = action.data
+    log.info(`${SERVICE_NAME}::createExternalUser::${action.label}::creating external user from ${JSON.stringify(data)}`)
+    let responseData = await userService.createExternalUser(data)
+    log.info(`${SERVICE_NAME}::createExternalUser::${action.label}::created:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(featureName, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createExternalUser, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(featureName, action.label, savedAction)
+    var externalUsersIdList = localStorage.getItem(featureName, 'externalUsersIdList')
+    if (!externalUsersIdList) {
+        externalUsersIdList = []
+    }
+    externalUsersIdList.push(responseData.Id)
+    localStorage.setItem(featureName, 'externalUsersIdList', externalUsersIdList)
+
+    if (action.testUser === 'true' && responseData.Email) {
+        let email = responseData.Email
+        log.info(`${SERVICE_NAME}::createVet::${action.label}::saving test user ${email}`)
+        localStorage.setItem(featureName, 'testuser', { 'Email': email, 'Password': constants.DEFAULT_USER_PASSWORD })
+    }
+}
+
 
 module.exports.process = process
