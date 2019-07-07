@@ -5,7 +5,7 @@ const ADMIN_BASE_API_URL = process.env.ADMIN_BASE_API_URL
 const SERVICE_NAME = 'marketing-authorisation-service'
 
 async function createMarketingAuthorisation (payload) {
-    let url = `${ADMIN_BASE_API_URL}/marketingAuthorisation`
+    let url = `${ADMIN_BASE_API_URL}/MarketingAuthorisations/marketingAuthorisation`
     log.info(`${SERVICE_NAME}::createMarketingAuthorisation:url:${url}`)
 
     return axios.post(url, payload)
@@ -18,7 +18,7 @@ async function createMarketingAuthorisation (payload) {
 }
 
 async function deleteMarketingAuthorisation (maId) {
-    let url = `${ADMIN_BASE_API_URL}/marketingAuthorisation/${maId}`
+    let url = `${ADMIN_BASE_API_URL}/MarketingAuthorisations/marketingAuthorisation/${maId}`
     log.info(`${SERVICE_NAME}::deleteMarketingAuthorisation:url:${url}`)
 
     return axios.delete(url)
