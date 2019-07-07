@@ -10,6 +10,7 @@ const TYPE_SUBSTANCE = 'SubstanceRecord'
 const TYPE_SUBSTANCE_QUALIFIER = 'SubstanceQualifierRecord'
 const TYPE_MANUFACTURER = 'ManufacturerRecord'
 const TYPE_SPECIAL_IMPORT_APPLICATION = 'SpecialImportApplicationRecord'
+const TYPE_MARKETING_AUTHORISATION = 'MarketingAuthorisation'
 
 const ACTION_CREATE = 'create'
 const ACTION_UPDATE = 'update'
@@ -43,6 +44,7 @@ module.exports = {
     TYPE_SUBSTANCE_QUALIFIER,
     TYPE_MANUFACTURER,
     TYPE_SPECIAL_IMPORT_APPLICATION,
+    TYPE_MARKETING_AUTHORISATION,
     ACTION_CREATE,
     ACTION_UPDATE,
     ACTION_ASSIGN_ROLE,
