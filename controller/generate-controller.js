@@ -10,6 +10,7 @@ const speciesService = require('../service/species-service')
 const speciesQualifyingService = require('../service/species-qualifying-service')
 const substanceService = require('../service/substance-service')
 const substanceQualifierService = require('../service/substance-qualifier-service')
+const marketingAuthorisationService = require('../service/marketing-authorisation-service')
 const jobService = require('../service/job-service')
 const log = global.log
 const CONTROLLER_NAME = 'generate-controller'
@@ -68,6 +69,7 @@ async function tearDownEntities (featureName) {
     await tearDownSubstanceQualifier(featureName)
     await tearDownManufacturer(featureName)
     await tearDownSpecialImportApplication(featureName)
+    await tearDownMarketingAuthorisation(featureName)
     await tearDownExternalUser(featureName)
 }
 
@@ -81,7 +83,6 @@ async function tearDownExternalUser (featureName) {
         }
     }
 }
-
 
 async function tearDownLocalStorage (featureName) {
     log.info(`${CONTROLLER_NAME}::tearDownLocalStorage:${featureName}`)
@@ -198,6 +199,17 @@ async function tearDownSpecialImportApplication (featureName) {
         for (let identifier of jobIdentifierList) {
             log.info(`${CONTROLLER_NAME}::about to teardown special-import-application with id ${identifier}`)
             await jobService.deleteJob(identifier)
+        }
+    }
+}
+
+async function tearDownMarketingAuthorisation (featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownMarketingAuthorisation:${featureName}`)
+    const maList = localStorage.getItem(featureName, 'maList')
+    if (maList) {
+        for (let id of maList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown marketing authorisation with id ${id}`)
+            await marketingAuthorisationService.deleteMarketingAuthorisation(id)
         }
     }
 }

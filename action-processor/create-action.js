@@ -9,6 +9,7 @@ const speciesService = require('../service/species-service')
 const speciesQualifyingService = require('../service/species-qualifying-service')
 const substanceService = require('../service/substance-service')
 const substanceQualifierService = require('../service/substance-qualifier-service')
+const marketingAuthorisationService = require('../service/marketing-authorisation-service')
 const jobService = require('../service/job-service')
 const sisService = require('../service/sis-service')
 const constants = require('../common/constants')
@@ -63,6 +64,10 @@ async function process (featureName, action) {
     case actionTypes.TYPE_SPECIAL_IMPORT_APPLICATION:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIAL_IMPORT_APPLICATION}`)
         await createSpecialImportApplication(featureName, action)
+        break
+    case actionTypes.TYPE_MARKETING_AUTHORISATION:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_MARKETING_AUTHORISATION}`)
+        await createMarketingAuthorisation(featureName, action)
         break
     default:
         log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
@@ -275,6 +280,24 @@ async function createSpecialImportApplication (namespace, action) {
     }
     specialImportApplicationIdList.push(jobIdentifier)
     localStorage.setItem(namespace, 'specialImportApplicationIdList', specialImportApplicationIdList)
+}
+
+async function createMarketingAuthorisation (featureName, action) {
+    log.debug(`${SERVICE_NAME}::createMarketingAuthorisation`)
+    let maData = action.data
+    log.info(`${SERVICE_NAME}::createMarketingAuthorisation::${action.label}::creating marketing authorisation from ${JSON.stringify(maData)}`)
+    let responseData = await marketingAuthorisationService.createMarketingAuthorisation(maData)
+    log.info(`${SERVICE_NAME}::createMarketingAuthorisation::${action.label}::created:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(featureName, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createMarketingAuthorisation, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(featureName, action.label, savedAction)
+    var maList = localStorage.getItem(featureName, 'maList')
+    if (!maList) {
+        maList = []
+    }
+    maList.push(responseData.Id)
+    localStorage.setItem(featureName, 'maList', maList)
 }
 
 async function createExternalUser (featureName, action) {
