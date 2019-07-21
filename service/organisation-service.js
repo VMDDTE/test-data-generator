@@ -14,6 +14,7 @@ async function createOrganisation (orgType, payload) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::createOrganisation:error: ${error}`)
+            throw error
         })
 }
 
@@ -27,6 +28,7 @@ async function updateOrganisation (payload) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::updateOrganisation:error: ${error}`)
+            throw error
         })
 }
 
@@ -40,6 +42,7 @@ async function deleteOrganisation (orgId) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::deleteOrganisation:error: ${error}`)
+            throw error
         })
 }
 
@@ -54,6 +57,7 @@ async function assignRoleToOrganisationForUser (orgId, userId, roleName) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::assignRoleToOrganisationForUser:error: ${error}`)
+            throw error
         })
 }{}
 
