@@ -23,7 +23,13 @@ async function generate (filename, featureName, namespace) {
     if (namespace) {
         jsonData = JSON.parse(JSON.stringify(jsonData).replace(/\$\{namespace\}/g, namespace))
     }
-    await processActions(featureName, jsonData)
+    try {
+        await processActions(featureName, jsonData)
+    } catch (error) {
+        log.error(`${CONTROLLER_NAME}::${featureName}::generate failed, error: ${error}`)
+    } finally {
+        //
+    }
 }
 
 async function tearDown (featureName) {
