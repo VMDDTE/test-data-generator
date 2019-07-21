@@ -37,7 +37,6 @@ async function getTestUser (filename, namespace) {
         console.log(`Running with Test User [${testuser.Email}] ...`)
         return testuser
     }
-    console.log('Test User not defined')
     return null
 }
 
