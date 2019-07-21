@@ -27,8 +27,9 @@ async function generate (filename, featureName, namespace) {
         await processActions(featureName, jsonData)
     } catch (error) {
         log.error(`${CONTROLLER_NAME}::${featureName}::generate failed, error: ${error}`)
-    } finally {
-        //
+        log.info(`${CONTROLLER_NAME}::${featureName}::generate failed, tearing down ...`)
+        await tearDown(featureName)
+        throw error // fail fast and stop running the tests
     }
 }
 
