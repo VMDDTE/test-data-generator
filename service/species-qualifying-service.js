@@ -14,6 +14,7 @@ async function createSpeciesQualifying (payload) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::createSpeciesQualifying:error: ${error}`)
+            throw error
         })
 }
 
@@ -27,6 +28,7 @@ async function deleteSpeciesQualifying (speciesId) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::deleteSpeciesQualifying:error: ${error}`)
+            throw error
         })
 }
 
