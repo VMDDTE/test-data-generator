@@ -56,7 +56,6 @@ async function process (featureName, action) {
         log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SUBSTANCE_QUALIFIER}`)
         await createSubstanceQualifier(featureName, action)
         break
-
     case actionTypes.TYPE_MANUFACTURER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_MANUFACTURER}`)
         await createManufacturer(featureName, action)

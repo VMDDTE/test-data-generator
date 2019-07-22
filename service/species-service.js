@@ -14,6 +14,7 @@ async function createSpecies (payload) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::createSpecies:error: ${error}`)
+            throw error
         })
 }
 
@@ -27,6 +28,7 @@ async function deleteSpecies (productNo) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::deleteSpecies:error: ${error}`)
+            throw error
         })
 }
 

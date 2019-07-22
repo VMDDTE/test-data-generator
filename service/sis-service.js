@@ -14,6 +14,7 @@ async function update (jobId, updatedBy, payload) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::update:error: ${error}`)
+            throw error
         })
 }
 

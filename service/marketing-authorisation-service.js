@@ -14,6 +14,7 @@ async function createMarketingAuthorisation (payload) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::createMarketingAuthorisation:error: ${error}`)
+            throw error
         })
 }
 
@@ -27,6 +28,7 @@ async function deleteMarketingAuthorisation (maId) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::deleteMarketingAuthorisation:error: ${error}`)
+            throw error
         })
 }
 

@@ -35,26 +35,33 @@ async function tearDown (featureName) {
 async function processActions (featureName, actionJson) {
     let actionRecords = actionJson.actions
 
-    for (const action of actionRecords) {
-        // Save a copy of each action for later reference
-        localStorage.setItem(featureName, action.label, action)
+    try {
+        for (const action of actionRecords) {
+            // Save a copy of each action for later reference
+            localStorage.setItem(featureName, action.label, action)
 
-        switch (action.action) {
-        case actions.ACTION_CREATE:
-            log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
-            await createActionProcessor.process(featureName, action)
-            break
-        case actions.ACTION_UPDATE:
-            log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
-            break
-        case actions.ACTION_ASSIGN_ROLE:
-            log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
-            await roleActionProcessor.process(featureName, action)
-            break
-        default:
-            log.debug(`${CONTROLLER_NAME}::unrecognised action ${action.action}`)
-            break
+            switch (action.action) {
+            case actions.ACTION_CREATE:
+                log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
+                await createActionProcessor.process(featureName, action)
+                break
+            case actions.ACTION_UPDATE:
+                log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
+                break
+            case actions.ACTION_ASSIGN_ROLE:
+                log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
+                await roleActionProcessor.process(featureName, action)
+                break
+            default:
+                log.debug(`${CONTROLLER_NAME}::unrecognised action ${action.action}`)
+                break
+            }
         }
+    } catch (error) {
+        log.error(`${CONTROLLER_NAME}::${featureName}::processActions failed, error: ${error}`)
+        log.info(`${CONTROLLER_NAME}::${featureName}::processActions failed, tearing down ...`)
+        await tearDown(featureName)
+        throw error // fail fast and stop trying to create test data
     }
 }
 

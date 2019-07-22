@@ -18,6 +18,7 @@ async function createUser (userType, payload) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::createUser:error: ${error}`)
+            throw error
         })
 }
 
@@ -30,6 +31,7 @@ async function createExternalUser (payload) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::createExternalUser:error: ${error}`)
+            throw error
         })
 }
 
@@ -42,6 +44,7 @@ async function deleteUser (id) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::deleteUser:error: ${error}`)
+            throw error
         })
 }
 

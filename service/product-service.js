@@ -14,6 +14,7 @@ async function createProduct (payload) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::createProduct:error: ${error}`)
+            throw error
         })
 }
 
@@ -27,6 +28,7 @@ async function deleteProduct (productNo) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::deleteProduct:error: ${error}`)
+            throw error
         })
 }
 

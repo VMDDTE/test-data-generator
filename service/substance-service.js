@@ -13,6 +13,7 @@ async function createSubstance (payload) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::createSubstance:error: ${error}`)
+            throw error
         })
 }
 
@@ -26,6 +27,7 @@ async function deleteSubstance (productNo) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::deleteSubstance:error: ${error}`)
+            throw error
         })
 }
 

@@ -13,6 +13,7 @@ async function createSubstanceQualifier (payload) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::createSubstanceQualifier:error: ${error}`)
+            throw error
         })
 }
 
@@ -26,6 +27,7 @@ async function deleteSubstanceQualifier (substanceId) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::deleteSubstanceQualifier:error: ${error}`)
+            throw error
         })
 }
 

@@ -14,6 +14,7 @@ async function createJob (type, name) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::createJob:error: ${error}`)
+            throw error
         })
 }
 
@@ -27,6 +28,7 @@ async function updateJobStatus (jobIdentifier, newStatus) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::updateJobStatus:error: ${error}`)
+            throw error
         })
 }
 
@@ -40,6 +42,7 @@ async function deleteJob (jobIdentifier) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::deleteJob:error: ${error}`)
+            throw error
         })
 }
 
