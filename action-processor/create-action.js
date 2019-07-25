@@ -20,52 +20,52 @@ const SERVICE_NAME = 'create-action-processor'
 async function process (featureName, action) {
     log.debug(`${SERVICE_NAME}::${featureName}::process`)
     switch (action.type) {
-    case actionTypes.TYPE_VET:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_VET}`)
+    case actionTypes.ACTION_TYPE_VET:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_VET}`)
         await createVet(featureName, action)
         break
-    case actionTypes.TYPE_INTERNAL_USER:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_INTERNAL_USER}`)
+    case actionTypes.ACTION_TYPE_INTERNAL_USER:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_INTERNAL_USER}`)
         await createInternalUser(featureName, action)
         break
-    case actionTypes.TYPE_EXTERNAL_USER:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_EXTERNAL_USER}`)
+    case actionTypes.ACTION_TYPE_EXTERNAL_USER:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_EXTERNAL_USER}`)
         await createExternalUser(featureName, action)
         break
-    case actionTypes.TYPE_VET_PRACTICE_RECORD:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_VET_PRACTICE_RECORD}`)
+    case actionTypes.ACTION_TYPE_VET_PRACTICE_RECORD:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_VET_PRACTICE_RECORD}`)
         await createVetPractice(featureName, action)
         break
-    case actionTypes.TYPE_PRODUCT:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_PRODUCT}`)
+    case actionTypes.ACTION_TYPE_PRODUCT:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_PRODUCT}`)
         await createProduct(featureName, action)
         break
-    case actionTypes.TYPE_SPECIES:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIES}`)
+    case actionTypes.ACTION_TYPE_SPECIES:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SPECIES}`)
         await createSpecies(featureName, action)
         break
-    case actionTypes.TYPE_SPECIES_QUALIFYING:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIES_QUALIFYING}`)
+    case actionTypes.ACTION_TYPE_SPECIES_QUALIFYING:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SPECIES_QUALIFYING}`)
         await createSpeciesQualifying(featureName, action)
         break
-    case actionTypes.TYPE_SUBSTANCE:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SUBSTANCE}`)
+    case actionTypes.ACTION_TYPE_SUBSTANCE:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SUBSTANCE}`)
         await createSubstance(featureName, action)
         break
-    case actionTypes.TYPE_SUBSTANCE_QUALIFIER:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SUBSTANCE_QUALIFIER}`)
+    case actionTypes.ACTION_TYPE_SUBSTANCE_QUALIFIER:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SUBSTANCE_QUALIFIER}`)
         await createSubstanceQualifier(featureName, action)
         break
-    case actionTypes.TYPE_MANUFACTURER:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_MANUFACTURER}`)
+    case actionTypes.ACTION_TYPE_MANUFACTURER:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MANUFACTURER}`)
         await createManufacturer(featureName, action)
         break
-    case actionTypes.TYPE_SPECIAL_IMPORT_APPLICATION:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIAL_IMPORT_APPLICATION}`)
+    case actionTypes.ACTION_TYPE_SPECIAL_IMPORT_APPLICATION:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SPECIAL_IMPORT_APPLICATION}`)
         await createSpecialImportApplication(featureName, action)
         break
-    case actionTypes.TYPE_MARKETING_AUTHORISATION:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_MARKETING_AUTHORISATION}`)
+    case actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION}`)
         await createMarketingAuthorisation(featureName, action)
         break
     default:
