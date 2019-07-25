@@ -228,7 +228,7 @@ async function createManufacturer (featureName, action) {
     log.debug(`${SERVICE_NAME}::createManufacturer`)
     let manufacturerData = action.data
     log.info(`${SERVICE_NAME}::createManufacturer::${action.label}::creating manufacturer from ${JSON.stringify(manufacturerData)}`)
-    let responseData = await organisationService.createOrganisation(orgTypes.ORG_TYPE_MANUFACTURER, manufacturerData)
+    let responseData = await organisationService.createOrganisation(orgTypes.ORG_TYPE_NAME_MANUFACTURER, manufacturerData)
     log.info(`${SERVICE_NAME}::createManufacturer::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
