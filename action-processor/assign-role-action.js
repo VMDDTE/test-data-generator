@@ -9,11 +9,11 @@ const SERVICE_NAME = 'assign-role-action-processor'
 async function process (namespace, action) {
     log.debug(`${SERVICE_NAME}::${namespace}::process`)
     switch (action.type) {
-    case actionTypes.TYPE_VET_ROLE:
-    case actionTypes.TYPE_VET_PRIMARY_ADMIN_ROLE:
-    case actionTypes.TYPE_PRIMARY_ADMIN_ROLE:
-    case actionTypes.TYPE_ADMIN_ROLE:
-    case actionTypes.TYPE_AUTHORISED_ROLE:
+    case actionTypes.ACTION_TYPE_VET_ROLE:
+    case actionTypes.ACTION_TYPE_VET_PRIMARY_ADMIN_ROLE:
+    case actionTypes.ACTION_TYPE_PRIMARY_ADMIN_ROLE:
+    case actionTypes.ACTION_TYPE_ADMIN_ROLE:
+    case actionTypes.ACTION_TYPE_AUTHORISED_ROLE:
         log.info(`${SERVICE_NAME}::processing ${action.type}`)
         await createRole(namespace, action)
         break
@@ -44,7 +44,7 @@ async function createRole (namespace, action) {
 
     var roleName = ""
     switch (roleType) {
-    case actionTypes.TYPE_VET_ROLE:
+    case actionTypes.ACTION_TYPE_VET_ROLE:
         roleName = roleNames.ROLE_NAME_VET
         break
     case actionTypes.TYPE_USER_ADMIN_ROLE:
@@ -68,16 +68,16 @@ async function createRole (namespace, action) {
             roleProperties[roleNames.ROLE_NAME_AUTHORISED_USER] = userList
         }
         break
-    case actionTypes.TYPE_VET_PRIMARY_ADMIN_ROLE:
+    case actionTypes.ACTION_TYPE_VET_PRIMARY_ADMIN_ROLE:
         roleName = roleNames.ROLE_NAME_VET_PRIMARY_ADMIN
         break
-    case actionTypes.TYPE_ADMIN_ROLE:
+    case actionTypes.ACTION_TYPE_ADMIN_ROLE:
         roleName = roleNames.ROLE_NAME_ADMIN
         break
-    case actionTypes.TYPE_AUTHORISED_ROLE:
+    case actionTypes.ACTION_TYPE_AUTHORISED_ROLE:
         roleName = roleNames.ROLE_NAME_AUTHORISED_USER
         break
-    case actionTypes.TYPE_PRIMARY_ADMIN_ROLE:
+    case actionTypes.ACTION_TYPE_PRIMARY_ADMIN_ROLE:
         roleName = roleNames.ROLE_NAME_PRIMARY_ADMIN
         break
     }
