@@ -57,7 +57,8 @@ async function sendInvitation (namespace, action) {
 
     for (userId of userList) {
         log.info(`${SERVICE_NAME}::createInvitation::about to send ${roleName} invitation to ${userId} for organisation with id ${orgId}`)
-        const invitation = await invitationService.createInvitation(userId, orgId, uuid.v1(), roleType)
+        const invitation = await invitationService
+            .createInvitation(userId, orgId, uuid.v1(), roleType.replace('Role',''))
         savedInvitations.push(invitation.Id)
     }
 
