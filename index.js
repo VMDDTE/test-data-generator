@@ -40,7 +40,21 @@ async function getTestUser (filename, namespace) {
     return null
 }
 
+async function getInvites (filename, namespace) {
+    var featureName = filename
+    if (namespace) {
+        featureName = `${filename}-${namespace}`
+    }
+    const invites = localStorage.getItem(featureName, 'invites')
+    if (invites) {
+        console.log(`Invitations send with id [${inites.join(', ')}] ...`)
+        return invites
+    }
+    return null
+}
+
 module.exports.generate = generate
 module.exports.tearDown = tearDown
 module.exports.clearAll = clearAll
+module.exports.getInvites = getInvites
 module.exports.getTestUser = getTestUser
