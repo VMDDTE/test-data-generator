@@ -45,13 +45,14 @@ async function getInvites (filename, namespace) {
     if (namespace) {
         featureName = `${filename}-${namespace}`
     }
-    const invites = localStorage.getItem(featureName, 'invites')
+    const invites = localStorage.getItem(featureName, 'invitations')
     if (invites) {
-        console.log(`Invitations send with id [${inites.join(', ')}] ...`)
+        console.log(`Invitations send with id [${invites.join(', ')}] ...`)
         return invites
     }
     return null
 }
+
 
 module.exports.generate = generate
 module.exports.tearDown = tearDown
