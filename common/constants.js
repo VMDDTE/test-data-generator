@@ -22,6 +22,7 @@ const ACTION_TYPE_EXTERNAL_USER = 'ExternalUserRecord'
 const ACTION_CREATE = 'create'
 const ACTION_UPDATE = 'update'
 const ACTION_ASSIGN_ROLE = 'assignRole'
+const ACTION_SEND_INVITE = 'sendInvite'
 
 const ORG_TYPE_VET_PRACTICE = 0
 const ORG_TYPE_MANUFACTURER = 1
@@ -70,6 +71,7 @@ module.exports = {
     ACTION_CREATE,
     ACTION_UPDATE,
     ACTION_ASSIGN_ROLE,
+    ACTION_SEND_INVITE,
     ORG_TYPE_VET_PRACTICE,
     ORG_TYPE_MANUFACTURER,
     ORG_TYPE_IMPORTER,

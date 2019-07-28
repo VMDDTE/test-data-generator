@@ -1,5 +1,6 @@
 const createActionProcessor = require('../action-processor/create-action')
 const roleActionProcessor = require('../action-processor/assign-role-action')
+const sendInviteActionProcessor = require('../action-processor/send-invite-action')
 const actions = require('../common/constants')
 const fs = require('fs-extra')
 const localStorage = require('../service/local-storage-service')
@@ -7,6 +8,7 @@ const organisationService = require('../service/organisation-service')
 const userService = require('../service/user-service')
 const productService = require('../service/product-service')
 const speciesService = require('../service/species-service')
+const invitationService = require('../service/invitation-service')
 const speciesQualifyingService = require('../service/species-qualifying-service')
 const substanceService = require('../service/substance-service')
 const substanceQualifierService = require('../service/substance-qualifier-service')
@@ -52,6 +54,10 @@ async function processActions (featureName, actionJson) {
                 log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
                 await roleActionProcessor.process(featureName, action)
                 break
+            case actions.ACTION_SEND_INVITE:
+                log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
+                await sendInviteActionProcessor.process(featureName, action)
+                break
             default:
                 log.debug(`${CONTROLLER_NAME}::unrecognised action ${action.action}`)
                 break
@@ -78,6 +84,18 @@ async function tearDownEntities (featureName) {
     await tearDownSpecialImportApplication(featureName)
     await tearDownMarketingAuthorisation(featureName)
     await tearDownExternalUser(featureName)
+    await tearDownInvitations(featureName)
+}
+
+async function tearDownInvitations (featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownInvitations:${featureName}`)
+    const invitationsList = localStorage.getItem(featureName, 'invitations')
+    if (invitationsList) {
+        for (let id of invitationsList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown invitation with id ${id}`)
+            await invitationService.deleteInvitation(id)
+        }
+    }
 }
 
 async function tearDownExternalUser (featureName) {
