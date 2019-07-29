@@ -56,10 +56,13 @@ async function process (featureName, action) {
         log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SUBSTANCE_QUALIFIER}`)
         await createSubstanceQualifier(featureName, action)
         break
-
     case actionTypes.TYPE_MANUFACTURER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_MANUFACTURER}`)
         await createManufacturer(featureName, action)
+        break
+    case actionTypes.TYPE_ORGANISATION:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_ORGANISATION}`)
+        await createOrganisation(featureName, action)
         break
     case actionTypes.TYPE_SPECIAL_IMPORT_APPLICATION:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.TYPE_SPECIAL_IMPORT_APPLICATION}`)
@@ -241,6 +244,24 @@ async function createManufacturer (featureName, action) {
     }
     manufacturerIdList.push(responseData.Id)
     localStorage.setItem(featureName, 'manufacturerIdList', manufacturerIdList)
+}
+
+async function createOrganisation (featureName, action) {
+    log.debug(`${SERVICE_NAME}::createOrganisation`)
+    let OrganisationData = action.data
+    log.info(`${SERVICE_NAME}::createOrganisation::${action.label}::creating Organisation from ${JSON.stringify(OrganisationData)}`)
+    let responseData = await organisationService.createOrganisation(orgTypes.ORG_TYPE_NAME_Organisation, OrganisationData)
+    log.info(`${SERVICE_NAME}::createOrganisation::${action.label}::created:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(featureName, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createOrganisation, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(featureName, action.label, savedAction)
+    var OrganisationIdList = localStorage.getItem(featureName, 'OrganisationIdList')
+    if (!OrganisationIdList) {
+        OrganisationIdList = []
+    }
+    OrganisationIdList.push(responseData.Id)
+    localStorage.setItem(featureName, 'OrganisationIdList', OrganisationIdList)
 }
 
 async function createSpecialImportApplication (namespace, action) {
