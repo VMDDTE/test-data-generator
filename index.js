@@ -13,6 +13,16 @@ async function generate (filename, namespace) {
     await generator.generate(`./test-data/${dataFileName}`, featureName, namespace)
 }
 
+async function generate2 (filepath, namespace) {
+    const filename = filepath.split('/').pop()
+    var featureName = filename
+    if (namespace) {
+        featureName = `${filename}-${namespace}`
+    }
+    console.log(`Running data generator using input [${filename}] and featureName [${featureName}]`)
+    await generator.generate(filepath, featureName, namespace)
+}
+
 async function tearDown (filename, namespace) {
     var featureName = filename
     if (namespace) {
@@ -37,11 +47,26 @@ async function getTestUser (filename, namespace) {
         console.log(`Running with Test User [${testuser.Email}] ...`)
         return testuser
     }
-    console.log('Test User not defined')
     return null
 }
 
+async function getInvites (filename, namespace) {
+    var featureName = filename
+    if (namespace) {
+        featureName = `${filename}-${namespace}`
+    }
+    const invites = localStorage.getItem(featureName, 'invitations')
+    if (invites) {
+        console.log(`Invitations send with id [${invites.join(', ')}] ...`)
+        return invites
+    }
+    return null
+}
+
+
+module.exports.generate2 = generate2
 module.exports.generate = generate
 module.exports.tearDown = tearDown
 module.exports.clearAll = clearAll
+module.exports.getInvites = getInvites
 module.exports.getTestUser = getTestUser
