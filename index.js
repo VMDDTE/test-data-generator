@@ -15,11 +15,11 @@ async function generate (filename, namespace) {
 
 async function generate2 (filepath, namespace) {
     const filename = filepath.split('/').pop()
-    var featureName = filename
+    let featureName = filename.split('.')[0]
     if (namespace) {
-        featureName = `${filename}-${namespace}`
+        featureName = `${featureName}-${namespace}`
     }
-    console.log(`Running data generator using input [${filename}] and featureName [${featureName}]`)
+    console.log(`Running data generator using input [${filepath}] and featureName [${featureName}]`)
     await generator.generate(filepath, featureName, namespace)
 }
 
