@@ -32,6 +32,20 @@ async function updateJobStatus (jobIdentifier, newStatus) {
         })
 }
 
+async function updateJob (jobIdentifier, payload) {
+    let url = `${JOB_API_URL}/update/${jobIdentifier}`
+    log.info(`${SERVICE_NAME}::updateJob:url:${url}`)
+
+    return axios.put(url, payload)
+        .then((response) => {
+            return response.data
+        })
+        .catch(error => {
+            log.error(`${SERVICE_NAME}::updateJob:error: ${error}`)
+            throw error
+        })
+}
+
 async function deleteJob (jobIdentifier) {
     let url = `${JOB_API_URL}/${jobIdentifier}`
     log.info(`${SERVICE_NAME}::deleteJob:url:${url}`)
@@ -48,4 +62,5 @@ async function deleteJob (jobIdentifier) {
 
 module.exports.createJob = createJob
 module.exports.updateJobStatus = updateJobStatus
+module.exports.updateJob = updateJob
 module.exports.deleteJob = deleteJob

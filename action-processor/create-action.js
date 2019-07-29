@@ -68,6 +68,10 @@ async function process (featureName, action) {
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION}`)
         await createMarketingAuthorisation(featureName, action)
         break
+    case actionTypes.ACTION_TYPE_JOB_MARKETING_AUTHORISATION:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_JOB_MARKETING_AUTHORISATION}`)
+        await createMarketingAuthorisationJob(featureName, action)
+        break
     default:
         log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
         break
@@ -297,6 +301,26 @@ async function createMarketingAuthorisation (featureName, action) {
     }
     maList.push(responseData.Id)
     localStorage.setItem(featureName, 'maList', maList)
+}
+
+async function createMarketingAuthorisationJob (featureName, action){
+    log.debug(`${SERVICE_NAME}::createMarketingAuthorisationJob`)
+    let data = action.data
+    log.info(`${SERVICE_NAME}::createMarketingAuthorisationJob::${action.label}::creating marketing authorisation job from ${JSON.stringify(data)}`)
+    let responseData = await jobService.createJob("Registration", featureName)
+    let jobId = responseData.Id
+    responseData = await jobService.updateJob(jobId, data)
+    log.info(`${SERVICE_NAME}::createMarketingAuthorisationJob::${action.label}::updated:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(featureName, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createMarketingAuthorisationJob, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(featureName, action.label, savedAction)
+    var maList = localStorage.getItem(featureName, 'maJobList')
+    if (!maList) {
+        maList = []
+    }
+    maList.push(responseData.Id)
+    localStorage.setItem(featureName, 'maJobList', maList)
 }
 
 async function createExternalUser (featureName, action) {
