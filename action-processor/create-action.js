@@ -319,12 +319,12 @@ async function createMarketingAuthorisationJob (featureName, action){
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createMarketingAuthorisationJob, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(featureName, action.label, savedAction)
-    var maList = localStorage.getItem(featureName, 'maJobList')
-    if (!maList) {
-        maList = []
+    var maJobList = localStorage.getItem(featureName, 'maJobList')
+    if (!maJobList) {
+        maJobList = []
     }
-    maList.push(responseData.Id)
-    localStorage.setItem(featureName, 'maJobList', maList)
+    maJobList.push(responseData.Id)
+    localStorage.setItem(featureName, 'maJobList', maJobList)
 }
 
 async function createRegistrationJob (featureName, action){
@@ -344,7 +344,7 @@ async function createRegistrationJob (featureName, action){
         registrationJobList = []
     }
     registrationJobList.push(responseData.Id)
-    localStorage.setItem(featureName, 'registrationJobList', maList)
+    localStorage.setItem(featureName, 'registrationJobList', registrationJobList)
 }
 
 async function createExternalUser (featureName, action) {
