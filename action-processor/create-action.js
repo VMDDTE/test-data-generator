@@ -250,7 +250,7 @@ async function createOrganisation (featureName, action) {
     log.debug(`${SERVICE_NAME}::createOrganisation`)
     let OrganisationData = action.data
     log.info(`${SERVICE_NAME}::createOrganisation::${action.label}::creating Organisation from ${JSON.stringify(OrganisationData)}`)
-    let responseData = await organisationService.createOrganisation(orgTypes.ORG_TYPE_NAME_Organisation, OrganisationData)
+    let responseData = await organisationService.createOrganisation(orgTypes.ORG_TYPE_OTHER, OrganisationData)
     log.info(`${SERVICE_NAME}::createOrganisation::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
