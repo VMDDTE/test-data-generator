@@ -13,7 +13,7 @@ async function generate (filename, namespace) {
     await generator.generate(`./test-data/${dataFileName}`, featureName, namespace)
 }
 
-async function generate2 (filepath, namespace) {
+async function generateFromAbsPath (filepath, namespace) {
     const filename = filepath.split('/').pop()
     let featureName = filename.split('.')[0]
     if (namespace) {
@@ -64,7 +64,7 @@ async function getInvites (filename, namespace) {
 }
 
 
-module.exports.generate2 = generate2
+module.exports.generateFromAbsPath = generateFromAbsPath
 module.exports.generate = generate
 module.exports.tearDown = tearDown
 module.exports.clearAll = clearAll
