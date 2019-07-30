@@ -311,7 +311,7 @@ async function createMarketingAuthorisationJob (featureName, action){
     log.debug(`${SERVICE_NAME}::createMarketingAuthorisationJob`)
     let data = action.data
     log.info(`${SERVICE_NAME}::createMarketingAuthorisationJob::${action.label}::creating marketing authorisation job from ${JSON.stringify(data)}`)
-    let responseData = await jobService.createJob("MarketingAuthorisation", featureName)
+    let responseData = await jobService.createJob(constants.JOB_TYPE_MARKETING_AUTHORISATION, featureName)
     let jobId = responseData.Id
     responseData = await jobService.updateJob(jobId, data)
     log.info(`${SERVICE_NAME}::createMarketingAuthorisationJob::${action.label}::updated:${JSON.stringify(responseData)}`)
@@ -331,7 +331,7 @@ async function createRegistrationJob (featureName, action){
     log.debug(`${SERVICE_NAME}::createRegistrationJob`)
     let data = action.data
     log.info(`${SERVICE_NAME}::createRegistrationJob::${action.label}::creating a new business registration job from ${JSON.stringify(data)}`)
-    let responseData = await jobService.createJob("Registration", featureName)
+    let responseData = await jobService.createJob(constants.JOB_TYPE_REGISTRATION, featureName)
     let jobId = responseData.Id
     responseData = await jobService.updateJob(jobId, data)
     log.info(`${SERVICE_NAME}::createRegistrationJob::${action.label}::updated:${JSON.stringify(responseData)}`)
