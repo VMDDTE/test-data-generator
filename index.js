@@ -13,9 +13,7 @@ async function generate (filename, namespace) {
     await generator.generate(`./test-data/${dataFileName}`, featureName, namespace)
 }
 
-async function generateFromAbsPath (filepath, namespace) {
-    const filename = filepath.split('/').pop()
-    let featureName = filename.split('.')[0]
+async function generateFromAbsPath (filepath, featureName, namespace) {
     if (namespace) {
         featureName = `${featureName}-${namespace}`
     }
