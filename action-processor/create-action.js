@@ -68,9 +68,9 @@ async function process (featureName, action) {
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION}`)
         await createMarketingAuthorisation(featureName, action)
         break
-    case actionTypes.ACTION_TYPE_JOB_MARKETING_AUTHORISATION:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_JOB_MARKETING_AUTHORISATION}`)
-        await createMarketingAuthorisationJob(featureName, action)
+    case actionTypes.ACTION_TYPE_JOB_MARKETING_AUTHORISATION_RENEWAL:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_JOB_MARKETING_AUTHORISATION_RENEWAL}`)
+        await createMarketingAuthorisationRenewalJob(featureName, action)
         break
     case actionTypes.ACTION_TYPE_JOB_REGISTRATION:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_JOB_REGISTRATION}`)
@@ -307,24 +307,24 @@ async function createMarketingAuthorisation (featureName, action) {
     localStorage.setItem(featureName, 'maList', maList)
 }
 
-async function createMarketingAuthorisationJob (featureName, action){
-    log.debug(`${SERVICE_NAME}::createMarketingAuthorisationJob`)
+async function createMarketingAuthorisationRenewalJob (featureName, action){
+    log.debug(`${SERVICE_NAME}::createMarketingAuthorisationRenewalJob`)
     let data = action.data
-    log.info(`${SERVICE_NAME}::createMarketingAuthorisationJob::${action.label}::creating marketing authorisation job from ${JSON.stringify(data)}`)
-    let responseData = await jobService.createJob(constants.JOB_TYPE_MARKETING_AUTHORISATION, featureName)
+    log.info(`${SERVICE_NAME}::createMarketingAuthorisationRenewalJob::${action.label}::creating marketing authorisation renewal job from ${JSON.stringify(data)}`)
+    let responseData = await jobService.createJob(constants.JOB_TYPE_MARKETING_AUTHORISATION_RENEWAL, featureName)
     let jobId = responseData.Id
     responseData = await jobService.updateJob(jobId, data)
-    log.info(`${SERVICE_NAME}::createMarketingAuthorisationJob::${action.label}::updated:${JSON.stringify(responseData)}`)
+    log.info(`${SERVICE_NAME}::createMarketingAuthorisationRenewalJob::${action.label}::updated:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
-    log.debug(`${SERVICE_NAME}::createMarketingAuthorisationJob, saved action ${JSON.stringify(savedAction)}`)
+    log.debug(`${SERVICE_NAME}::createMarketingAuthorisationRenewalJob, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(featureName, action.label, savedAction)
-    var maJobList = localStorage.getItem(featureName, 'maJobList')
-    if (!maJobList) {
-        maJobList = []
+    var maRenewalJobList = localStorage.getItem(featureName, 'maRenewalJobList')
+    if (!maRenewalJobList) {
+        maRenewalJobList = []
     }
-    maJobList.push(responseData.Id)
-    localStorage.setItem(featureName, 'maJobList', maJobList)
+    maRenewalJobList.push(responseData.Id)
+    localStorage.setItem(featureName, 'maRenewalJobList', maRenewalJobList)
 }
 
 async function createRegistrationJob (featureName, action){
