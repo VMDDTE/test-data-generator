@@ -12,6 +12,7 @@ const substanceQualifierService = require('../service/substance-qualifier-servic
 const marketingAuthorisationService = require('../service/marketing-authorisation-service')
 const jobService = require('../service/job-service')
 const sisService = require('../service/sis-service')
+const messageService = require('../service/message-service')
 const constants = require('../common/constants')
 const log = global.log
 
@@ -75,6 +76,10 @@ async function process (featureName, action) {
     case actionTypes.ACTION_TYPE_JOB_REGISTRATION:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_JOB_REGISTRATION}`)
         await createRegistrationJob(featureName, action)
+        break
+    case actionTypes.ACTION_TYPE_SECURE_MESSAGE:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SECURE_MESSAGE}`)
+        await createSecureMessage(featureName, action)
         break
     default:
         log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
@@ -369,6 +374,26 @@ async function createExternalUser (featureName, action) {
         log.info(`${SERVICE_NAME}::createVet::${action.label}::saving test user ${email}`)
         localStorage.setItem(featureName, 'testuser', { 'Email': email, 'Password': constants.DEFAULT_USER_PASSWORD })
     }
+}
+
+async function createSecureMessage (featureName, action){
+    log.debug(`${SERVICE_NAME}::createSecureMessage`)
+    let data = action.data
+    log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::creating a new secure message ${JSON.stringify(data)}`)
+    let responseData = await messageService.createDraft(data.FromUserId)
+    let draftId = responseData.Id
+    responseData = await messageService.sendDraft(draftId, data)
+    log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::sendDraft:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(featureName, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createSecureMessage, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(featureName, action.label, savedAction)
+    var secureMessageList = localStorage.getItem(featureName, 'secureMessageList')
+    if (!secureMessageList) {
+        secureMessageList = []
+    }
+    secureMessageList.push(responseData.Id)
+    localStorage.setItem(featureName, 'secureMessageList', secureMessageList)
 }
 
 

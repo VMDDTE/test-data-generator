@@ -14,6 +14,7 @@ const substanceService = require('../service/substance-service')
 const substanceQualifierService = require('../service/substance-qualifier-service')
 const marketingAuthorisationService = require('../service/marketing-authorisation-service')
 const jobService = require('../service/job-service')
+const messageService = require('../service/message-service')
 const log = global.log
 const CONTROLLER_NAME = 'generate-controller'
 
@@ -85,6 +86,18 @@ async function tearDownEntities (featureName) {
     await tearDownMarketingAuthorisation(featureName)
     await tearDownExternalUser(featureName)
     await tearDownInvitations(featureName)
+    await tearDownMessages(featureName)
+}
+
+async function tearDownMessages (featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownMessages:${featureName}`)
+    const secureMessageList = localStorage.getItem(featureName, 'secureMessageList')
+    if (secureMessageList) {
+        for (let id of secureMessageList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown message with id ${id}`)
+            await messageService.deleteMessage(id)
+        }
+    }
 }
 
 async function tearDownInvitations (featureName) {
