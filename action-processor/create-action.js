@@ -384,7 +384,7 @@ async function createSecureMessage (featureName, action){
     let response = savedUser.response
     
     let responseData = await messageService.createDraft(response.Id)
-    let draftId = responseData.id
+    let draftId = responseData.Id
 
     var sendData = {}
     sendData.Subject = action.data.Subject
@@ -410,7 +410,7 @@ async function createSecureMessage (featureName, action){
     if (!secureMessageList) {
         secureMessageList = []
     }
-    secureMessageList.push(responseData.id)
+    secureMessageList.push(responseData.Id)
     localStorage.setItem(featureName, 'secureMessageList', secureMessageList)
 }
 
