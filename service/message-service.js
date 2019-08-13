@@ -12,8 +12,7 @@ async function createDraft (userId) {
     return axios({
             headers: { ...requestHeaders },
             method: 'post',
-            url: url,
-            data: data
+            url: url
         })
         .then((response) => {
             return response.data
