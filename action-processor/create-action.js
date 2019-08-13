@@ -384,15 +384,22 @@ async function createSecureMessage (featureName, action){
     let response = savedUser.response
     
     let responseData = await messageService.createDraft(response.Id)
-    let draftId = responseData.Id
+    let draftId = responseData.id
 
     var sendData = {}
     sendData.Subject = action.data.Subject
     sendData.Message = action.data.Message
-    sendData.Recipients = action.data.Recipients
+
+    sendData.Recipients = []
+    for (const userLabel of action.data.Recipients) {
+        let savedAction = await localStorage.getItem(namespace, userLabel)
+        let response = savedAction.response
+        let userEmail = response.Email
+        log.info(`${SERVICE_NAME}::createSecureMessage::Recipient ${userEmail}`)
+        sendData.Recipients.push(userEmail)
+    }
 
     responseData = await messageService.sendDraft(draftId, sendData)
-
 
     log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::sendDraft:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
