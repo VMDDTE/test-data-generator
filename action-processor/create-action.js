@@ -392,7 +392,7 @@ async function createSecureMessage (featureName, action){
 
     sendData.Recipients = []
     for (const userLabel of action.data.Recipients) {
-        let savedAction = await localStorage.getItem(namespace, userLabel)
+        let savedAction = await localStorage.getItem(featureName, userLabel)
         let response = savedAction.response
         let userEmail = response.Email
         log.info(`${SERVICE_NAME}::createSecureMessage::Recipient ${userEmail}`)
