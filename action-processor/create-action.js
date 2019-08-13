@@ -378,7 +378,7 @@ async function createExternalUser (featureName, action) {
 
 async function createSecureMessage (featureName, action){
     log.debug(`${SERVICE_NAME}::createSecureMessage`)
-    log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::creating a new secure message ${JSON.stringify(data)}`)
+    log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::creating a new secure message ${JSON.stringify(action.data)}`)
     let savedUser = await localStorage.getItem(featureName, action.data.FromUser)
 
     let response = savedUser.response
