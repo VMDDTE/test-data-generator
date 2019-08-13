@@ -5,10 +5,16 @@ const MESSAGES_API_URL = `${process.env.MESSAGES_SERVICE_API_URL}`
 const SERVICE_NAME = 'message-service'
 
 async function createDraft (userId) {
-    let url = `${MESSAGES_API_URL}/messages/${userId}`
+    let url = `${MESSAGES_API_URL}/messages`
     log.info(`${SERVICE_NAME}::createDraft:url:${url}`)
+    const requestHeaders = { 'vmd-userid': userId }
 
-    return axios.post(url)
+    return axios({
+            headers: { ...requestHeaders },
+            method: 'post',
+            url: url,
+            data: data
+        })
         .then((response) => {
             return response.data
         })
@@ -21,9 +27,15 @@ async function createDraft (userId) {
 async function sendDraft (draftId, payload) {
     let url = `${MESSAGES_API_URL}/messages/send/${draftId}`
     log.info(`${SERVICE_NAME}::sendDraft:url:${url}`)
+    const requestHeaders = { 'vmd-userid': userId }
 
-    return axios.post(url, payload)
-        .then((response) => {
+    return axios({
+        headers: { ...requestHeaders },
+        method: 'post',
+        url: url,
+        data: payload
+    })
+    .then((response) => {
             return response.data
         })
         .catch(error => {
