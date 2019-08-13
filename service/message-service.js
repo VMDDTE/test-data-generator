@@ -5,7 +5,7 @@ const MESSAGES_API_URL = `${process.env.MESSAGES_SERVICE_API_URL}`
 const SERVICE_NAME = 'message-service'
 
 async function createDraft (userId) {
-    let url = `${MESSAGES_API_URL}/${userId}`
+    let url = `${MESSAGES_API_URL}/messages/${userId}`
     log.info(`${SERVICE_NAME}::createDraft:url:${url}`)
 
     return axios.post(url)
@@ -19,7 +19,7 @@ async function createDraft (userId) {
 }
 
 async function sendDraft (draftId, payload) {
-    let url = `${MESSAGES_API_URL}/send/${draftId}`
+    let url = `${MESSAGES_API_URL}/messages/send/${draftId}`
     log.info(`${SERVICE_NAME}::sendDraft:url:${url}`)
 
     return axios.post(url, payload)
@@ -33,7 +33,7 @@ async function sendDraft (draftId, payload) {
 }
 
 async function deleteMessage (messageId) {
-    let url = `${MESSAGES_API_URL}/${messageId}`
+    let url = `${MESSAGES_API_URL}/messages/${messageId}`
     log.info(`${SERVICE_NAME}::deleteMessage:url:${url}`)
 
     return axios.delete(url)
