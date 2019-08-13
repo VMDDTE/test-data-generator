@@ -378,12 +378,11 @@ async function createExternalUser (featureName, action) {
 
 async function createSecureMessage (featureName, action){
     log.debug(`${SERVICE_NAME}::createSecureMessage`)
-
     log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::creating a new secure message ${JSON.stringify(data)}`)
-
     let savedUser = await localStorage.getItem(featureName, action.data.FromUser)
-    let response = savedUser.response
 
+    let response = savedUser.response
+    
     let responseData = await messageService.createDraft(response.Id)
     let draftId = responseData.Id
 
