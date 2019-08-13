@@ -410,7 +410,7 @@ async function createSecureMessage (featureName, action){
     if (!secureMessageList) {
         secureMessageList = []
     }
-    secureMessageList.push(responseData.Id)
+    secureMessageList.push(responseData.id)
     localStorage.setItem(featureName, 'secureMessageList', secureMessageList)
 }
 

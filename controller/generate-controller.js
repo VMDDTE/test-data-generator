@@ -84,9 +84,9 @@ async function tearDownEntities (featureName) {
     await tearDownManufacturer(featureName)
     await tearDownSpecialImportApplication(featureName)
     await tearDownMarketingAuthorisation(featureName)
+    await tearDownMessages(featureName)
     await tearDownExternalUser(featureName)
     await tearDownInvitations(featureName)
-    await tearDownMessages(featureName)
 }
 
 async function tearDownMessages (featureName) {
