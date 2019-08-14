@@ -389,6 +389,7 @@ async function createSecureMessage (featureName, action){
     var sendData = {}
     sendData.Subject = action.data.Subject
     sendData.Message = action.data.Message
+    sendData.FromId = response.Id
 
     sendData.Recipients = []
     for (const userLabel of action.data.Recipients) {
