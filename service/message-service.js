@@ -23,9 +23,9 @@ async function createDraft (userId) {
         })
 }
 
-async function sendDraft (draftId, payload) {
+async function sendMessage (draftId, payload) {
     let url = `${ADMIN_BASE_API_URL}/messages/send/${draftId}`
-    log.info(`${SERVICE_NAME}::sendDraft:url:${url}`)
+    log.info(`${SERVICE_NAME}::sendMessage:url:${url}`)
     const requestHeaders = { 'vmd-userid': userId }
 
     return axios({
@@ -38,7 +38,7 @@ async function sendDraft (draftId, payload) {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::sendDraft:error: ${error}`)
+            log.error(`${SERVICE_NAME}::sendMessage:error: ${error}`)
             throw error
         })
 }
@@ -58,5 +58,5 @@ async function deleteMessage (messageId) {
 }
 
 module.exports.createDraft = createDraft
-module.exports.sendDraft = sendDraft
+module.exports.sendMessage = sendMessage
 module.exports.deleteMessage = deleteMessage

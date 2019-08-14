@@ -399,9 +399,9 @@ async function createSecureMessage (featureName, action){
         sendData.Recipients.push(userEmail)
     }
 
-    responseData = await messageService.sendDraft(draftId, sendData)
+    responseData = await messageService.sendMessage(draftId, sendData)
 
-    log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::sendDraft:${JSON.stringify(responseData)}`)
+    log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::sendMessage:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createSecureMessage, saved action ${JSON.stringify(savedAction)}`)
@@ -410,6 +410,7 @@ async function createSecureMessage (featureName, action){
     if (!secureMessageList) {
         secureMessageList = []
     }
+    secureMessageList.push(draftId)
     secureMessageList.push(responseData.Id)
     localStorage.setItem(featureName, 'secureMessageList', secureMessageList)
 }
