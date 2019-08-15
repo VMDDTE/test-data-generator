@@ -4,8 +4,8 @@ const log = global.log
 const ADMIN_BASE_API_URL = process.env.ADMIN_BASE_API_URL
 const SERVICE_NAME = 'legal-basis-qualifying-service'
 
-async function createLegalBasisQualifying (legalBasisType, payload) {
-    let url = `${ADMIN_BASE_API_URL}/reference/legalBasis/${legalBasisType}`
+async function createLegalBasisQualifying (payload) {
+    let url = `${ADMIN_BASE_API_URL}/reference/legalBasis/${payload.Type}`
     log.info(`${SERVICE_NAME}::createLegalBasisQualifying:url:${url}`)
 
     return axios.post(url, payload)
