@@ -7,6 +7,7 @@ const userService = require('../service/user-service')
 const productService = require('../service/product-service')
 const speciesService = require('../service/species-service')
 const speciesQualifyingService = require('../service/species-qualifying-service')
+const legalBasisQualifyingService = require('../service/legal-basis-qualifying-service')
 const substanceService = require('../service/substance-service')
 const substanceQualifierService = require('../service/substance-qualifier-service')
 const marketingAuthorisationService = require('../service/marketing-authorisation-service')
@@ -48,6 +49,10 @@ async function process (featureName, action) {
     case actionTypes.ACTION_TYPE_SPECIES_QUALIFYING:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SPECIES_QUALIFYING}`)
         await createSpeciesQualifying(featureName, action)
+        break
+    case actionTypes.ACTION_TYPE_LEGAL_BASIS_QUALIFYING:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_LEGAL_BASIS_QUALIFYING}`)
+        await createLegalBasisQualifying(featureName, action)
         break
     case actionTypes.ACTION_TYPE_SUBSTANCE:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SUBSTANCE}`)
@@ -199,6 +204,24 @@ async function createSpeciesQualifying (featureName, action) {
     }
     speciesQualifyingList.push(responseData.Id)
     localStorage.setItem(featureName, 'speciesQualifyingList', speciesQualifyingList)
+}
+
+async function createLegalBasisQualifying (featureName, action) {
+    log.debug(`${SERVICE_NAME}::createLegalBasisQualifying`)
+    let legalBasisQualifyingData = action.data
+    log.info(`${SERVICE_NAME}::createLegalBasisQualifying::${action.label}::creating legal basis qualifying from ${JSON.stringify(legalBasisQualifyingData)}`)
+    let responseData = await legalBasisQualifyingService.createLegalBasisQualifying(legalBasisQualifyingData)
+    log.info(`${SERVICE_NAME}::createLegalBasisQualifying::${action.label}::created:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(featureName, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createLegalBasisQualifying, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(featureName, action.label, savedAction)
+    var legalBasisQualifyingList = localStorage.getItem(featureName, 'legalBasisQualifyingList')
+    if (!legalBasisQualifyingList) {
+        legalBasisQualifyingList = []
+    }
+    legalBasisQualifyingList.push(responseData.Id)
+    localStorage.setItem(featureName, 'legalBasisQualifyingList', legalBasisQualifyingList)
 }
 
 async function createSubstance (featureName, action) {
