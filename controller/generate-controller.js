@@ -10,7 +10,7 @@ const productService = require('../service/product-service')
 const speciesService = require('../service/species-service')
 const invitationService = require('../service/invitation-service')
 const speciesQualifyingService = require('../service/species-qualifying-service')
-const legalBasisQualifyingService = require('../service/legal-basis-qualifying-service')
+const referenceDataService = require('../service/reference-data-service')
 const substanceService = require('../service/substance-service')
 const substanceQualifierService = require('../service/substance-qualifier-service')
 const marketingAuthorisationService = require('../service/marketing-authorisation-service')
@@ -80,7 +80,7 @@ async function tearDownEntities (featureName) {
     await tearDownProduct(featureName)
     await tearDownSpecies(featureName)
     await tearDownSpeciesQualifying(featureName)
-    await tearDownLegalBasisQualifying(featureName)
+    await tearDownReferenceData(featureName)
     await tearDownSubstance(featureName)
     await tearDownSubstanceQualifier(featureName)
     await tearDownManufacturer(featureName)
@@ -192,13 +192,13 @@ async function tearDownSpeciesQualifying (featureName) {
     }
 }
 
-async function tearDownLegalBasisQualifying (featureName) {
-    log.info(`${CONTROLLER_NAME}::tearDownLegalBasisQualifying:${featureName}`)
-    const legalBasisQualifyingList = localStorage.getItem(featureName, 'legalBasisQualifyingList')
-    if (legalBasisQualifyingList) {
-        for (let id of legalBasisQualifyingList) {
-            log.info(`${CONTROLLER_NAME}::about to teardown legal basis qualifying with id ${id}`)
-            await legalBasisQualifyingService.deleteLegalBasisQualifying(id)
+async function tearDownReferenceData (featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownReferenceData:${featureName}`)
+    const referenceDataList = localStorage.getItem(featureName, 'referenceDataList')
+    if (referenceDataList) {
+        for (let id of referenceDataList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown reference data with id ${id}`)
+            await referenceDataService.deleteReferenceData(id)
         }
     }
 }
