@@ -7,7 +7,7 @@ const userService = require('../service/user-service')
 const productService = require('../service/product-service')
 const speciesService = require('../service/species-service')
 const speciesQualifyingService = require('../service/species-qualifying-service')
-const legalBasisQualifyingService = require('../service/legal-basis-qualifying-service')
+const referenceDataService = require('../service/legal-basis-qualifying-service')
 const substanceService = require('../service/substance-service')
 const substanceQualifierService = require('../service/substance-qualifier-service')
 const marketingAuthorisationService = require('../service/marketing-authorisation-service')
@@ -50,9 +50,9 @@ async function process (featureName, action) {
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SPECIES_QUALIFYING}`)
         await createSpeciesQualifying(featureName, action)
         break
-    case actionTypes.ACTION_TYPE_LEGAL_BASIS_QUALIFYING:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_LEGAL_BASIS_QUALIFYING}`)
-        await createLegalBasisQualifying(featureName, action)
+    case actionTypes.ACTION_TYPE_REFERENCE_DATA:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_REFERENCE_DATA}`)
+        await createReferenceData(featureName, action)
         break
     case actionTypes.ACTION_TYPE_SUBSTANCE:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SUBSTANCE}`)
@@ -206,22 +206,22 @@ async function createSpeciesQualifying (featureName, action) {
     localStorage.setItem(featureName, 'speciesQualifyingList', speciesQualifyingList)
 }
 
-async function createLegalBasisQualifying (featureName, action) {
-    log.debug(`${SERVICE_NAME}::createLegalBasisQualifying`)
-    let legalBasisQualifyingData = action.data
-    log.info(`${SERVICE_NAME}::createLegalBasisQualifying::${action.label}::creating legal basis qualifying from ${JSON.stringify(legalBasisQualifyingData)}`)
-    let responseData = await legalBasisQualifyingService.createLegalBasisQualifying(legalBasisQualifyingData)
-    log.info(`${SERVICE_NAME}::createLegalBasisQualifying::${action.label}::created:${JSON.stringify(responseData)}`)
+async function createReferenceData (featureName, action) {
+    log.debug(`${SERVICE_NAME}::createReferenceData`)
+    let referenceData = action.data
+    log.info(`${SERVICE_NAME}::createReferenceData::${action.label}::creating referenceData from ${JSON.stringify(referenceData)}`)
+    let responseData = await referenceDataService.createReferenceData(referenceData)
+    log.info(`${SERVICE_NAME}::createReferenceData::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
-    log.debug(`${SERVICE_NAME}::createLegalBasisQualifying, saved action ${JSON.stringify(savedAction)}`)
+    log.debug(`${SERVICE_NAME}::createReferenceData, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(featureName, action.label, savedAction)
-    var legalBasisQualifyingList = localStorage.getItem(featureName, 'legalBasisQualifyingList')
-    if (!legalBasisQualifyingList) {
-        legalBasisQualifyingList = []
+    var referenceDataList = localStorage.getItem(featureName, 'referenceDataList')
+    if (!referenceDataList) {
+        referenceDataList = []
     }
-    legalBasisQualifyingList.push(responseData.Id)
-    localStorage.setItem(featureName, 'legalBasisQualifyingList', legalBasisQualifyingList)
+    referenceDataList.push(responseData.Id)
+    localStorage.setItem(featureName, 'referenceDataList', referenceDataList)
 }
 
 async function createSubstance (featureName, action) {
