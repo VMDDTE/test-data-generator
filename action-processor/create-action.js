@@ -412,6 +412,7 @@ async function createSecureMessage (featureName, action){
     var sendData = {}
     sendData.Subject = action.data.Subject
     sendData.Message = action.data.Message
+    sendData.Attachments = action.data.Attachments
     sendData.FromId = response.Id
 
     sendData.Recipients = []
