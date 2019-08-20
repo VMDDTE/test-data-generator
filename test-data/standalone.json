@@ -1,0 +1,83 @@
+{
+    "actions": [
+        {
+            "action": "create",
+            "type": "ManufacturerRecord",
+            "label": "vp1",
+            "data": {
+                "Name": "Raptors and Reptiles-${namespace}",
+                "OrganisationReference": "10347-${namespace}",
+                "Address" : {
+                    "Address": "221B Baker St",
+                    "Address1": "Marylebone",
+                    "Town": "London",
+                    "PostCode": "NW1 6XE",
+                    "Country": "UK"
+                }
+            }
+        },
+        {
+            "action": "create",
+            "type": "ExternalUserRecord",
+            "label": "vet1",
+            "data": {
+                "FirstName": "Sherlock",
+                "LastName": "Holmes",
+                "Email": "{usergen}"
+            }
+        },
+        {
+            "action": "create",
+            "type": "ExternalUserRecord",
+            "label": "vet2",
+            "data": {
+                "FirstName": "John",
+                "LastName": "Watson",
+                "Email": "{usergen}"
+            }
+        },
+        {
+            "action": "create",
+            "type": "ExternalUserRecord",
+            "label": "vet3",
+            "data": {
+                "FirstName": "Molly",
+                "LastName": "Hooper",
+                "Email": "{usergen}"
+            }
+        },
+        {
+            "action": "create",
+            "type": "ExternalUserRecord",
+            "label": "vet4",
+            "testUser": "true",
+            "data": {
+                "FirstName": "Test",
+                "LastName": "User",
+                "Email": "{usergen}"
+            }
+        },
+        {
+            "action": "assignRole",
+            "type": "PrimaryAdminRole",
+            "label": "role3",
+            "data": {
+                "orgId": "vp1",
+                "users": [
+                    "vet4"
+                ]
+            }
+        },
+        {
+            "action": "assignRole",
+            "type": "AdminRole",
+            "label": "role4",
+            "data": {
+                "orgId": "vp1",
+                "users": [
+                    "vet4"
+                ]
+            }
+        }
+    ]
+}
