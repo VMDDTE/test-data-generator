@@ -415,7 +415,7 @@ async function createSecureMessage (featureName, action){
     sendData.Attachments = action.data.Attachments
     sendData.FromId = response.Id
 
-    sendData.Recipients = []
+    sendData.RecipientIds = []
     for (const userLabel of action.data.Recipients) {
         let savedAction = await localStorage.getItem(featureName, userLabel)
         let userId = savedAction && savedAction.response && savedAction.response.Id
