@@ -418,9 +418,10 @@ async function createSecureMessage (featureName, action){
     sendData.RecipientIds = []
     for (const userLabel of action.data.Recipients) {
         let savedAction = await localStorage.getItem(featureName, userLabel)
-        let userId = savedAction && savedAction.response && savedAction.response.Id
-        log.info(`${SERVICE_NAME}::createSecureMessage::RecipientId ${userId}`)
-        sendData.RecipientIds.push(userId)
+        if(savedAction && savedAction.response) {
+            log.info(`${SERVICE_NAME}::createSecureMessage::RecipientId ${savedAction.response.Id}`)
+            sendData.RecipientIds.push(savedAction.response.Id)
+        }
     }
 
     responseData = await messageService.sendMessage(draftId, sendData)
