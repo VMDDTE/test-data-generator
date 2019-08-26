@@ -14,6 +14,7 @@ const marketingAuthorisationService = require('../service/marketing-authorisatio
 const jobService = require('../service/job-service')
 const sisService = require('../service/sis-service')
 const messageService = require('../service/message-service')
+const storageService = require('../service/storage-service')
 const constants = require('../common/constants')
 const log = global.log
 
@@ -85,6 +86,10 @@ async function process (featureName, action) {
     case actionTypes.ACTION_TYPE_SECURE_MESSAGE:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SECURE_MESSAGE}`)
         await createSecureMessage(featureName, action)
+        break
+    case actionTypes.ACTION_TYPE_STORAGE:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SECURE_MESSAGE}`)
+        await createStorageRecord(featureName, action)
         break
     default:
         log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
@@ -403,7 +408,6 @@ async function createSecureMessage (featureName, action){
     log.debug(`${SERVICE_NAME}::createSecureMessage`)
     log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::creating a new secure message ${JSON.stringify(action.data)}`)
     let savedUser = await localStorage.getItem(featureName, action.data.FromUser)
-
     let response = savedUser.response
     
     let responseData = await messageService.createDraft(response.Id)
@@ -440,5 +444,33 @@ async function createSecureMessage (featureName, action){
     localStorage.setItem(featureName, 'secureMessageList', secureMessageList)
 }
 
+
+async function createStorageRecord (featureName, action){
+    log.debug(`${SERVICE_NAME}::createStorage`)
+    log.info(`${SERVICE_NAME}::createStorage::${action.label}::creating a new secure message ${JSON.stringify(action.data)}`)
+    console.log(action.data)
+    let savedUser = await localStorage.getItem(featureName, action.data.UserLabel)
+    let user = savedUser.response
+    console.log(user)
+
+    let responseData = await storageService.createStorageRecord(
+        user.Id,   
+        action.data.FileName,
+        action.data.ContentType,
+        action.data.Payload) 
+
+    log.info(`${SERVICE_NAME}::createStorage::${action.label}::sendMessage:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(featureName, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createStorage, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(featureName, action.label, savedAction)
+    var storageList = localStorage.getItem(featureName, 'StorageList')
+    if (!storageList) {
+        storageList = []
+    }
+    storageList.push(draftId)
+    storageList.push(responseData.Id)
+    localStorage.setItem(featureName, 'StorageList', storageList)
+}
 
 module.exports.process = process
