@@ -14,6 +14,7 @@ const marketingAuthorisationService = require('../service/marketing-authorisatio
 const jobService = require('../service/job-service')
 const sisService = require('../service/sis-service')
 const messageService = require('../service/message-service')
+const storageService = require('../service/storage-service')
 const constants = require('../common/constants')
 const log = global.log
 
@@ -85,6 +86,10 @@ async function process (featureName, action) {
     case actionTypes.ACTION_TYPE_SECURE_MESSAGE:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SECURE_MESSAGE}`)
         await createSecureMessage(featureName, action)
+        break
+    case actionTypes.ACTION_TYPE_STORAGE:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_STORAGE}`)
+        await createStorageRecord(featureName, action)
         break
     default:
         log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
@@ -403,7 +408,6 @@ async function createSecureMessage (featureName, action){
     log.debug(`${SERVICE_NAME}::createSecureMessage`)
     log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::creating a new secure message ${JSON.stringify(action.data)}`)
     let savedUser = await localStorage.getItem(featureName, action.data.FromUser)
-
     let response = savedUser.response
     
     let responseData = await messageService.createDraft(response.Id)
@@ -412,7 +416,6 @@ async function createSecureMessage (featureName, action){
     var sendData = {}
     sendData.Subject = action.data.Subject
     sendData.Message = action.data.Message
-    sendData.Attachments = action.data.Attachments
     sendData.FromId = response.Id
 
     sendData.RecipientIds = []
@@ -424,6 +427,16 @@ async function createSecureMessage (featureName, action){
         }
     }
 
+    sendData.Attachments = []
+    if(action.data && action.data.Attachments && action.data.Attachments.length) {
+        for (const label of action.data.Attachments) {
+            let savedAction = await localStorage.getItem(featureName, label)
+            if(savedAction && savedAction.response) {
+                log.info(`${SERVICE_NAME}::createSecureMessage::RecipientId ${savedAction.response.Id}`)
+                sendData.Attachments.push(savedAction.response.Id)
+            }
+        }
+    }
     responseData = await messageService.sendMessage(draftId, sendData)
 
     log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::sendMessage:${JSON.stringify(responseData)}`)
@@ -435,10 +448,35 @@ async function createSecureMessage (featureName, action){
     if (!secureMessageList) {
         secureMessageList = []
     }
-    secureMessageList.push(draftId)
+
     secureMessageList.push(responseData.Id)
     localStorage.setItem(featureName, 'secureMessageList', secureMessageList)
 }
 
+
+async function createStorageRecord (featureName, action){
+    log.debug(`${SERVICE_NAME}::createStorage`)
+    let savedUser = await localStorage.getItem(featureName, action.data.UserLabel)
+    let user = savedUser.response
+
+    let responseData = await storageService.createStorageRecord(
+        user.Id,   
+        action.data.FileName,
+        action.data.ContentType,
+        action.data.Payload) 
+
+    var savedAction = localStorage.getItem(featureName, action.label)
+    if(responseData && responseData.length){
+        savedAction.response = responseData[0]
+        log.debug(`${SERVICE_NAME}::createStorage, saved action ${JSON.stringify(savedAction)}`)
+        localStorage.setItem(featureName, action.label, savedAction)
+        var storageList = localStorage.getItem(featureName, 'StorageList')
+        if (!storageList) {
+            storageList = []
+        }
+        storageList.push(responseData[0].Id)
+        localStorage.setItem(featureName, 'StorageList', storageList)
+    }
+}
 
 module.exports.process = process
