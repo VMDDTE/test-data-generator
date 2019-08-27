@@ -28,4 +28,22 @@ async function createStorageRecord(userId, fileName, contentType, payload) {
         })
 }
 
+async function deleteStorageRecord(storageId) {
+    let url = `${ADMIN_BASE_API_URL}/storage/delete/${storageId}`
+    log.info(`${SERVICE_NAME}::deleteStorageRecord:url:${url}`)
+
+    return axios({
+        method: 'delete',
+        url: url
+    })
+        .then((response) => {
+            return response.data
+        })
+        .catch(error => {
+            log.error(`${SERVICE_NAME}::deleteStorageRecord:error: ${error}`)
+            throw error
+        })
+}
+
 module.exports.createStorageRecord = createStorageRecord
+module.exports.deleteStorageRecord = deleteStorageRecord

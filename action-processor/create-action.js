@@ -416,7 +416,6 @@ async function createSecureMessage (featureName, action){
     var sendData = {}
     sendData.Subject = action.data.Subject
     sendData.Message = action.data.Message
-    sendData.Attachments = action.data.Attachments
     sendData.FromId = response.Id
 
     sendData.RecipientIds = []
@@ -428,6 +427,16 @@ async function createSecureMessage (featureName, action){
         }
     }
 
+    sendData.Attachments = []
+    if(action.data && action.data.Attachments && action.data.Attachments.length) {
+        for (const label of action.data.Attachments) {
+            let savedAction = await localStorage.getItem(featureName, label)
+            if(savedAction && savedAction.response) {
+                log.info(`${SERVICE_NAME}::createSecureMessage::RecipientId ${savedAction.response.Id}`)
+                sendData.Attachments.push(savedAction.response.Id)
+            }
+        }
+    }
     responseData = await messageService.sendMessage(draftId, sendData)
 
     log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::sendMessage:${JSON.stringify(responseData)}`)
@@ -439,7 +448,7 @@ async function createSecureMessage (featureName, action){
     if (!secureMessageList) {
         secureMessageList = []
     }
-    secureMessageList.push(draftId)
+
     secureMessageList.push(responseData.Id)
     localStorage.setItem(featureName, 'secureMessageList', secureMessageList)
 }
@@ -448,10 +457,8 @@ async function createSecureMessage (featureName, action){
 async function createStorageRecord (featureName, action){
     log.debug(`${SERVICE_NAME}::createStorage`)
     log.info(`${SERVICE_NAME}::createStorage::${action.label}::creating a new secure message ${JSON.stringify(action.data)}`)
-    console.log(action.data)
     let savedUser = await localStorage.getItem(featureName, action.data.UserLabel)
     let user = savedUser.response
-    console.log(user)
 
     let responseData = await storageService.createStorageRecord(
         user.Id,   
@@ -461,16 +468,17 @@ async function createStorageRecord (featureName, action){
 
     log.info(`${SERVICE_NAME}::createStorage::${action.label}::sendMessage:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
-    savedAction.response = responseData
-    log.debug(`${SERVICE_NAME}::createStorage, saved action ${JSON.stringify(savedAction)}`)
-    localStorage.setItem(featureName, action.label, savedAction)
-    var storageList = localStorage.getItem(featureName, 'StorageList')
-    if (!storageList) {
-        storageList = []
+    if(responseData && responseData.length){
+        savedAction.response = responseData[0]
+        log.debug(`${SERVICE_NAME}::createStorage, saved action ${JSON.stringify(savedAction)}`)
+        localStorage.setItem(featureName, action.label, savedAction)
+        var storageList = localStorage.getItem(featureName, 'StorageList')
+        if (!storageList) {
+            storageList = []
+        }
+        storageList.push(responseData[0].Id)
+        localStorage.setItem(featureName, 'StorageList', storageList)
     }
-    storageList.push(draftId)
-    storageList.push(responseData.Id)
-    localStorage.setItem(featureName, 'StorageList', storageList)
 }
 
 module.exports.process = process
