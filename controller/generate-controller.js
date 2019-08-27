@@ -87,18 +87,18 @@ async function tearDownEntities (featureName) {
     await tearDownManufacturer(featureName)
     await tearDownSpecialImportApplication(featureName)
     await tearDownMarketingAuthorisation(featureName)
-    await tearStorageRecords(featureName)
+    await tearDownStorageRecords(featureName)
     await tearDownMessages(featureName)
     await tearDownExternalUser(featureName)
     await tearDownInvitations(featureName)
 }
 
-async function tearStorageRecords (featureName) {
-    log.info(`${CONTROLLER_NAME}::tearStorageRecords:${featureName}`)
+async function tearDownStorageRecords (featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownStorageRecords:${featureName}`)
     const list = localStorage.getItem(featureName, 'StorageList')
     if (list) {
         for (let id of list) {
-            log.info(`${CONTROLLER_NAME}::about to teardown message with id ${id}`)
+            log.info(`${CONTROLLER_NAME}::about to teardown storge record with id ${id}`)
             await storageService.deleteStorageRecord(id)
         }
     }

@@ -88,7 +88,7 @@ async function process (featureName, action) {
         await createSecureMessage(featureName, action)
         break
     case actionTypes.ACTION_TYPE_STORAGE:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SECURE_MESSAGE}`)
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_STORAGE}`)
         await createStorageRecord(featureName, action)
         break
     default:
@@ -456,7 +456,6 @@ async function createSecureMessage (featureName, action){
 
 async function createStorageRecord (featureName, action){
     log.debug(`${SERVICE_NAME}::createStorage`)
-    log.info(`${SERVICE_NAME}::createStorage::${action.label}::creating a new secure message ${JSON.stringify(action.data)}`)
     let savedUser = await localStorage.getItem(featureName, action.data.UserLabel)
     let user = savedUser.response
 
@@ -466,7 +465,6 @@ async function createStorageRecord (featureName, action){
         action.data.ContentType,
         action.data.Payload) 
 
-    log.info(`${SERVICE_NAME}::createStorage::${action.label}::sendMessage:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     if(responseData && responseData.length){
         savedAction.response = responseData[0]
