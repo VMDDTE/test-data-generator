@@ -355,12 +355,12 @@ async function createMarketingAuthorisationApplication (featureName, action) {
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createMarketingAuthorisationApplication, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(featureName, action.label, savedAction)
-    var maList = localStorage.getItem(featureName, 'maList')
+    var maList = localStorage.getItem(featureName, 'maApplicationList')
     if (!maList) {
         maList = []
     }
     maList.push(responseData.Id)
-    localStorage.setItem(featureName, 'maList', maList)
+    localStorage.setItem(featureName, 'maApplicationList', maList)
 }
 
 async function createMarketingAuthorisationRenewalJob (featureName, action){

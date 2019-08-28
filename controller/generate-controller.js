@@ -282,10 +282,10 @@ async function tearDownMarketingAuthorisation (featureName) {
 
 async function tearDownMarketingAuthorisationApplication (featureName) {
     log.info(`${CONTROLLER_NAME}::tearDownMarketingAuthorisationApplication:${featureName}`)
-    const maList = localStorage.getItem(featureName, 'maList')
+    const maList = localStorage.getItem(featureName, 'maApplicationList')
     if (maList) {
         for (let id of maList) {
-            log.info(`${CONTROLLER_NAME}::about to teardown marketing authorisation with id ${id}`)
+            log.info(`${CONTROLLER_NAME}::about to teardown marketing authorisation application with id ${id}`)
             await maApplicationService.deleteMarketingAuthorisationApplication(id)
         }
     }
