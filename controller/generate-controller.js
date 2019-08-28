@@ -14,6 +14,7 @@ const referenceDataService = require('../service/reference-data-service')
 const substanceService = require('../service/substance-service')
 const substanceQualifierService = require('../service/substance-qualifier-service')
 const marketingAuthorisationService = require('../service/marketing-authorisation-service')
+const maApplicationService = require('../service/ma-application-service')
 const jobService = require('../service/job-service')
 const messageService = require('../service/message-service')
 const storageService = require('../service/storage-service')
@@ -87,6 +88,7 @@ async function tearDownEntities (featureName) {
     await tearDownManufacturer(featureName)
     await tearDownSpecialImportApplication(featureName)
     await tearDownMarketingAuthorisation(featureName)
+    await tearDownMarketingAuthorisationApplication(featureName)
     await tearDownStorageRecords(featureName)
     await tearDownMessages(featureName)
     await tearDownExternalUser(featureName)
@@ -274,6 +276,17 @@ async function tearDownMarketingAuthorisation (featureName) {
         for (let id of maList) {
             log.info(`${CONTROLLER_NAME}::about to teardown marketing authorisation with id ${id}`)
             await marketingAuthorisationService.deleteMarketingAuthorisation(id)
+        }
+    }
+}
+
+async function tearDownMarketingAuthorisationApplication (featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownMarketingAuthorisationApplication:${featureName}`)
+    const maList = localStorage.getItem(featureName, 'maApplicationList')
+    if (maList) {
+        for (let id of maList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown marketing authorisation application with id ${id}`)
+            await maApplicationService.deleteMarketingAuthorisationApplication(id)
         }
     }
 }
