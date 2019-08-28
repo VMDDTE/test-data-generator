@@ -11,6 +11,7 @@ const referenceDataService = require('../service/reference-data-service')
 const substanceService = require('../service/substance-service')
 const substanceQualifierService = require('../service/substance-qualifier-service')
 const marketingAuthorisationService = require('../service/marketing-authorisation-service')
+const maApplicationService = require('../service/ma-application-service')
 const jobService = require('../service/job-service')
 const sisService = require('../service/sis-service')
 const messageService = require('../service/message-service')
@@ -74,6 +75,10 @@ async function process (featureName, action) {
     case actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION}`)
         await createMarketingAuthorisation(featureName, action)
+        break
+    case actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_APPLICATION:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_APPLICATION}`)
+        await createMarketingAuthorisationApplication(featureName, action)
         break
     case actionTypes.ACTION_TYPE_JOB_MARKETING_AUTHORISATION_RENEWAL:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_JOB_MARKETING_AUTHORISATION_RENEWAL}`)
@@ -331,6 +336,24 @@ async function createMarketingAuthorisation (featureName, action) {
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createMarketingAuthorisation, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(featureName, action.label, savedAction)
+    var maList = localStorage.getItem(featureName, 'maList')
+    if (!maList) {
+        maList = []
+    }
+    maList.push(responseData.Id)
+    localStorage.setItem(featureName, 'maList', maList)
+}
+
+async function createMarketingAuthorisationApplication (featureName, action) {
+    log.debug(`${SERVICE_NAME}::createMarketingAuthorisationApplication`)
+    let maData = action.data
+    log.info(`${SERVICE_NAME}::createMarketingAuthorisationApplication::${action.label}::creating marketing authorisation application from ${JSON.stringify(maData)}`)
+    let responseData = await maApplicationService.createMarketingAuthorisationApplication(maData)
+    log.info(`${SERVICE_NAME}::createMarketingAuthorisationApplication::${action.label}::created:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(featureName, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createMarketingAuthorisationApplication, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(featureName, action.label, savedAction)
     var maList = localStorage.getItem(featureName, 'maList')
     if (!maList) {
