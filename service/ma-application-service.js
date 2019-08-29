@@ -19,7 +19,7 @@ async function createNewMarketingAuthorisationApplication (payload) {
 }
 
 async function createRenewalMarketingAuthorisationApplication (payload) {
-    let url = `${ADMIN_BASE_API_URL}/MarketingAuthorisationApplication`
+    let url = `${ADMIN_BASE_API_URL}/MarketingAuthorisationApplication/renewal`
     log.info(`${SERVICE_NAME}::createRenewalMarketingAuthorisationApplication:url:${url}`)
 
     return axios.post(url, payload)
