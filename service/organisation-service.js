@@ -46,6 +46,19 @@ async function deleteOrganisation (orgId) {
         })
 }
 
+async function findManufacturerByName (name) {
+    let url = `${ADMIN_BASE_API_URL}/organisations/${orgId}`
+    log.info(`${SERVICE_NAME}::findManufacturerByName:url:${url}`)
+
+    return axios.delete(url)
+        .then((response) => {
+            return response.data
+        })
+        .catch(error => {
+            log.error(`${SERVICE_NAME}::deleteOrganisation:error: ${error}`)
+            throw error
+        })
+}
 
 async function assignRoleToOrganisationForUser (orgId, userId, roleName) {
     let url = `${ADMIN_BASE_API_URL}/organisations/${orgId}/assignrole/${userId}/${roleName}`
