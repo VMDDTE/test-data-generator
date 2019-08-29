@@ -359,12 +359,12 @@ async function createNewMarketingAuthorisationApplication (featureName, action) 
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createNewMarketingAuthorisationApplication, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(featureName, action.label, savedAction)
-    var maNewAppList = localStorage.getItem(featureName, 'maNewApplicationList')
-    if (!maNewAppList) {
-        maNewAppList = []
+    var maAppList = localStorage.getItem(featureName, 'maApplicationList')
+    if (!maAppList) {
+        maAppList = []
     }
-    maNewAppList.push(responseData.Id)
-    localStorage.setItem(featureName, 'maNewApplicationList', maNewAppList)
+    maAppList.push(responseData.Id)
+    localStorage.setItem(featureName, 'maNewApplicationList', maAppList)
 }
 
 async function createRenewalMarketingAuthorisationApplication (featureName, action) {
@@ -377,12 +377,12 @@ async function createRenewalMarketingAuthorisationApplication (featureName, acti
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createRenewalMarketingAuthorisationApplication, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(featureName, action.label, savedAction)
-    var maRenewalAppList = localStorage.getItem(featureName, 'maRenewalApplicationList')
-    if (!maRenewalAppList) {
-        maRenewalAppList = []
+    var maAppList = localStorage.getItem(featureName, 'maApplicationList')
+    if (!maAppList) {
+        maAppList = []
     }
-    maRenewalAppList.push(responseData.Id)
-    localStorage.setItem(featureName, 'maRenewalApplicationList', maRenewalAppList)
+    maAppList.push(responseData.Id)
+    localStorage.setItem(featureName, 'maRenewalApplicationList', maAppList)
 }
 
 async function createMarketingAuthorisationRenewalJob (featureName, action){
