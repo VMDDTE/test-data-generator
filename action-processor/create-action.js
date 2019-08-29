@@ -371,7 +371,7 @@ async function createRenewalMarketingAuthorisationApplication (featureName, acti
     log.debug(`${SERVICE_NAME}::createRenewalMarketingAuthorisationApplication`)
     let maData = action.data
     log.info(`${SERVICE_NAME}::createRenewalMarketingAuthorisationApplication::${action.label}::creating renewal marketing authorisation application from ${JSON.stringify(maData)}`)
-    let responseData = await maApplicationService.createNewMarketingAuthorisationApplication(maData)
+    let responseData = await maApplicationService.createRenewalMarketingAuthorisationApplication(maData)
     log.info(`${SERVICE_NAME}::createRenewalMarketingAuthorisationApplication::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData

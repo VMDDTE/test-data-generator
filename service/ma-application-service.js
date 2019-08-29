@@ -48,4 +48,5 @@ async function deleteMarketingAuthorisationApplication (maApplicationId) {
 }
 
 module.exports.createNewMarketingAuthorisationApplication = createNewMarketingAuthorisationApplication
+module.exports.createRenewalMarketingAuthorisationApplication = createRenewalMarketingAuthorisationApplication
 module.exports.deleteMarketingAuthorisationApplication = deleteMarketingAuthorisationApplication
