@@ -5,7 +5,7 @@ const ADMIN_BASE_API_URL = process.env.ADMIN_BASE_API_URL
 const SERVICE_NAME = 'ma-application-service'
 
 async function createMarketingAuthorisationApplication (payload) {
-    let url = `${ADMIN_BASE_API_URL}/MarketingAuthorisationApplication`
+    let url = `${ADMIN_BASE_API_URL}/MarketingAuthorisationApplication/new`
     log.info(`${SERVICE_NAME}::createMarketingAuthorisationApplication:url:${url}`)
 
     return axios.post(url, payload)
@@ -13,7 +13,7 @@ async function createMarketingAuthorisationApplication (payload) {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::createMarketingAuthorisation:error: ${error}`)
+            log.error(`${SERVICE_NAME}::createMarketingAuthorisationApplication:error: ${error}`)
             throw error
         })
 }
