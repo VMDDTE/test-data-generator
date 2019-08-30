@@ -364,7 +364,7 @@ async function createNewMarketingAuthorisationApplication (featureName, action) 
         maAppList = []
     }
     maAppList.push(responseData.Id)
-    localStorage.setItem(featureName, 'maNewApplicationList', maAppList)
+    localStorage.setItem(featureName, 'maApplicationList', maAppList)
 }
 
 async function createRenewalMarketingAuthorisationApplication (featureName, action) {
