@@ -382,7 +382,7 @@ async function createRenewalMarketingAuthorisationApplication (featureName, acti
         maAppList = []
     }
     maAppList.push(responseData.Id)
-    localStorage.setItem(featureName, 'maRenewalApplicationList', maAppList)
+    localStorage.setItem(featureName, 'maApplicationList', maAppList)
 }
 
 async function createMarketingAuthorisationRenewalJob (featureName, action){
