@@ -76,9 +76,13 @@ async function process (featureName, action) {
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION}`)
         await createMarketingAuthorisation(featureName, action)
         break
-    case actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_APPLICATION:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_APPLICATION}`)
-        await createMarketingAuthorisationApplication(featureName, action)
+    case actionTypes.ACTION_TYPE_NEW_MARKETING_AUTHORISATION_APPLICATION:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_NEW_MARKETING_AUTHORISATION_APPLICATION}`)
+        await createNewMarketingAuthorisationApplication(featureName, action)
+        break
+    case actionTypes.ACTION_TYPE_RENEWAL_MARKETING_AUTHORISATION_APPLICATION:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_RENEWAL_MARKETING_AUTHORISATION_APPLICATION}`)
+        await createRenewalMarketingAuthorisationApplication(featureName, action)
         break
     case actionTypes.ACTION_TYPE_JOB_MARKETING_AUTHORISATION_RENEWAL:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_JOB_MARKETING_AUTHORISATION_RENEWAL}`)
@@ -345,22 +349,40 @@ async function createMarketingAuthorisation (featureName, action) {
     localStorage.setItem(featureName, 'maList', maList)
 }
 
-async function createMarketingAuthorisationApplication (featureName, action) {
-    log.debug(`${SERVICE_NAME}::createMarketingAuthorisationApplication`)
+async function createNewMarketingAuthorisationApplication (featureName, action) {
+    log.debug(`${SERVICE_NAME}::createNewMarketingAuthorisationApplication`)
     let maData = action.data
-    log.info(`${SERVICE_NAME}::createMarketingAuthorisationApplication::${action.label}::creating marketing authorisation application from ${JSON.stringify(maData)}`)
-    let responseData = await maApplicationService.createMarketingAuthorisationApplication(maData)
-    log.info(`${SERVICE_NAME}::createMarketingAuthorisationApplication::${action.label}::created:${JSON.stringify(responseData)}`)
+    log.info(`${SERVICE_NAME}::createNewMarketingAuthorisationApplication::${action.label}::creating new marketing authorisation application from ${JSON.stringify(maData)}`)
+    let responseData = await maApplicationService.createNewMarketingAuthorisationApplication(maData)
+    log.info(`${SERVICE_NAME}::createNewMarketingAuthorisationApplication::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
-    log.debug(`${SERVICE_NAME}::createMarketingAuthorisationApplication, saved action ${JSON.stringify(savedAction)}`)
+    log.debug(`${SERVICE_NAME}::createNewMarketingAuthorisationApplication, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(featureName, action.label, savedAction)
-    var maList = localStorage.getItem(featureName, 'maApplicationList')
-    if (!maList) {
-        maList = []
+    var maAppList = localStorage.getItem(featureName, 'maApplicationList')
+    if (!maAppList) {
+        maAppList = []
     }
-    maList.push(responseData.Id)
-    localStorage.setItem(featureName, 'maApplicationList', maList)
+    maAppList.push(responseData.Id)
+    localStorage.setItem(featureName, 'maApplicationList', maAppList)
+}
+
+async function createRenewalMarketingAuthorisationApplication (featureName, action) {
+    log.debug(`${SERVICE_NAME}::createRenewalMarketingAuthorisationApplication`)
+    let maData = action.data
+    log.info(`${SERVICE_NAME}::createRenewalMarketingAuthorisationApplication::${action.label}::creating renewal marketing authorisation application from ${JSON.stringify(maData)}`)
+    let responseData = await maApplicationService.createRenewalMarketingAuthorisationApplication(maData)
+    log.info(`${SERVICE_NAME}::createRenewalMarketingAuthorisationApplication::${action.label}::created:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(featureName, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createRenewalMarketingAuthorisationApplication, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(featureName, action.label, savedAction)
+    var maAppList = localStorage.getItem(featureName, 'maApplicationList')
+    if (!maAppList) {
+        maAppList = []
+    }
+    maAppList.push(responseData.Id)
+    localStorage.setItem(featureName, 'maApplicationList', maAppList)
 }
 
 async function createMarketingAuthorisationRenewalJob (featureName, action){
