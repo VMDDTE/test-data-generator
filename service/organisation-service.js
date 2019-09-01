@@ -46,6 +46,19 @@ async function deleteOrganisation (orgId) {
         })
 }
 
+async function findManufacturerByName (name) {
+    let url = `${ADMIN_BASE_API_URL}/organisations/byTypeAndName/Manufacturer/{name}`
+    log.info(`${SERVICE_NAME}::findManufacturerByName:url:${url}`)
+
+    return axios.get(url)
+        .then((response) => {
+            return response.data
+        })
+        .catch(error => {
+            log.error(`${SERVICE_NAME}::findManufacturerByName:error: ${error}`)
+            throw error
+        })
+}
 
 async function assignRoleToOrganisationForUser (orgId, userId, roleName) {
     let url = `${ADMIN_BASE_API_URL}/organisations/${orgId}/assignrole/${userId}/${roleName}`
@@ -65,3 +78,4 @@ module.exports.createOrganisation = createOrganisation
 module.exports.updateOrganisation = updateOrganisation
 module.exports.deleteOrganisation = deleteOrganisation
 module.exports.assignRoleToOrganisationForUser = assignRoleToOrganisationForUser
+module.exports.findManufacturerByName = findManufacturerByName

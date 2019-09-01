@@ -25,8 +25,10 @@ const ACTION_TYPE_JOB_REGISTRATION = 'RegistrationJob'
 const ACTION_TYPE_EXTERNAL_USER = 'ExternalUserRecord'
 const ACTION_TYPE_SECURE_MESSAGE = 'SecureMessageRecord'
 const ACTION_TYPE_STORAGE = 'StorageRecord'
+const ACTION_TYPE_USER = 'UserRecord'
 
 const ACTION_CREATE = 'create'
+const ACTION_DELETE = 'delete'
 const ACTION_UPDATE = 'update'
 const ACTION_ASSIGN_ROLE = 'assignRole'
 const ACTION_SEND_INVITE = 'sendInvite'
@@ -85,7 +87,9 @@ module.exports = {
     ACTION_TYPE_JOB_REGISTRATION,
     ACTION_TYPE_SECURE_MESSAGE,
     ACTION_TYPE_STORAGE,
+    ACTION_TYPE_USER,
     ACTION_CREATE,
+    ACTION_DELETE,
     ACTION_UPDATE,
     ACTION_ASSIGN_ROLE,
     ACTION_SEND_INVITE,
