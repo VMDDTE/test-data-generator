@@ -1,5 +1,6 @@
 const createActionProcessor = require('../action-processor/create-action')
 const deleteActionProcessor = require('../action-processor/delete-action')
+const getActionProcessor = require('../action-processor/get-action')
 const roleActionProcessor = require('../action-processor/assign-role-action')
 const sendInviteActionProcessor = require('../action-processor/send-invite-action')
 const actions = require('../common/constants')
@@ -55,6 +56,9 @@ async function processActions (featureName, actionJson) {
             case actions.ACTION_DELETE:
                 log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
                 await deleteActionProcessor.process(featureName, action)
+            case actions.ACTION_GET:
+                log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
+                await getActionProcessor.process(featureName, action)
                 break
             case actions.ACTION_UPDATE:
                 log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
