@@ -1,5 +1,6 @@
 const actionTypes = require('../common/constants')
 const userService = require('../service/user-service')
+const localStorage = require('../service/local-storage-service')
 const log = global.log
 
 const SERVICE_NAME = 'get-action-processor'
