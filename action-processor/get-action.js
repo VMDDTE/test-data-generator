@@ -5,7 +5,7 @@ const log = global.log
 const SERVICE_NAME = 'get-action-processor'
 
 async function process (featureName, action) {
-    log.debug(`${SERVICE_NAME}::${namespace}::process`)
+    log.debug(`${SERVICE_NAME}::${featureName}::process`)
     switch (action.type) {
     case actionTypes.ACTION_TYPE_INTERNAL_USER:
         log.info(`${SERVICE_NAME}::processing ${action.type}`)
