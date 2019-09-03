@@ -29,6 +29,7 @@ const ACTION_TYPE_USER = 'UserRecord'
 
 const ACTION_CREATE = 'create'
 const ACTION_DELETE = 'delete'
+const ACTION_GET = 'get'
 const ACTION_UPDATE = 'update'
 const ACTION_ASSIGN_ROLE = 'assignRole'
 const ACTION_SEND_INVITE = 'sendInvite'
@@ -90,6 +91,7 @@ module.exports = {
     ACTION_TYPE_USER,
     ACTION_CREATE,
     ACTION_DELETE,
+    ACTION_GET,
     ACTION_UPDATE,
     ACTION_ASSIGN_ROLE,
     ACTION_SEND_INVITE,
