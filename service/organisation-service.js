@@ -47,7 +47,7 @@ async function deleteOrganisation (orgId) {
 }
 
 async function findManufacturerByName (name) {
-    let url = `${ADMIN_BASE_API_URL}/organisations/byTypeAndName/Manufacturer/{name}`
+    let url = `${ADMIN_BASE_API_URL}/organisations/byTypeAndName/Manufacturer/${name}`
     log.info(`${SERVICE_NAME}::findManufacturerByName:url:${url}`)
 
     return axios.get(url)
