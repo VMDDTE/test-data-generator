@@ -1,5 +1,6 @@
 const actionTypes = require('../common/constants')
 const organisationService = require('../service/organisation-service')
+const productService = require('../service/product-service')
 const userService = require('../service/user-service')
 const log = global.log
 
@@ -35,7 +36,21 @@ async function deleteManufacturer (featureName, action) {
     .catch(error => {
         log.warn(`${SERVICE_NAME}::deleteManufacturer:error: ${error}`)
     })
+}
 
+async function deleteProduct (featureName, action) {
+    log.debug(`${SERVICE_NAME}::deleteProduct`)
+    let productData = action.data
+    log.info(`${SERVICE_NAME}::deleteProduct::${action.label}::deleting product from ${JSON.stringify(productData)}`)
+
+    return await productService.findProductByName(productData.Name)
+    .then((response) => {
+        log.info(`${SERVICE_NAME}::deleteProduct::${action.label}::found:${JSON.stringify(response)}`)
+        productService.deleteOrganisation(response.Id)
+    })
+    .catch(error => {
+        log.warn(`${SERVICE_NAME}::deleteProduct:error: ${error}`)
+    })
 }
 
 async function deleteUser (featureName, action) {

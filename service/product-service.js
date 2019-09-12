@@ -32,5 +32,20 @@ async function deleteProduct (productNo) {
         })
 }
 
+async function findProductByName (name) {
+    let url = `${ADMIN_BASE_API_URL}/products/${name}`
+    log.info(`${SERVICE_NAME}::findProductByName:url:${url}`)
+
+    return axios.get(url)
+        .then((response) => {
+            return response.data
+        })
+        .catch(error => {
+            log.error(`${SERVICE_NAME}::findProductByName:error: ${error}`)
+            throw error
+        })
+}
+
 module.exports.createProduct = createProduct
 module.exports.deleteProduct = deleteProduct
+module.exports.findProductByName = findProductByName
