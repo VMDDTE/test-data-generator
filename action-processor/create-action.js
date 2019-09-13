@@ -65,8 +65,13 @@ async function process (featureName, action) {
         await createSubstanceQualifier(featureName, action)
         break
     case actionTypes.ACTION_TYPE_MANUFACTURER:
+            log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MANUFACTURER}`)
+            await createOrganisation(ORG_TYPE_NAME_MANUFACTURER, featureName, action)
+            break
+    case actionTypes.ACTION_TYPE_WHOLESALER:
+    case actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_HOLDER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MANUFACTURER}`)
-        await createManufacturer(featureName, action)
+        await createOrganisation(featureName, action)
         break
     case actionTypes.ACTION_TYPE_SPECIAL_IMPORT_APPLICATION:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SPECIAL_IMPORT_APPLICATION}`)
@@ -274,11 +279,11 @@ async function createSubstanceQualifier (featureName, action) {
     localStorage.setItem(featureName, 'substanceQualifierList', substanceQualifierList)
 }
 
-async function createManufacturer (featureName, action) {
+async function createOrganisation (organisationType, featureName, action) {
     log.debug(`${SERVICE_NAME}::createManufacturer`)
     let manufacturerData = action.data
     log.info(`${SERVICE_NAME}::createManufacturer::${action.label}::creating manufacturer from ${JSON.stringify(manufacturerData)}`)
-    let responseData = await organisationService.createOrganisation(orgTypes.ORG_TYPE_NAME_MANUFACTURER, manufacturerData)
+    let responseData = await organisationService.createOrganisation(organisationType, manufacturerData)
     log.info(`${SERVICE_NAME}::createManufacturer::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
