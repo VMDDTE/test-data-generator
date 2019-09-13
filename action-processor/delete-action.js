@@ -9,6 +9,8 @@ async function process (featureName, action) {
     log.debug(`${SERVICE_NAME}::${featureName}::process`)
     switch (action.type) {
     case actionTypes.ACTION_TYPE_MANUFACTURER:
+    case actionTypes.ACTION_TYPE_WHOLESALER:
+    case actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_HOLDER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MANUFACTURER}`)
         await deleteManufacturer(featureName, action)
         break
