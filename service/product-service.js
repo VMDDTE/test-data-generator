@@ -33,7 +33,7 @@ async function deleteProduct (productNo) {
 }
 
 async function findProductByName (name) {
-    let url = `${ADMIN_BASE_API_URL}/products/${name}`
+    let url = `${ADMIN_BASE_API_URL}/products/byName/${name}`
     log.info(`${SERVICE_NAME}::findProductByName:url:${url}`)
 
     return axios.get(url)

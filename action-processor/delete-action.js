@@ -7,6 +7,7 @@ const log = global.log
 const SERVICE_NAME = 'delete-action-processor'
 
 async function process (featureName, action) {
+    debugger
     log.debug(`${SERVICE_NAME}::${featureName}::process`)
     switch (action.type) {
     case actionTypes.ACTION_TYPE_MANUFACTURER:
@@ -16,6 +17,10 @@ async function process (featureName, action) {
     case actionTypes.ACTION_TYPE_USER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_USER}`)
         await deleteUser(featureName, action)
+        break
+    case actionTypes.ACTION_TYPE_PRODUCT:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_PRODUCT}`)
+        await deleteProduct(featureName, action)
         break
     default:
         log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
@@ -46,7 +51,7 @@ async function deleteProduct (featureName, action) {
     return await productService.findProductByName(productData.Name)
     .then((response) => {
         log.info(`${SERVICE_NAME}::deleteProduct::${action.label}::found:${JSON.stringify(response)}`)
-        productService.deleteOrganisation(response.Id)
+        productService.deleteProduct(response.ProductNo)
     })
     .catch(error => {
         log.warn(`${SERVICE_NAME}::deleteProduct:error: ${error}`)
@@ -66,7 +71,6 @@ async function deleteUser (featureName, action) {
     .catch(error => {
         log.warn(`${SERVICE_NAME}::deleteUser:error: ${error}`)
     })
-
 }
 
 module.exports.process = process
