@@ -9,10 +9,16 @@ async function process (featureName, action) {
     log.debug(`${SERVICE_NAME}::${featureName}::process`)
     switch (action.type) {
     case actionTypes.ACTION_TYPE_MANUFACTURER:
-    case actionTypes.ACTION_TYPE_WHOLESALER:
-    case actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_HOLDER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MANUFACTURER}`)
-        await deleteManufacturer(featureName, action)
+        await deleteOrganisation(featureName, action)
+        break
+    case actionTypes.ACTION_TYPE_WHOLESALER:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_WHOLESALER}`)
+        await deleteOrganisation(featureName, action)
+        break
+    case actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_HOLDER:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_HOLDER}`)
+        await deleteOrganisation(featureName, action)
         break
     case actionTypes.ACTION_TYPE_USER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_USER}`)
@@ -24,18 +30,18 @@ async function process (featureName, action) {
     }
 }
 
-async function deleteManufacturer (featureName, action) {
-    log.debug(`${SERVICE_NAME}::deleteManufacturer`)
-    let manufacturerData = action.data
-    log.info(`${SERVICE_NAME}::deleteManufacturer::${action.label}::deleting manufacturer from ${JSON.stringify(manufacturerData)}`)
+async function deleteOrganisation (featureName, action) {
+    log.debug(`${SERVICE_NAME}::deleteOrganisation`)
+    let organisationData = action.data
+    log.info(`${SERVICE_NAME}::deleteOrganisation::${action.label}::deleting organisation from ${JSON.stringify(organisationData)}`)
 
-    return await organisationService.findManufacturerByName(manufacturerData.Name)
+    return await organisationService.findManufacturerByName(organisationData.Name)
     .then((response) => {
-        log.info(`${SERVICE_NAME}::deleteManufacturer::${action.label}::found:${JSON.stringify(response)}`)
+        log.info(`${SERVICE_NAME}::deleteOrganisation::${action.label}::found:${JSON.stringify(response)}`)
         organisationService.deleteOrganisation(response.Id)
     })
     .catch(error => {
-        log.warn(`${SERVICE_NAME}::deleteManufacturer:error: ${error}`)
+        log.warn(`${SERVICE_NAME}::deleteOrganisation:error: ${error}`)
     })
 
 }
