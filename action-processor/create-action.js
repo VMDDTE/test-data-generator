@@ -65,13 +65,16 @@ async function process (featureName, action) {
         await createSubstanceQualifier(featureName, action)
         break
     case actionTypes.ACTION_TYPE_MANUFACTURER:
-            log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MANUFACTURER}`)
-            await createOrganisation(ORG_TYPE_NAME_MANUFACTURER, featureName, action)
-            break
-    case actionTypes.ACTION_TYPE_WHOLESALER:
-    case actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_HOLDER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MANUFACTURER}`)
-        await createOrganisation(featureName, action)
+        await createOrganisation(orgTypes.ORG_TYPE_NAME_MANUFACTURER, featureName, action)
+        break
+    case actionTypes.ACTION_TYPE_WHOLESALER:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_WHOLESALER}`)
+        await createOrganisation(orgTypes.ORG_TYPE_NAME_WHOLESALER, featureName, action)
+        break
+    case actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_HOLDER:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_HOLDER}`)
+        await createOrganisation(orgTypes.ORG_TYPE_NAME_MARKETING_AUTHORISATION_HOLDER, featureName, action)
         break
     case actionTypes.ACTION_TYPE_SPECIAL_IMPORT_APPLICATION:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SPECIAL_IMPORT_APPLICATION}`)
@@ -280,21 +283,21 @@ async function createSubstanceQualifier (featureName, action) {
 }
 
 async function createOrganisation (organisationType, featureName, action) {
-    log.debug(`${SERVICE_NAME}::createManufacturer`)
-    let manufacturerData = action.data
-    log.info(`${SERVICE_NAME}::createManufacturer::${action.label}::creating manufacturer from ${JSON.stringify(manufacturerData)}`)
-    let responseData = await organisationService.createOrganisation(organisationType, manufacturerData)
-    log.info(`${SERVICE_NAME}::createManufacturer::${action.label}::created:${JSON.stringify(responseData)}`)
+    log.debug(`${SERVICE_NAME}::createOrganisation`)
+    let organisationData = action.data
+    log.info(`${SERVICE_NAME}::createOrganisation::${action.label}::creating organisation from ${JSON.stringify(organisationData)}`)
+    let responseData = await organisationService.createOrganisation(organisationType, organisationData)
+    log.info(`${SERVICE_NAME}::createOrganisation::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
-    log.debug(`${SERVICE_NAME}::createManufacturer, saved action ${JSON.stringify(savedAction)}`)
+    log.debug(`${SERVICE_NAME}::createOrganisation, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(featureName, action.label, savedAction)
-    var manufacturerIdList = localStorage.getItem(featureName, 'manufacturerIdList')
-    if (!manufacturerIdList) {
-        manufacturerIdList = []
+    var organisationIdList = localStorage.getItem(featureName, 'organisationIdList')
+    if (!organisationIdList) {
+        organisationIdList = []
     }
-    manufacturerIdList.push(responseData.Id)
-    localStorage.setItem(featureName, 'manufacturerIdList', manufacturerIdList)
+    organisationIdList.push(responseData.Id)
+    localStorage.setItem(featureName, 'organisationIdList', organisationIdList)
 }
 
 async function createSpecialImportApplication (namespace, action) {
