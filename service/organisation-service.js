@@ -46,16 +46,16 @@ async function deleteOrganisation (orgId) {
         })
 }
 
-async function findManufacturerByName (name) {
-    let url = `${ADMIN_BASE_API_URL}/organisations/byTypeAndName/Manufacturer/${name}`
-    log.info(`${SERVICE_NAME}::findManufacturerByName:url:${url}`)
+async function findOrganisationByName (organisationType, name) {
+    let url = `${ADMIN_BASE_API_URL}/organisations/byTypeAndName/${organisationType}/${name}`
+    log.info(`${SERVICE_NAME}::findOrganisationByName:url:${url}`)
 
     return axios.get(url)
         .then((response) => {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::findManufacturerByName:error: ${error}`)
+            log.error(`${SERVICE_NAME}::findOrganisationByName:error: ${error}`)
             throw error
         })
 }

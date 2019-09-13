@@ -1,4 +1,5 @@
 const actionTypes = require('../common/constants')
+const orgTypes = require('../common/constants')
 const organisationService = require('../service/organisation-service')
 const userService = require('../service/user-service')
 const log = global.log
@@ -10,15 +11,15 @@ async function process (featureName, action) {
     switch (action.type) {
     case actionTypes.ACTION_TYPE_MANUFACTURER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MANUFACTURER}`)
-        await deleteOrganisation(featureName, action)
+        await deleteOrganisation(orgTypes.ORG_TYPE_NAME_MANUFACTURER, featureName, action)
         break
     case actionTypes.ACTION_TYPE_WHOLESALER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_WHOLESALER}`)
-        await deleteOrganisation(featureName, action)
+        await deleteOrganisation(orgTypes.ORG_TYPE_NAME_WHOLESALER, featureName, action)
         break
     case actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_HOLDER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_HOLDER}`)
-        await deleteOrganisation(featureName, action)
+        await deleteOrganisation(orgTypes.ORG_TYPE_NAME_MARKETING_AUTHORISATION_HOLDER, featureName, action)
         break
     case actionTypes.ACTION_TYPE_USER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_USER}`)
@@ -30,12 +31,12 @@ async function process (featureName, action) {
     }
 }
 
-async function deleteOrganisation (featureName, action) {
+async function deleteOrganisation (organisationType, featureName, action) {
     log.debug(`${SERVICE_NAME}::deleteOrganisation`)
     let organisationData = action.data
     log.info(`${SERVICE_NAME}::deleteOrganisation::${action.label}::deleting organisation from ${JSON.stringify(organisationData)}`)
 
-    return await organisationService.findManufacturerByName(organisationData.Name)
+    return await organisationService.findOrganisationByName(organisationType, organisationData.Name)
     .then((response) => {
         log.info(`${SERVICE_NAME}::deleteOrganisation::${action.label}::found:${JSON.stringify(response)}`)
         organisationService.deleteOrganisation(response.Id)
