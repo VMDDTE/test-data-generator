@@ -78,4 +78,4 @@ module.exports.createOrganisation = createOrganisation
 module.exports.updateOrganisation = updateOrganisation
 module.exports.deleteOrganisation = deleteOrganisation
 module.exports.assignRoleToOrganisationForUser = assignRoleToOrganisationForUser
-module.exports.findManufacturerByName = findManufacturerByName
+module.exports.findOrganisationByName = findOrganisationByName
