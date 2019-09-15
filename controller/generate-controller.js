@@ -89,6 +89,7 @@ async function tearDownEntities (featureName) {
     await tearDownSpecialImportApplication(featureName)
     await tearDownMarketingAuthorisation(featureName)
     await tearDownMarketingAuthorisationApplication(featureName)
+    await tearDownDraftMarketingAuthorisationApplication(featureName)
     await tearDownStorageRecords(featureName)
     await tearDownMessages(featureName)
     await tearDownExternalUser(featureName)
@@ -287,6 +288,17 @@ async function tearDownMarketingAuthorisationApplication (featureName) {
         for (let id of maAppList) {
             log.info(`${CONTROLLER_NAME}::about to teardown marketing authorisation application with id ${id}`)
             await maApplicationService.deleteMarketingAuthorisationApplication(id)
+        }
+    }
+}
+
+async function tearDownDraftMarketingAuthorisationApplication (featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownMarketingAuthorisationApplication:${featureName}`)
+    const maDraftAppList = localStorage.getItem(featureName, 'maDraftApplicationList')
+    if (maDraftAppList) {
+        for (let internalRef of maDraftAppList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown marketing authorisation application with internal reference ${internalRef}`)
+            await maApplicationService.deleteMarketingAuthorisationApplicationByInternalReference(internalRef)
         }
     }
 }
