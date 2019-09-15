@@ -20,14 +20,14 @@ async function createNewMarketingAuthorisationApplication (payload) {
 
 async function createDraftNewMarketingAuthorisationApplication (payload) {
     let url = `${ADMIN_BASE_API_URL}/MarketingAuthorisationApplication/saveAsDraft`
-    log.info(`${SERVICE_NAME}::createNewMarketingAuthorisationApplication:url:${url}`)
+    log.info(`${SERVICE_NAME}::createDraftNewMarketingAuthorisationApplication:url:${url}`)
 
     return axios.post(url, payload)
         .then((response) => {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::createNewMarketingAuthorisationApplication:error: ${error}`)
+            log.error(`${SERVICE_NAME}::createDraftNewMarketingAuthorisationApplication:error: ${error}`)
             throw error
         })
 }
@@ -62,14 +62,14 @@ async function deleteMarketingAuthorisationApplication (maApplicationId) {
 
 async function deleteMarketingAuthorisationApplicationByInternalReference (maInternalReference) {
     let url = `${ADMIN_BASE_API_URL}/MarketingAuthorisationApplication/deleteByInternalReference/${maInternalReference}`
-    log.info(`${SERVICE_NAME}::deleteMarketingAuthorisationApplication:url:${url}`)
+    log.info(`${SERVICE_NAME}::deleteMarketingAuthorisationApplicationByInternalReference:url:${url}`)
 
     return axios.delete(url)
         .then((response) => {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::deleteMarketingAuthorisationApplication:error: ${error}`)
+            log.error(`${SERVICE_NAME}::deleteMarketingAuthorisationApplicationByInternalReference:error: ${error}`)
             throw error
         })
 }
