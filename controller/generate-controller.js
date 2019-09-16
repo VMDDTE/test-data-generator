@@ -94,7 +94,7 @@ async function tearDownEntities (featureName) {
     await tearDownReferenceData(featureName)
     await tearDownSubstance(featureName)
     await tearDownSubstanceQualifier(featureName)
-    await tearDownManufacturer(featureName)
+    await tearDownOrganisation(featureName)
     await tearDownSpecialImportApplication(featureName)
     await tearDownMarketingAuthorisation(featureName)
     await tearDownMarketingAuthorisationApplication(featureName)
@@ -257,11 +257,11 @@ async function tearDownSubstanceQualifier (featureName) {
         }
     }
 }
-async function tearDownManufacturer (featureName) {
-    log.info(`${CONTROLLER_NAME}::tearDownManufacturer:${featureName}`)
-    const manufacturerIdList = localStorage.getItem(featureName, 'manufacturerIdList')
-    if (manufacturerIdList) {
-        for (let id of manufacturerIdList) {
+async function tearDownOrganisation (featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownOrganisation:${featureName}`)
+    const organisationIdList = localStorage.getItem(featureName, 'organisationIdList')
+    if (organisationIdList) {
+        for (let id of organisationIdList) {
             log.info(`${CONTROLLER_NAME}::about to teardown manufacturer with id ${id}`)
             await organisationService.deleteOrganisation(id)
         }
