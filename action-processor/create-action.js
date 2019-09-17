@@ -562,11 +562,12 @@ async function createSentMessage (featureName, action){
             }
         }
     }
-    responseData = await messageService.sentMessage(sentDataPayload)
 
-    log.info(`${SERVICE_NAME}::createSentMessage::${action.label}::sendMessage:${JSON.stringify(responseData)}`)
+    var createdSentMessage = await messageService.sentMessage(sentDataPayload)
+
+    log.info(`${SERVICE_NAME}::createSentMessage::${action.label}::createdSentMessage:${JSON.stringify(createdSentMessage)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
-    savedAction.response = responseData
+    savedAction.response = createdSentMessage
     log.debug(`${SERVICE_NAME}::createSentMessage, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(featureName, action.label, savedAction)
 
@@ -577,7 +578,7 @@ async function createSentMessage (featureName, action){
 
     // secureMessageList.push(responseData.Id)
     // localStorage.setItem(featureName, 'secureMessageList', secureMessageList)
-    storeMessageIdForDeletion(featureName, messageId)
+    storeMessageIdForDeletion(featureName, createdSentMessage.Id)
 }
 
 function storeMessageIdForDeletion(featureName, messageId){
