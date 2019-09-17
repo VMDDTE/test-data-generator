@@ -49,7 +49,7 @@ async function sentMessage (payload) {
     //const requestHeaders = { 'vmd-userid': payload.FromId }
     debugger
     return axios({
-        headers: { ...requestHeaders },
+        //headers: { ...requestHeaders },
         method: 'post',
         url: url,
         data: payload
