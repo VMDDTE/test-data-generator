@@ -565,7 +565,7 @@ async function createSentMessage (featureName, action){
             }
         }
     }
-    responseData = await messageService.sendMessage(draftId, sendData)
+    responseData = await messageService.sentMessage(sendData)
 
     log.info(`${SERVICE_NAME}::createSentMessage::${action.label}::sendMessage:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)

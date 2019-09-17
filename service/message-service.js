@@ -47,7 +47,7 @@ async function sentMessage (payload) {
     let url = `${ADMIN_BASE_API_URL}/messages/CreateSent`
     log.info(`${SERVICE_NAME}::sentMessage:url:${url}`)
     const requestHeaders = { 'vmd-userid': payload.FromId }
-
+    debugger
     return axios({
         headers: { ...requestHeaders },
         method: 'post',
@@ -79,4 +79,5 @@ async function deleteMessage (messageId) {
 
 module.exports.createDraft = createDraft
 module.exports.sendMessage = sendMessage
+module.exports.sentMessage = sentMessage
 module.exports.deleteMessage = deleteMessage
