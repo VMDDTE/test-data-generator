@@ -110,7 +110,8 @@ async function process (featureName, action) {
         break
     case actionTypes.ACTION_TYPE_SENT_MESSAGE:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SENT_MESSAGE}`)
-        await createSecureMessage(featureName, action)
+        debugger
+        await createSentMessage(featureName, action)
         break
     case actionTypes.ACTION_TYPE_STORAGE:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_STORAGE}`)
