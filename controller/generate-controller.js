@@ -257,6 +257,7 @@ async function tearDownSubstanceQualifier (featureName) {
         }
     }
 }
+
 async function tearDownOrganisation (featureName) {
     log.info(`${CONTROLLER_NAME}::tearDownOrganisation:${featureName}`)
     const organisationIdList = localStorage.getItem(featureName, 'organisationIdList')

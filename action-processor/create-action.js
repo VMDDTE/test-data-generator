@@ -108,6 +108,10 @@ async function process (featureName, action) {
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SECURE_MESSAGE}`)
         await createSecureMessage(featureName, action)
         break
+    case actionTypes.ACTION_TYPE_SENT_MESSAGE:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SENT_MESSAGE}`)
+        await createSecureMessage(featureName, action)
+        break
     case actionTypes.ACTION_TYPE_STORAGE:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_STORAGE}`)
         await createStorageRecord(featureName, action)
@@ -481,7 +485,6 @@ async function createExternalUser (featureName, action) {
 }
 
 async function createSecureMessage (featureName, action){
-    log.debug(`${SERVICE_NAME}::createSecureMessage`)
     log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::creating a new secure message ${JSON.stringify(action.data)}`)
     let savedUser = await localStorage.getItem(featureName, action.data.FromUser)
     let response = savedUser.response
@@ -526,6 +529,66 @@ async function createSecureMessage (featureName, action){
     }
 
     secureMessageList.push(responseData.Id)
+    localStorage.setItem(featureName, 'secureMessageList', secureMessageList)
+}
+
+async function createSentMessage (featureName, action){
+    log.info(`${SERVICE_NAME}::createSentMessage::${action.label}::creating a new sent message ${JSON.stringify(action.data)}`)
+    let savedUser = await localStorage.getItem(featureName, action.data.FromUser)
+    let response = savedUser.response
+    
+    //let responseData = await messageService.createDraft(response.Id)
+    //let draftId = responseData.Id
+
+    var sendData = {}
+    sendData.Subject = action.data.Subject
+    sendData.Message = action.data.Message
+    sendData.FromId = response.Id
+
+    sendData.RecipientIds = []
+    for (const userLabel of action.data.Recipients) {
+        let savedAction = await localStorage.getItem(featureName, userLabel)
+        if(savedAction && savedAction.response) {
+            log.info(`${SERVICE_NAME}::createSentMessage::RecipientId ${savedAction.response.Id}`)
+            sendData.RecipientIds.push(savedAction.response.Id)
+        }
+    }
+
+    sendData.Attachments = []
+    if(action.data && action.data.Attachments && action.data.Attachments.length) {
+        for (const label of action.data.Attachments) {
+            let savedAction = await localStorage.getItem(featureName, label)
+            if(savedAction && savedAction.response) {
+                log.info(`${SERVICE_NAME}::createSentMessage::RecipientId ${savedAction.response.Id}`)
+                sendData.Attachments.push(savedAction.response.Id)
+            }
+        }
+    }
+    responseData = await messageService.sendMessage(draftId, sendData)
+
+    log.info(`${SERVICE_NAME}::createSentMessage::${action.label}::sendMessage:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(featureName, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createSentMessage, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(featureName, action.label, savedAction)
+
+    // var secureMessageList = localStorage.getItem(featureName, 'secureMessageList')
+    // if (!secureMessageList) {
+    //     secureMessageList = []
+    // }
+
+    // secureMessageList.push(responseData.Id)
+    // localStorage.setItem(featureName, 'secureMessageList', secureMessageList)
+    storeMessageIdForDeletion(featureName, messageId)
+}
+
+function storeMessageIdForDeletion(featureName, messageId){
+    var secureMessageList = localStorage.getItem(featureName, 'secureMessageList')
+    if (!secureMessageList) {
+        secureMessageList = []
+    }
+
+    secureMessageList.push(messageId)
     localStorage.setItem(featureName, 'secureMessageList', secureMessageList)
 }
 

@@ -37,10 +37,30 @@ async function sendMessage (draftId, payload) {
     .then((response) => {
             return response.data
         })
-        .catch(error => {
-            log.error(`${SERVICE_NAME}::sendMessage:error: ${error}`)
-            throw error
+    .catch(error => {
+        log.error(`${SERVICE_NAME}::sendMessage:error: ${error}`)
+        throw error
+    })
+}
+
+async function sentMessage (payload) {
+    let url = `${ADMIN_BASE_API_URL}/messages/CreateSent`
+    log.info(`${SERVICE_NAME}::sentMessage:url:${url}`)
+    const requestHeaders = { 'vmd-userid': payload.FromId }
+
+    return axios({
+        headers: { ...requestHeaders },
+        method: 'post',
+        url: url,
+        data: payload
+    })
+    .then((response) => {
+            return response.data
         })
+    .catch(error => {
+        log.error(`${SERVICE_NAME}::sentMessage:error: ${error}`)
+        throw error
+    })
 }
 
 async function deleteMessage (messageId) {
