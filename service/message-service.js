@@ -47,7 +47,6 @@ async function sentMessage (payload) {
     let url = `${ADMIN_BASE_API_URL}/messages/CreateSent`
     log.info(`${SERVICE_NAME}::sentMessage:url:${url}`)
     // TestSupport CreateSent not currently using headers, only payload contents
-    debugger
     return axios({
         method: 'post',
         url: url,
