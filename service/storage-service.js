@@ -11,6 +11,7 @@ async function createStorageRecord(userId, fileName, contentType, payload) {
         'vmd-userid': userId,
         'vmd-filename': fileName,
         'Content-Type': contentType,
+        'vmd-system-generated': 'true'
     }
 
     return axios({
