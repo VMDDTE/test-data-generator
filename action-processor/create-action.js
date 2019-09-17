@@ -535,37 +535,34 @@ async function createSecureMessage (featureName, action){
 
 async function createSentMessage (featureName, action){
     log.info(`${SERVICE_NAME}::createSentMessage::${action.label}::creating a new sent message ${JSON.stringify(action.data)}`)
-    let savedUser = await localStorage.getItem(featureName, action.data.FromUser)
-    let response = savedUser.response
+    let storedUser = await localStorage.getItem(featureName, action.data.FromUser)
+    let fromUser = storedUser.response
     
-    //let responseData = await messageService.createDraft(response.Id)
-    //let draftId = responseData.Id
+    var sentDataPayload = {}
+    sentDataPayload.Subject = action.data.Subject
+    sentDataPayload.Message = action.data.Message
+    sentDataPayload.FromUserId = fromUser.Id
 
-    var sendData = {}
-    sendData.Subject = action.data.Subject
-    sendData.Message = action.data.Message
-    sendData.FromId = response.Id
-
-    sendData.RecipientIds = []
+    sentDataPayload.RecipientIds = []
     for (const userLabel of action.data.Recipients) {
         let savedAction = await localStorage.getItem(featureName, userLabel)
         if(savedAction && savedAction.response) {
             log.info(`${SERVICE_NAME}::createSentMessage::RecipientId ${savedAction.response.Id}`)
-            sendData.RecipientIds.push(savedAction.response.Id)
+            sentDataPayload.RecipientIds.push(savedAction.response.Id)
         }
     }
 
-    sendData.Attachments = []
+    sentDataPayload.Attachments = []
     if(action.data && action.data.Attachments && action.data.Attachments.length) {
         for (const label of action.data.Attachments) {
             let savedAction = await localStorage.getItem(featureName, label)
             if(savedAction && savedAction.response) {
                 log.info(`${SERVICE_NAME}::createSentMessage::RecipientId ${savedAction.response.Id}`)
-                sendData.Attachments.push(savedAction.response.Id)
+                sentDataPayload.Attachments.push(savedAction.response.Id)
             }
         }
     }
-    responseData = await messageService.sentMessage(sendData)
+    responseData = await messageService.sentMessage(sentDataPayload)
 
     log.info(`${SERVICE_NAME}::createSentMessage::${action.label}::sendMessage:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)

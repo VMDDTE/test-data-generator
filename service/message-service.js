@@ -46,7 +46,7 @@ async function sendMessage (draftId, payload) {
 async function sentMessage (payload) {
     let url = `${ADMIN_BASE_API_URL}/messages/CreateSent`
     log.info(`${SERVICE_NAME}::sentMessage:url:${url}`)
-    const requestHeaders = { 'vmd-userid': payload.FromId }
+    //const requestHeaders = { 'vmd-userid': payload.FromId }
     debugger
     return axios({
         headers: { ...requestHeaders },
