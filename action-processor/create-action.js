@@ -570,13 +570,6 @@ async function createSentMessage (featureName, action){
     log.debug(`${SERVICE_NAME}::createSentMessage, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(featureName, action.label, savedAction)
 
-    // var secureMessageList = localStorage.getItem(featureName, 'secureMessageList')
-    // if (!secureMessageList) {
-    //     secureMessageList = []
-    // }
-
-    // secureMessageList.push(responseData.Id)
-    // localStorage.setItem(featureName, 'secureMessageList', secureMessageList)
     storeMessageIdForDeletion(featureName, createdSentMessage.Id)
 }
 
