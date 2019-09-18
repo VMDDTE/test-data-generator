@@ -10,8 +10,8 @@ async function createOrganisation (orgType, payload) {
     log.info(`${SERVICE_NAME}::createOrganisation:url:${url}`)
 
     return axios.post(url, payload)
-        .then((response) => {
-            rebuildRedisOrganisationsCache()
+        .then(async (response) => {
+            await rebuildRedisOrganisationsCache()
             return response.data
         })
         .catch(error => {
@@ -25,8 +25,8 @@ async function updateOrganisation (payload) {
     log.info(`${SERVICE_NAME}::updateOrganisation:url:${url}`)
 
     return axios.put(url, payload)
-        .then((response) => {
-            rebuildRedisOrganisationsCache()
+        .then(async (response) => {
+            await rebuildRedisOrganisationsCache()
             return response.data
         })
         .catch(error => {
@@ -40,8 +40,8 @@ async function deleteOrganisation (orgId) {
     log.info(`${SERVICE_NAME}::deleteOrganisation:url:${url}`)
 
     return axios.delete(url)
-        .then((response) => {
-            rebuildRedisOrganisationsCache()
+        .then(async (response) => {
+            await rebuildRedisOrganisationsCache()
             return response.data
         })
         .catch(error => {
