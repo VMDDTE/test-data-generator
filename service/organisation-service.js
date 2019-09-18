@@ -2,6 +2,7 @@
 const axios = require('axios')
 const log = global.log
 const ADMIN_BASE_API_URL = process.env.ADMIN_BASE_API_URL
+const ADMIN_SERVICE_BASE_API_URL = process.env.ADMIN_SERVICE_BASE_API_URL
 const SERVICE_NAME = 'organisation-service'
 
 async function createOrganisation (orgType, payload) {
@@ -10,6 +11,7 @@ async function createOrganisation (orgType, payload) {
 
     return axios.post(url, payload)
         .then((response) => {
+            rebuildRedisOrganisationsCache()
             return response.data
         })
         .catch(error => {
@@ -24,6 +26,7 @@ async function updateOrganisation (payload) {
 
     return axios.put(url, payload)
         .then((response) => {
+            rebuildRedisOrganisationsCache()
             return response.data
         })
         .catch(error => {
@@ -38,10 +41,25 @@ async function deleteOrganisation (orgId) {
 
     return axios.delete(url)
         .then((response) => {
+            rebuildRedisOrganisationsCache()
             return response.data
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::deleteOrganisation:error: ${error}`)
+            throw error
+        })
+}
+
+async function rebuildRedisOrganisationsCache () {
+    debugger
+    let url = `${ADMIN_SERVICE_BASE_API_URL}/cacheRebuildTest/recache/Organisations`
+    log.info(`${SERVICE_NAME}::rebuildRedisOrganisationsCache:url:${url}`)
+    return axios.put(url)
+        .then((response) => {
+            return response.data
+        })
+        .catch(error => {
+            log.error(`${SERVICE_NAME}::rebuildRedisOrganisationsCache:error: ${error}`)
             throw error
         })
 }
