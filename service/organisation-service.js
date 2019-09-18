@@ -51,7 +51,6 @@ async function deleteOrganisation (orgId) {
 }
 
 async function rebuildRedisOrganisationsCache () {
-    debugger
     let url = `${ADMIN_SERVICE_BASE_API_URL}/cacheRebuildTest/recache/Organisations`
     log.info(`${SERVICE_NAME}::rebuildRedisOrganisationsCache:url:${url}`)
     return axios.put(url)
