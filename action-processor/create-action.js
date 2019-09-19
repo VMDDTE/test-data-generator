@@ -489,13 +489,15 @@ async function createSecureMessage (featureName, action){
     let savedUser = await localStorage.getItem(featureName, action.data.FromUser)
     let response = savedUser.response
     
-    let responseData = await messageService.createDraft(response.Id)
-    let draftId = responseData.Id
+    let createDraftResponse = await messageService.createDraft(response.Id)
+    let draftId = createDraftResponse.Id
 
     var sendData = {}
+    sendData.FromId = response.Id // Only used to populate header, should really be a param of sendMessage
+
     sendData.Subject = action.data.Subject
-    sendData.Message = action.data.Message
-    sendData.FromId = response.Id
+    sendData.Message = action.data.Message 
+    sendData.sendNotification = false;
 
     sendData.RecipientIds = []
     for (const userLabel of action.data.Recipients) {
@@ -516,19 +518,21 @@ async function createSecureMessage (featureName, action){
             }
         }
     }
-    responseData = await messageService.sendMessage(draftId, sendData)
 
-    log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::sendMessage:${JSON.stringify(responseData)}`)
+    var sendMessageResponse = await messageService.sendMessage(draftId, sendData)
+
+    log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::sendMessage:${JSON.stringify(sendMessageResponse)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
-    savedAction.response = responseData
+    savedAction.response = sendMessageResponse
     log.debug(`${SERVICE_NAME}::createSecureMessage, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(featureName, action.label, savedAction)
+    
     var secureMessageList = localStorage.getItem(featureName, 'secureMessageList')
     if (!secureMessageList) {
         secureMessageList = []
     }
 
-    secureMessageList.push(responseData.Id)
+    secureMessageList.push(sendMessageResponse.Id)
     localStorage.setItem(featureName, 'secureMessageList', secureMessageList)
 }
 
