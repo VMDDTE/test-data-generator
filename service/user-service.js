@@ -61,7 +61,21 @@ async function findUserByEmail (email) {
         })
 }
 
+async function findUserByName (name) {
+    let url = ADMIN_BASE_API_URL + `/users/byName/${name}`
+    log.info(`${SERVICE_NAME}::findUserByName:url:${url}`)
+    return axios.get(url)
+        .then((response) => {
+            return response.data
+        })
+        .catch(error => {
+            log.error(`${SERVICE_NAME}::findUserByName:error: ${error}`)
+            throw error
+        })
+}
+
 module.exports.createUser = createUser
 module.exports.deleteUser = deleteUser
 module.exports.createExternalUser = createExternalUser
 module.exports.findUserByEmail = findUserByEmail
+module.exports.findUserByName = findUserByName

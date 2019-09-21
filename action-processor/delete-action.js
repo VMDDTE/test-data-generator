@@ -52,7 +52,18 @@ async function deleteUser (featureName, action) {
     let userData = action.data
     log.info(`${SERVICE_NAME}::deleteUser::${action.label}::deleting user from ${JSON.stringify(userData)}`)
 
-    return await userService.findUserByEmail(userData.Email)
+    var func,parm;
+    if (userData.Email){
+        func = userService.findUserByEmail
+        parm = userData.Email
+    }else if (userData.Name){
+        func = userService.findUserByName
+        parm = userData.Name
+    }else{
+        log.error(`${SERVICE_NAME}::deleteUser:error: neither name nor email passed in to deleteUser`)
+        return
+    }
+    return await func(parm)
     .then((response) => {
         log.info(`${SERVICE_NAME}::deleteUser::${action.label}::found:${JSON.stringify(response)}`)
         userService.deleteUser(response.Id)
@@ -60,7 +71,6 @@ async function deleteUser (featureName, action) {
     .catch(error => {
         log.warn(`${SERVICE_NAME}::deleteUser:error: ${error}`)
     })
-
 }
 
 module.exports.process = process
