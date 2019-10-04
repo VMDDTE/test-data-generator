@@ -88,9 +88,9 @@ async function process (featureName, action) {
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_NEW_MARKETING_AUTHORISATION_APPLICATION}`)
         await createNewMarketingAuthorisationApplication(featureName, action)
         break
-    case actionTypes.ACTION_TYPE_DRAFT_NEW_MARKETING_AUTHORISATION_APPLICATION:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_DRAFT_NEW_MARKETING_AUTHORISATION_APPLICATION}`)
-        await createDraftNewMarketingAuthorisationApplication(featureName, action)
+    case actionTypes.ACTION_TYPE_DRAFT_MARKETING_AUTHORISATION_APPLICATION:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_DRAFT_MARKETING_AUTHORISATION_APPLICATION}`)
+        await createDraftMarketingAuthorisationApplication(featureName, action)
         break
     case actionTypes.ACTION_TYPE_RENEWAL_MARKETING_AUTHORISATION_APPLICATION:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_RENEWAL_MARKETING_AUTHORISATION_APPLICATION}`)
@@ -383,15 +383,15 @@ async function createNewMarketingAuthorisationApplication (featureName, action) 
     localStorage.setItem(featureName, 'maApplicationList', maAppList)
 }
 
-async function createDraftNewMarketingAuthorisationApplication (featureName, action) {
-    log.debug(`${SERVICE_NAME}::createDraftNewMarketingAuthorisationApplication`)
+async function createDraftMarketingAuthorisationApplication (featureName, action) {
+    log.debug(`${SERVICE_NAME}::createDraftMarketingAuthorisationApplication`)
     let maData = action.data
-    log.info(`${SERVICE_NAME}::createDraftNewMarketingAuthorisationApplication::${action.label}::creating draft new marketing authorisation application from ${JSON.stringify(maData)}`)
-    let responseData = await maApplicationService.createDraftNewMarketingAuthorisationApplication(maData)
-    log.info(`${SERVICE_NAME}::createDraftNewMarketingAuthorisationApplication::${action.label}::created:${JSON.stringify(responseData)}`)
+    log.info(`${SERVICE_NAME}::createDraftMarketingAuthorisationApplication::${action.label}::creating draft marketing authorisation application from ${JSON.stringify(maData)}`)
+    let responseData = await maApplicationService.createDraftMarketingAuthorisationApplication(maData)
+    log.info(`${SERVICE_NAME}::createDraftMarketingAuthorisationApplication::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
-    log.debug(`${SERVICE_NAME}::createDraftNewMarketingAuthorisationApplication, saved action ${JSON.stringify(savedAction)}`)
+    log.debug(`${SERVICE_NAME}::createDraftMarketingAuthorisationApplication, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(featureName, action.label, savedAction)
     var maDraftAppList = localStorage.getItem(featureName, 'maDraftApplicationList')
     if (!maDraftAppList) {
