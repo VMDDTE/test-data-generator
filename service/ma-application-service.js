@@ -18,16 +18,16 @@ async function createNewMarketingAuthorisationApplication (payload) {
         })
 }
 
-async function createDraftNewMarketingAuthorisationApplication (payload) {
+async function createDraftMarketingAuthorisationApplication (payload) {
     let url = `${ADMIN_BASE_API_URL}/MarketingAuthorisationApplication/saveAsDraft`
-    log.info(`${SERVICE_NAME}::createDraftNewMarketingAuthorisationApplication:url:${url}`)
+    log.info(`${SERVICE_NAME}::createDraftMarketingAuthorisationApplication:url:${url}`)
 
     return axios.post(url, payload)
         .then((response) => {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::createDraftNewMarketingAuthorisationApplication:error: ${error}`)
+            log.error(`${SERVICE_NAME}::createDraftMarketingAuthorisationApplication:error: ${error}`)
             throw error
         })
 }
@@ -75,7 +75,7 @@ async function deleteMarketingAuthorisationApplicationByInternalReference (maInt
 }
 
 module.exports = {
-    createDraftNewMarketingAuthorisationApplication,
+    createDraftMarketingAuthorisationApplication,
     createNewMarketingAuthorisationApplication,
     createRenewalMarketingAuthorisationApplication,
     deleteMarketingAuthorisationApplication,
