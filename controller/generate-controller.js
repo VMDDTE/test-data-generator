@@ -40,6 +40,12 @@ async function tearDown (featureName) {
     await tearDownLocalStorage(featureName)
 }
 
+async function tearDownGlobal () {
+    log.info(`Tearing down ... GLOBAL`)
+    await tearDownEntities('global')
+    await tearDownLocalStorage('global')
+}
+
 async function processActions (featureName, actionJson) {
     let actionRecords = actionJson.actions
 
@@ -315,3 +321,4 @@ async function tearDownDraftMarketingAuthorisationApplication (featureName) {
 
 module.exports.generate = generate
 module.exports.tearDown = tearDown
+module.exports.tearDownGlobal = tearDownGlobal
