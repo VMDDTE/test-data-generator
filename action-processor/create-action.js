@@ -491,6 +491,10 @@ async function createExternalUser (featureName, action) {
 async function createSecureMessage (featureName, action){
     log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::creating a new secure message ${JSON.stringify(action.data)}`)
     let savedUser = await localStorage.getItem(featureName, action.data.FromUser)
+    if (!savedUser) {
+        // Check for a global user
+        savedUser = await localStorage.getItem('global', action.data.FromUser)
+    }
     let response = savedUser.response
     
     let createDraftResponse = await messageService.createDraft(response.Id)
