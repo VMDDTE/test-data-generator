@@ -553,6 +553,10 @@ async function createSecureMessage (featureName, action){
 async function createSentMessage (featureName, action){
     log.info(`${SERVICE_NAME}::createSentMessage::${action.label}::creating a new sent message ${JSON.stringify(action.data)}`)
     let storedUser = await localStorage.getItem(featureName, action.data.FromUser)
+    if (!storedUser) {
+        // Check for a global user
+        storedUser = await localStorage.getItem('global', action.data.FromUser)
+    }
     let fromUser = storedUser.response
     
     var sentDataPayload = {}
@@ -566,6 +570,12 @@ async function createSentMessage (featureName, action){
         if(savedAction && savedAction.response) {
             log.info(`${SERVICE_NAME}::createSentMessage::RecipientId ${savedAction.response.Id}`)
             sentDataPayload.RecipientIds.push(savedAction.response.Id)
+        } else {
+            let globalUserSavedAction = await localStorage.getItem('global', userLabel)
+            if(globalUserSavedAction && globalUserSavedAction.response) {
+                log.info(`${SERVICE_NAME}::createSentMessage::RecipientId ${globalUserSavedAction.response.Id}`)
+                sentDataPayload.RecipientIds.push(globalUserSavedAction.response.Id)
+            }
         }
     }
 
@@ -611,6 +621,10 @@ function storeMessageIdForDeletion(featureName, messageId){
 async function createStorageRecord (featureName, action){
     log.debug(`${SERVICE_NAME}::createStorage`)
     let savedUser = await localStorage.getItem(featureName, action.data.UserLabel)
+    if (!savedUser) {
+        // Check for a global user
+        savedUser = await localStorage.getItem('global', action.data.UserLabel)
+    }
     let user = savedUser.response
 
     let responseData = await storageService.createStorageRecord(
