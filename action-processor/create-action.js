@@ -34,7 +34,11 @@ async function process (featureName, action) {
         break
     case actionTypes.ACTION_TYPE_EXTERNAL_USER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_EXTERNAL_USER}`)
-        await createExternalUser(featureName, action)
+        if (action.global == 'true') {
+            await createGlobalExternalUser(action)
+        } else {
+            await createExternalUser(featureName, action)
+        }
         break
     case actionTypes.ACTION_TYPE_VET_PRACTICE_RECORD:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_VET_PRACTICE_RECORD}`)
@@ -487,6 +491,10 @@ async function createExternalUser (featureName, action) {
 async function createSecureMessage (featureName, action){
     log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::creating a new secure message ${JSON.stringify(action.data)}`)
     let savedUser = await localStorage.getItem(featureName, action.data.FromUser)
+    if (!savedUser) {
+        // Check for a global user
+        savedUser = await localStorage.getItem('global', action.data.FromUser)
+    }
     let response = savedUser.response
     
     let createDraftResponse = await messageService.createDraft(response.Id)
@@ -505,6 +513,12 @@ async function createSecureMessage (featureName, action){
         if(savedAction && savedAction.response) {
             log.info(`${SERVICE_NAME}::createSecureMessage::RecipientId ${savedAction.response.Id}`)
             sendData.RecipientIds.push(savedAction.response.Id)
+        } else {
+            let globalUserSavedAction = await localStorage.getItem('global', userLabel)
+            if(globalUserSavedAction && globalUserSavedAction.response) {
+                log.info(`${SERVICE_NAME}::createSecureMessage::RecipientId ${globalUserSavedAction.response.Id}`)
+                sendData.RecipientIds.push(globalUserSavedAction.response.Id)
+            }
         }
     }
 
@@ -539,6 +553,10 @@ async function createSecureMessage (featureName, action){
 async function createSentMessage (featureName, action){
     log.info(`${SERVICE_NAME}::createSentMessage::${action.label}::creating a new sent message ${JSON.stringify(action.data)}`)
     let storedUser = await localStorage.getItem(featureName, action.data.FromUser)
+    if (!storedUser) {
+        // Check for a global user
+        storedUser = await localStorage.getItem('global', action.data.FromUser)
+    }
     let fromUser = storedUser.response
     
     var sentDataPayload = {}
@@ -552,6 +570,12 @@ async function createSentMessage (featureName, action){
         if(savedAction && savedAction.response) {
             log.info(`${SERVICE_NAME}::createSentMessage::RecipientId ${savedAction.response.Id}`)
             sentDataPayload.RecipientIds.push(savedAction.response.Id)
+        } else {
+            let globalUserSavedAction = await localStorage.getItem('global', userLabel)
+            if(globalUserSavedAction && globalUserSavedAction.response) {
+                log.info(`${SERVICE_NAME}::createSentMessage::RecipientId ${globalUserSavedAction.response.Id}`)
+                sentDataPayload.RecipientIds.push(globalUserSavedAction.response.Id)
+            }
         }
     }
 
@@ -562,6 +586,12 @@ async function createSentMessage (featureName, action){
             if(savedAction && savedAction.response) {
                 log.info(`${SERVICE_NAME}::createSentMessage::RecipientId ${savedAction.response.Id}`)
                 sentDataPayload.Attachments.push(savedAction.response.Id)
+            } else {
+                let globalUserSavedAction = await localStorage.getItem('global', userLabel)
+                if(globalUserSavedAction && globalUserSavedAction.response) {
+                    log.info(`${SERVICE_NAME}::createSentMessage::RecipientId ${globalUserSavedAction.response.Id}`)
+                    sentDataPayload.RecipientIds.push(globalUserSavedAction.response.Id)
+                }
             }
         }
     }
@@ -591,6 +621,10 @@ function storeMessageIdForDeletion(featureName, messageId){
 async function createStorageRecord (featureName, action){
     log.debug(`${SERVICE_NAME}::createStorage`)
     let savedUser = await localStorage.getItem(featureName, action.data.UserLabel)
+    if (!savedUser) {
+        // Check for a global user
+        savedUser = await localStorage.getItem('global', action.data.UserLabel)
+    }
     let user = savedUser.response
 
     let responseData = await storageService.createStorageRecord(
@@ -610,6 +644,35 @@ async function createStorageRecord (featureName, action){
         }
         storageList.push(responseData[0].Id)
         localStorage.setItem(featureName, 'StorageList', storageList)
+    }
+}
+
+async function createGlobalExternalUser (action) {
+    log.debug(`${SERVICE_NAME}::createGlobalExternalUser`)
+    let data = action.data
+    log.info(`${SERVICE_NAME}::createGlobalExternalUser::${action.label}::creating GLOBAl external user from ${JSON.stringify(data)}`)
+    let existingUser = localStorage.getItem('global', action.label)
+    if (existingUser) {
+        return
+    }
+    
+    let responseData = await userService.createExternalUser(data)
+    log.info(`${SERVICE_NAME}::createGlobalExternalUser::${action.label}::created:${JSON.stringify(responseData)}`)
+    var savedAction = {}
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createGlobalExternalUser, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem("global", action.label, savedAction)
+    var externalUsersIdList = localStorage.getItem("global", 'externalUsersIdList')
+    if (!externalUsersIdList) {
+        externalUsersIdList = []
+    }
+    externalUsersIdList.push(responseData.Id)
+    localStorage.setItem("global", 'externalUsersIdList', externalUsersIdList)
+
+    if (action.testUser === 'true' && responseData.Email) {
+        let email = responseData.Email
+        log.info(`${SERVICE_NAME}::createGlobalExternalUser::${action.label}::saving test user ${email}`)
+        localStorage.setItem("global", 'testuser', { 'Email': email, 'Password': constants.DEFAULT_USER_PASSWORD })
     }
 }
 
