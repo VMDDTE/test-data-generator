@@ -35,9 +35,9 @@ async function sendInvitation (namespace, action) {
     var userList = []
     for (const userLabel of users) {
         let savedAction = await localStorage.getItem(namespace, userLabel)
-        if (!savedUser) {
+        if (!savedAction) {
             // Check for a global user
-            savedUser = await localStorage.getItem('global', userLabel)
+            savedAction = await localStorage.getItem('global', userLabel)
         }
         let response = savedAction.response
         let userId = response.Id
