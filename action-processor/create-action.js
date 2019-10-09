@@ -522,13 +522,13 @@ async function createSecureMessage (featureName, action){
         }
     }
 
-    sendData.Attachments = []
+    sendData.AttachmentIds = []
     if(action.data && action.data.Attachments && action.data.Attachments.length) {
         for (const label of action.data.Attachments) {
             let savedAction = await localStorage.getItem(featureName, label)
             if(savedAction && savedAction.response) {
                 log.info(`${SERVICE_NAME}::createSecureMessage::RecipientId ${savedAction.response.Id}`)
-                sendData.Attachments.push(savedAction.response.Id)
+                sendData.AttachmentIds.push(savedAction.response.Id)
             }
         }
     }
@@ -579,13 +579,13 @@ async function createSentMessage (featureName, action){
         }
     }
 
-    sentDataPayload.Attachments = []
+    sentDataPayload.AttachmentIds = []
     if(action.data && action.data.Attachments && action.data.Attachments.length) {
         for (const label of action.data.Attachments) {
             let savedAction = await localStorage.getItem(featureName, label)
             if(savedAction && savedAction.response) {
                 log.info(`${SERVICE_NAME}::createSentMessage::RecipientId ${savedAction.response.Id}`)
-                sentDataPayload.Attachments.push(savedAction.response.Id)
+                sentDataPayload.AttachmentIds.push(savedAction.response.Id)
             } else {
                 let globalUserSavedAction = await localStorage.getItem('global', userLabel)
                 if(globalUserSavedAction && globalUserSavedAction.response) {
