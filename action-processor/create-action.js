@@ -440,7 +440,7 @@ async function createMarketingAuthorisationRenewalJob (featureName, action){
     if (!maRenewalJobList) {
         maRenewalJobList = []
     }
-    maRenewalJobList.push(responseData.Id)
+    maRenewalJobList.push(responseData.Identifier)
     localStorage.setItem(featureName, 'maRenewalJobList', maRenewalJobList)
 }
 
@@ -460,7 +460,7 @@ async function createRegistrationJob (featureName, action){
     if (!registrationJobList) {
         registrationJobList = []
     }
-    registrationJobList.push(responseData.Id)
+    registrationJobList.push(responseData.Identifier)
     localStorage.setItem(featureName, 'registrationJobList', registrationJobList)
 }
 

@@ -109,6 +109,7 @@ async function tearDownEntities (featureName) {
     await tearDownMessages(featureName)
     await tearDownExternalUser(featureName)
     await tearDownInvitations(featureName)
+    await tearDownRegistrationJobs(featureName)
 }
 
 async function tearDownStorageRecords (featureName) {
@@ -315,6 +316,17 @@ async function tearDownDraftMarketingAuthorisationApplication (featureName) {
         for (let internalRef of maDraftAppList) {
             log.info(`${CONTROLLER_NAME}::about to teardown marketing authorisation application with internal reference ${internalRef}`)
             await maApplicationService.deleteMarketingAuthorisationApplicationByInternalReference(internalRef)
+        }
+    }
+}
+
+async function tearDownRegistrationJobs(featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownRegistrationJobs:${featureName}`)
+    const registrations = localStorage.getItem(featureName, 'registrationJobList')
+    if (registrations) {
+        for (let id of registrations) {
+            log.info(`${CONTROLLER_NAME}::about to teardown registration jobs with id ${id}`)
+            await jobService.deleteJob(id)
         }
     }
 }
