@@ -401,8 +401,8 @@ async function createDraftMarketingAuthorisationApplication (featureName, action
     if (!maDraftAppList) {
         maDraftAppList = []
     }
-    console.log(responseData.split('/')[1])
-    maDraftAppList.push(responseData.split('/')[1])
+    console.log(responseData.InternalReference)
+    maDraftAppList.push(responseData.InternalReference)
     localStorage.setItem(featureName, 'maDraftApplicationList', maDraftAppList)
 }
 
