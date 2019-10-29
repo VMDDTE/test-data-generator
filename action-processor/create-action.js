@@ -490,23 +490,23 @@ async function createExternalUser (featureName, action) {
 
 async function createSecureMessage (featureName, action){
     log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::creating a new secure message ${JSON.stringify(action.data)}`)
-    let savedUser = await localStorage.getItem(featureName, action.data.FromUser)
-    if (!savedUser) {
+    let savedFromUser = await localStorage.getItem(featureName, action.data.FromUser)
+    if (!savedFromUser) {
         // Check for a global user
-        savedUser = await localStorage.getItem('global', action.data.FromUser)
+        savedFromUser = await localStorage.getItem('global', action.data.FromUser)
     }
-    let response = savedUser.response
+    let savedToUser = await localStorage.getItem(featureName, action.data.ToUser)
+    if (!savedToUser) {
+        // Check for a global user
+        savedToUser = await localStorage.getItem('global', action.data.ToUser)
+    }
     
-    let createDraftResponse = await messageService.createDraft(response.Id)
-    let draftId = createDraftResponse.Id
-
     var sendData = {}
-    sendData.FromId = response.Id // Only used to populate header, should really be a param of sendMessage
-
+    sendData.FromUserId = savedFromUser.response.Id // Only used to populate header, should really be a param of sendMessage
     sendData.Subject = action.data.Subject
-    sendData.Message = action.data.Message 
-    sendData.sendNotification = false;
-
+    sendData.Message = action.data.Message
+    sendData.ToUserId = savedToUser.response.Id
+       
     sendData.RecipientIds = []
     for (const userLabel of action.data.Recipients) {
         let savedAction = await localStorage.getItem(featureName, userLabel)
@@ -522,18 +522,18 @@ async function createSecureMessage (featureName, action){
         }
     }
 
-    sendData.AttachmentIds = []
+    sendData.AttachmentsToCreate = []
     if(action.data && action.data.Attachments && action.data.Attachments.length) {
         for (const label of action.data.Attachments) {
             let savedAction = await localStorage.getItem(featureName, label)
             if(savedAction && savedAction.response) {
                 log.info(`${SERVICE_NAME}::createSecureMessage::RecipientId ${savedAction.response.Id}`)
-                sendData.AttachmentIds.push(savedAction.response.Id)
+                sendData.AttachmentsToCreate.push(savedAction.response.Id)
             }
         }
     }
 
-    var sendMessageResponse = await messageService.sendMessage(draftId, sendData)
+    var sendMessageResponse = await messageService.sendMessage(sendData)
 
     log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::sendMessage:${JSON.stringify(sendMessageResponse)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
