@@ -27,6 +27,10 @@ async function clearAll () {
     localStorage.clearAll()
 }
 
+async function tearDownGlobal () {
+    await generator.tearDownGlobal()
+}
+
 async function getTestUser (filename, namespace) {
     var featureName = filename
     if (namespace) {
@@ -36,6 +40,13 @@ async function getTestUser (filename, namespace) {
     if (testuser) {
         console.log(`Running with Test User [${testuser.Email}] ...`)
         return testuser
+    }
+
+    // Check for a global test user
+    let globalTestUser = localStorage.getItem('global', 'testuser')
+    if (globalTestUser) {
+        console.log(`Running with GLOBAL Test User [${globalTestUser.Email}] ...`)
+        return globalTestUser
     }
     return null
 }
@@ -59,3 +70,4 @@ module.exports.tearDown = tearDown
 module.exports.clearAll = clearAll
 module.exports.getInvites = getInvites
 module.exports.getTestUser = getTestUser
+module.exports.tearDownGlobal = tearDownGlobal

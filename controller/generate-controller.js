@@ -40,6 +40,12 @@ async function tearDown (featureName) {
     await tearDownLocalStorage(featureName)
 }
 
+async function tearDownGlobal () {
+    log.info(`Tearing down ... GLOBAL`)
+    await tearDownEntities('global')
+    await tearDownLocalStorage('global')
+}
+
 async function processActions (featureName, actionJson) {
     let actionRecords = actionJson.actions
 
@@ -106,7 +112,6 @@ async function tearDownEntities (featureName) {
     await tearDownRegistrationJobs(featureName)
     await tearDownRenewalMAJobs(featureName)
     await tearDownNewMAJobs(featureName)
-
 }
 
 async function tearDownStorageRecords (featureName) {
@@ -317,13 +322,14 @@ async function tearDownDraftMarketingAuthorisationApplication (featureName) {
     }
 }
 
-async function tearDownRegistrationJobs (featureName) {
+
+async function tearDownRegistrationJobs(featureName) {
     log.info(`${CONTROLLER_NAME}::tearDownRegistrationJobs:${featureName}`)
-    const maRegistrationJobsList = localStorage.getItem(featureName, 'maRegistrationJobs')
-    if (maRegistrationJobsList) {
-        for (let internalRef of maRegistrationJobsList) {
-            log.info(`${CONTROLLER_NAME}::about to teardown registration jobs with internal reference ${internalRef}`)
-            await jobService.deleteJob(internalRef)
+    const registrations = localStorage.getItem(featureName, 'registrationJobList')
+    if (registrations) {
+        for (let id of registrations) {
+            log.info(`${CONTROLLER_NAME}::about to teardown registration jobs with id ${id}`)
+            await jobService.deleteJob(id)
         }
     }
 }
@@ -349,5 +355,7 @@ async function tearDownNewMAJobs (featureName) {
         }
     }
 }
+
 module.exports.generate = generate
 module.exports.tearDown = tearDown
+module.exports.tearDownGlobal = tearDownGlobal

@@ -34,7 +34,11 @@ async function process (featureName, action) {
         break
     case actionTypes.ACTION_TYPE_EXTERNAL_USER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_EXTERNAL_USER}`)
-        await createExternalUser(featureName, action)
+        if (action.global == 'true') {
+            await createGlobalExternalUser(action)
+        } else {
+            await createExternalUser(featureName, action)
+        }
         break
     case actionTypes.ACTION_TYPE_VET_PRACTICE_RECORD:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_VET_PRACTICE_RECORD}`)
@@ -88,9 +92,9 @@ async function process (featureName, action) {
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_NEW_MARKETING_AUTHORISATION_APPLICATION}`)
         await createNewMarketingAuthorisationApplication(featureName, action)
         break
-    case actionTypes.ACTION_TYPE_DRAFT_NEW_MARKETING_AUTHORISATION_APPLICATION:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_DRAFT_NEW_MARKETING_AUTHORISATION_APPLICATION}`)
-        await createDraftNewMarketingAuthorisationApplication(featureName, action)
+    case actionTypes.ACTION_TYPE_DRAFT_MARKETING_AUTHORISATION_APPLICATION:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_DRAFT_MARKETING_AUTHORISATION_APPLICATION}`)
+        await createDraftMarketingAuthorisationApplication(featureName, action)
         break
     case actionTypes.ACTION_TYPE_RENEWAL_MARKETING_AUTHORISATION_APPLICATION:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_RENEWAL_MARKETING_AUTHORISATION_APPLICATION}`)
@@ -387,22 +391,22 @@ async function createNewMarketingAuthorisationApplication (featureName, action) 
     localStorage.setItem(featureName, 'maApplicationList', maAppList)
 }
 
-async function createDraftNewMarketingAuthorisationApplication (featureName, action) {
-    log.debug(`${SERVICE_NAME}::createDraftNewMarketingAuthorisationApplication`)
+async function createDraftMarketingAuthorisationApplication (featureName, action) {
+    log.debug(`${SERVICE_NAME}::createDraftMarketingAuthorisationApplication`)
     let maData = action.data
-    log.info(`${SERVICE_NAME}::createDraftNewMarketingAuthorisationApplication::${action.label}::creating draft new marketing authorisation application from ${JSON.stringify(maData)}`)
-    let responseData = await maApplicationService.createDraftNewMarketingAuthorisationApplication(maData)
-    log.info(`${SERVICE_NAME}::createDraftNewMarketingAuthorisationApplication::${action.label}::created:${JSON.stringify(responseData)}`)
+    log.info(`${SERVICE_NAME}::createDraftMarketingAuthorisationApplication::${action.label}::creating draft marketing authorisation application from ${JSON.stringify(maData)}`)
+    let responseData = await maApplicationService.createDraftMarketingAuthorisationApplication(maData)
+    log.info(`${SERVICE_NAME}::createDraftMarketingAuthorisationApplication::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
-    log.debug(`${SERVICE_NAME}::createDraftNewMarketingAuthorisationApplication, saved action ${JSON.stringify(savedAction)}`)
+    log.debug(`${SERVICE_NAME}::createDraftMarketingAuthorisationApplication, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(featureName, action.label, savedAction)
     var maDraftAppList = localStorage.getItem(featureName, 'maDraftApplicationList')
     if (!maDraftAppList) {
         maDraftAppList = []
     }
-    console.log(responseData.split('/')[1])
-    maDraftAppList.push(responseData.split('/')[1])
+    console.log(responseData.InternalReference)
+    maDraftAppList.push(responseData.InternalReference)
     localStorage.setItem(featureName, 'maDraftApplicationList', maDraftAppList)
 }
 
@@ -440,7 +444,7 @@ async function createMarketingAuthorisationRenewalJob (featureName, action){
     if (!maRenewalJobList) {
         maRenewalJobList = []
     }
-    maRenewalJobList.push(responseData.Id)
+    maRenewalJobList.push(responseData.Identifier)
     localStorage.setItem(featureName, 'maRenewalJobList', maRenewalJobList)
 }
 
@@ -480,7 +484,7 @@ async function createRegistrationJob (featureName, action){
     if (!registrationJobList) {
         registrationJobList = []
     }
-    registrationJobList.push(responseData.Id)
+    registrationJobList.push(responseData.Identifier)
     localStorage.setItem(featureName, 'registrationJobList', registrationJobList)
 }
 
@@ -510,40 +514,50 @@ async function createExternalUser (featureName, action) {
 
 async function createSecureMessage (featureName, action){
     log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::creating a new secure message ${JSON.stringify(action.data)}`)
-    let savedUser = await localStorage.getItem(featureName, action.data.FromUser)
-    let response = savedUser.response
+    let savedFromUser = await localStorage.getItem(featureName, action.data.FromUser)
+    if (!savedFromUser) {
+        // Check for a global user
+        savedFromUser = await localStorage.getItem('global', action.data.FromUser)
+    }
+    let savedToUser = await localStorage.getItem(featureName, action.data.ToUser)
+    if (!savedToUser) {
+        // Check for a global user
+        savedToUser = await localStorage.getItem('global', action.data.ToUser)
+    }
     
-    let createDraftResponse = await messageService.createDraft(response.Id)
-    let draftId = createDraftResponse.Id
-
     var sendData = {}
-    sendData.FromId = response.Id // Only used to populate header, should really be a param of sendMessage
-
+    sendData.FromUserId = savedFromUser.response.Id // Only used to populate header, should really be a param of sendMessage
     sendData.Subject = action.data.Subject
-    sendData.Message = action.data.Message 
-    sendData.sendNotification = false;
-
+    sendData.Message = action.data.Message
+    sendData.ToUserId = savedToUser.response.Id
+       
     sendData.RecipientIds = []
     for (const userLabel of action.data.Recipients) {
         let savedAction = await localStorage.getItem(featureName, userLabel)
         if(savedAction && savedAction.response) {
             log.info(`${SERVICE_NAME}::createSecureMessage::RecipientId ${savedAction.response.Id}`)
             sendData.RecipientIds.push(savedAction.response.Id)
+        } else {
+            let globalUserSavedAction = await localStorage.getItem('global', userLabel)
+            if(globalUserSavedAction && globalUserSavedAction.response) {
+                log.info(`${SERVICE_NAME}::createSecureMessage::RecipientId ${globalUserSavedAction.response.Id}`)
+                sendData.RecipientIds.push(globalUserSavedAction.response.Id)
+            }
         }
     }
 
-    sendData.Attachments = []
+    sendData.AttachmentsToCreate = []
     if(action.data && action.data.Attachments && action.data.Attachments.length) {
         for (const label of action.data.Attachments) {
             let savedAction = await localStorage.getItem(featureName, label)
             if(savedAction && savedAction.response) {
                 log.info(`${SERVICE_NAME}::createSecureMessage::RecipientId ${savedAction.response.Id}`)
-                sendData.Attachments.push(savedAction.response.Id)
+                sendData.AttachmentsToCreate.push(savedAction.response.Id)
             }
         }
     }
 
-    var sendMessageResponse = await messageService.sendMessage(draftId, sendData)
+    var sendMessageResponse = await messageService.sendMessage(sendData)
 
     log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::sendMessage:${JSON.stringify(sendMessageResponse)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
@@ -563,6 +577,10 @@ async function createSecureMessage (featureName, action){
 async function createSentMessage (featureName, action){
     log.info(`${SERVICE_NAME}::createSentMessage::${action.label}::creating a new sent message ${JSON.stringify(action.data)}`)
     let storedUser = await localStorage.getItem(featureName, action.data.FromUser)
+    if (!storedUser) {
+        // Check for a global user
+        storedUser = await localStorage.getItem('global', action.data.FromUser)
+    }
     let fromUser = storedUser.response
     
     var sentDataPayload = {}
@@ -576,16 +594,28 @@ async function createSentMessage (featureName, action){
         if(savedAction && savedAction.response) {
             log.info(`${SERVICE_NAME}::createSentMessage::RecipientId ${savedAction.response.Id}`)
             sentDataPayload.RecipientIds.push(savedAction.response.Id)
+        } else {
+            let globalUserSavedAction = await localStorage.getItem('global', userLabel)
+            if(globalUserSavedAction && globalUserSavedAction.response) {
+                log.info(`${SERVICE_NAME}::createSentMessage::RecipientId ${globalUserSavedAction.response.Id}`)
+                sentDataPayload.RecipientIds.push(globalUserSavedAction.response.Id)
+            }
         }
     }
 
-    sentDataPayload.Attachments = []
+    sentDataPayload.AttachmentIds = []
     if(action.data && action.data.Attachments && action.data.Attachments.length) {
         for (const label of action.data.Attachments) {
             let savedAction = await localStorage.getItem(featureName, label)
             if(savedAction && savedAction.response) {
                 log.info(`${SERVICE_NAME}::createSentMessage::RecipientId ${savedAction.response.Id}`)
-                sentDataPayload.Attachments.push(savedAction.response.Id)
+                sentDataPayload.AttachmentIds.push(savedAction.response.Id)
+            } else {
+                let globalUserSavedAction = await localStorage.getItem('global', userLabel)
+                if(globalUserSavedAction && globalUserSavedAction.response) {
+                    log.info(`${SERVICE_NAME}::createSentMessage::RecipientId ${globalUserSavedAction.response.Id}`)
+                    sentDataPayload.RecipientIds.push(globalUserSavedAction.response.Id)
+                }
             }
         }
     }
@@ -615,6 +645,10 @@ function storeMessageIdForDeletion(featureName, messageId){
 async function createStorageRecord (featureName, action){
     log.debug(`${SERVICE_NAME}::createStorage`)
     let savedUser = await localStorage.getItem(featureName, action.data.UserLabel)
+    if (!savedUser) {
+        // Check for a global user
+        savedUser = await localStorage.getItem('global', action.data.UserLabel)
+    }
     let user = savedUser.response
 
     let responseData = await storageService.createStorageRecord(
@@ -634,6 +668,35 @@ async function createStorageRecord (featureName, action){
         }
         storageList.push(responseData[0].Id)
         localStorage.setItem(featureName, 'StorageList', storageList)
+    }
+}
+
+async function createGlobalExternalUser (action) {
+    log.debug(`${SERVICE_NAME}::createGlobalExternalUser`)
+    let data = action.data
+    log.info(`${SERVICE_NAME}::createGlobalExternalUser::${action.label}::creating GLOBAl external user from ${JSON.stringify(data)}`)
+    let existingUser = localStorage.getItem('global', action.label)
+    if (existingUser) {
+        return
+    }
+    
+    let responseData = await userService.createExternalUser(data)
+    log.info(`${SERVICE_NAME}::createGlobalExternalUser::${action.label}::created:${JSON.stringify(responseData)}`)
+    var savedAction = {}
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createGlobalExternalUser, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem("global", action.label, savedAction)
+    var externalUsersIdList = localStorage.getItem("global", 'externalUsersIdList')
+    if (!externalUsersIdList) {
+        externalUsersIdList = []
+    }
+    externalUsersIdList.push(responseData.Id)
+    localStorage.setItem("global", 'externalUsersIdList', externalUsersIdList)
+
+    if (action.testUser === 'true' && responseData.Email) {
+        let email = responseData.Email
+        log.info(`${SERVICE_NAME}::createGlobalExternalUser::${action.label}::saving test user ${email}`)
+        localStorage.setItem("global", 'testuser', { 'Email': email, 'Password': constants.DEFAULT_USER_PASSWORD })
     }
 }
 
