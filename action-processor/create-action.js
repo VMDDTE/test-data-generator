@@ -464,7 +464,7 @@ async function createMarketingAuthorisationNewJob (featureName, action){
     if (!maNewJobList) {
         maNewJobList = []
     }
-    maNewJobList.push(responseData.Id)
+    maNewJobList.push(responseData.Identifier)
     localStorage.setItem(featureName, 'maNewJobList', maNewJobList)
 }
 
