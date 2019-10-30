@@ -100,6 +100,10 @@ async function process (featureName, action) {
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_JOB_MARKETING_AUTHORISATION_RENEWAL}`)
         await createMarketingAuthorisationRenewalJob(featureName, action)
         break
+    case actionTypes.ACTION_TYPE_JOB_MARKETING_AUTHORISATION_NEW:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_JOB_MARKETING_AUTHORISATION_NEW}`)
+        await createMarketingAuthorisationNewJob(featureName, action)
+        break
     case actionTypes.ACTION_TYPE_JOB_REGISTRATION:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_JOB_REGISTRATION}`)
         await createRegistrationJob(featureName, action)
@@ -438,6 +442,26 @@ async function createMarketingAuthorisationRenewalJob (featureName, action){
     }
     maRenewalJobList.push(responseData.Id)
     localStorage.setItem(featureName, 'maRenewalJobList', maRenewalJobList)
+}
+
+async function createMarketingAuthorisationNewJob (featureName, action){
+    log.debug(`${SERVICE_NAME}::createMarketingAuthorisationNewJob`)
+    let data = action.data
+    log.info(`${SERVICE_NAME}::createMarketingAuthorisationNewJob::${action.label}::creating marketing authorisation new job from ${JSON.stringify(data)}`)
+    let responseData = await jobService.createJob(constants.JOB_TYPE_MARKETING_AUTHORISATION_NEW, featureName)
+    let jobId = responseData.Id
+    responseData = await jobService.updateJob(jobId, data)
+    log.info(`${SERVICE_NAME}::createMarketingAuthorisationNewJob::${action.label}::updated:${JSON.stringify(responseData)}`)
+    var savedAction = localStorage.getItem(featureName, action.label)
+    savedAction.response = responseData
+    log.debug(`${SERVICE_NAME}::createMarketingAuthorisationNewJob, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(featureName, action.label, savedAction)
+    var maNewJobList = localStorage.getItem(featureName, 'maNewJobList')
+    if (!maNewJobList) {
+        maNewJobList = []
+    }
+    maNewJobList.push(responseData.Id)
+    localStorage.setItem(featureName, 'maNewJobList', maNewJobList)
 }
 
 async function createRegistrationJob (featureName, action){

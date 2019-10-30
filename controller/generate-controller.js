@@ -103,6 +103,10 @@ async function tearDownEntities (featureName) {
     await tearDownMessages(featureName)
     await tearDownExternalUser(featureName)
     await tearDownInvitations(featureName)
+    await tearDownRegistrationJobs(featureName)
+    await tearDownRenewalMAJobs(featureName)
+    await tearDownNewMAJobs(featureName)
+
 }
 
 async function tearDownStorageRecords (featureName) {
@@ -313,5 +317,37 @@ async function tearDownDraftMarketingAuthorisationApplication (featureName) {
     }
 }
 
+async function tearDownRegistrationJobs (featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownRegistrationJobs:${featureName}`)
+    const maRegistrationJobsList = localStorage.getItem(featureName, 'maRegistrationJobs')
+    if (maRegistrationJobsList) {
+        for (let internalRef of maRegistrationJobsList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown registration jobs with internal reference ${internalRef}`)
+            await jobService.deleteJob(internalRef)
+        }
+    }
+}
+
+async function tearDownRenewalMAJobs (featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownRenewalMAJobs:${featureName}`)
+    const maRenewalJobsList = localStorage.getItem(featureName, 'maRenewalJobList')
+    if (maRenewalJobsList) {
+        for (let internalRef of maRenewalJobsList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown renew ma jobs with internal reference ${internalRef}`)
+            await jobService.deleteJob(internalRef)
+        }
+    }
+}
+
+async function tearDownNewMAJobs (featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownNewMAJobs:${featureName}`)
+    const maRenewJobsList = localStorage.getItem(featureName, 'maNewMAJobs')
+    if (maRenewJobsList) {
+        for (let internalRef of maRenewJobsList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown new ma jobs with internal reference ${internalRef}`)
+            await jobService.deleteJob(internalRef)
+        }
+    }
+}
 module.exports.generate = generate
 module.exports.tearDown = tearDown
