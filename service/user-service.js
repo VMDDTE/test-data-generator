@@ -31,7 +31,23 @@ async function createExternalUser (payload) {
         })
         .catch(error => {
             log.error(`${SERVICE_NAME}::createExternalUser:error: ${error}`)
-            throw error
+            return axios.post(url, payload)
+                .then((response) => {
+                    log.info(`${SERVICE_NAME}::createExternalUser:retry1:success`)
+                    return response.data
+                })
+                .catch(error => {
+                    log.error(`${SERVICE_NAME}::createExternalUser:retry1:error: ${error}`)
+                    return axios.post(url, payload)
+                        .then((response) => {
+                            log.info(`${SERVICE_NAME}::createExternalUser:retry2:success`)
+                            return response.data
+                        })
+                        .catch(error => {
+                            log.error(`${SERVICE_NAME}::createExternalUser:retry2:error: ${error}`)
+                            throw error
+                        })
+                })
         })
 }
 
