@@ -22,6 +22,11 @@ const log = global.log
 const SERVICE_NAME = 'create-action-processor'
 
 async function process (featureName, action) {
+    console.log('ALL UP IN YOUR PROCESS>>>> ');
+    console.log(`${SERVICE_NAME}::${featureName}::process`)
+
+    console.log('ACTION:');
+    console.log(action);
     log.debug(`${SERVICE_NAME}::${featureName}::process`)
     switch (action.type) {
     case actionTypes.ACTION_TYPE_VET:
@@ -115,6 +120,11 @@ async function process (featureName, action) {
     case actionTypes.ACTION_TYPE_SECURE_MESSAGE:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SECURE_MESSAGE}`)
         await createSecureMessage(featureName, action)
+        break
+    case actionTypes.ACTION_TYPE_DRAFT_MESSAGE:
+        console.log('the action type is:'+ actionTypes.ACTION_TYPE_DRAFT_MESSAGE)
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_DRAFT_MESSAGE}`)
+        await createDraftMessage(featureName, action)
         break
     case actionTypes.ACTION_TYPE_SENT_MESSAGE:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SENT_MESSAGE}`)
@@ -611,6 +621,63 @@ async function createSentMessage (featureName, action){
     localStorage.setItem(featureName, action.label, savedAction)
 
     storeMessageIdForDeletion(featureName, createdSentMessage.Id)
+}
+
+async function createDraftMessage (featureName, action){
+    console.log('in create draft message....');
+    log.info(`${SERVICE_NAME}::createDraftMessage::${action.label}::creating a new draft message ${JSON.stringify(action.data)}`)
+    let savedFromUser = await localStorage.getItem(featureName, action.data.FromUser)
+    if (!savedFromUser) {
+        // Check for a global user
+        savedFromUser = await localStorage.getItem('global', action.data.FromUser)
+    }
+    let savedToUser = await localStorage.getItem(featureName, action.data.ToUser)
+    if (!savedToUser) {
+        // Check for a global user
+        savedToUser = await localStorage.getItem('global', action.data.ToUser)
+    }
+    
+    var sendData = {}
+    sendData.FromUserId = savedFromUser.response.Id // Only used to populate header, should really be a param of sendMessage
+    sendData.Subject = action.data.Subject
+    sendData.Message = action.data.Message
+    sendData.ToUserId = savedToUser.response.Id
+       
+    sendData.RecipientIds = []
+    for (const userLabel of action.data.Recipients) {
+        let savedAction = await localStorage.getItem(featureName, userLabel)
+        if(savedAction && savedAction.response) {
+            log.info(`${SERVICE_NAME}::createDraftMessage::RecipientId ${savedAction.response.Id}`)
+            sendData.RecipientIds.push(savedAction.response.Id)
+        } else {
+            let globalUserSavedAction = await localStorage.getItem('global', userLabel)
+            if(globalUserSavedAction && globalUserSavedAction.response) {
+                log.info(`${SERVICE_NAME}::createDraftMessage::RecipientId ${globalUserSavedAction.response.Id}`)
+                sendData.RecipientIds.push(globalUserSavedAction.response.Id)
+            }
+        }
+    }
+
+    sendData.AttachmentsToCreate = []
+    if(action.data && action.data.Attachments && action.data.Attachments.length) {
+        sendData.AttachmentsToCreate = action.data.Attachments
+    }
+
+    var sendMessageResponse = await messageService.sendMessage(sendData)
+
+    log.info(`${SERVICE_NAME}::createDraftMessage::${action.label}::sendMessage:${JSON.stringify(sendMessageResponse)}`)
+    var savedAction = localStorage.getItem(featureName, action.label)
+    savedAction.response = sendMessageResponse
+    log.debug(`${SERVICE_NAME}::createDraftMessage, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(featureName, action.label, savedAction)
+    
+    var draftMessageList = localStorage.getItem(featureName, 'draftMessageList')
+    if (!draftMessageList) {
+        draftMessageList = []
+    }
+
+    draftMessageList.push(sendMessageResponse.Id)
+    localStorage.setItem(featureName, 'draftMessageList', draftMessageList)
 }
 
 function storeMessageIdForDeletion(featureName, messageId){

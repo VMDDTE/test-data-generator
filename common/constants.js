@@ -27,6 +27,7 @@ const ACTION_TYPE_JOB_REGISTRATION = 'RegistrationJob'
 const ACTION_TYPE_EXTERNAL_USER = 'ExternalUserRecord'
 const ACTION_TYPE_SECURE_MESSAGE = 'SecureMessageRecord'
 const ACTION_TYPE_SENT_MESSAGE = 'SentMessageRecord'
+const ACTION_TYPE_DRAFT_MESSAGE = 'DraftMessageRecord'
 const ACTION_TYPE_STORAGE = 'StorageRecord'
 const ACTION_TYPE_USER = 'UserRecord'
 
