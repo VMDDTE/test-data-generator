@@ -663,11 +663,11 @@ async function createDraftMessage (featureName, action){
         sendData.AttachmentsToCreate = action.data.Attachments
     }
 
-    var sendMessageResponse = await messageService.sendMessage(sendData)
+    var draftMessageResponse = await messageService.createDraft(sendData.FromUserId)
 
-    log.info(`${SERVICE_NAME}::createDraftMessage::${action.label}::sendMessage:${JSON.stringify(sendMessageResponse)}`)
+    log.info(`${SERVICE_NAME}::createDraftMessage::${action.label}::sendMessage:${JSON.stringify(draftMessageResponse)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
-    savedAction.response = sendMessageResponse
+    savedAction.response = draftMessageResponse
     log.debug(`${SERVICE_NAME}::createDraftMessage, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(featureName, action.label, savedAction)
     
@@ -676,7 +676,7 @@ async function createDraftMessage (featureName, action){
         draftMessageList = []
     }
 
-    draftMessageList.push(sendMessageResponse.Id)
+    draftMessageList.push(draftMessageResponse.Id)
     localStorage.setItem(featureName, 'draftMessageList', draftMessageList)
 }
 
