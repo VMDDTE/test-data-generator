@@ -4,7 +4,7 @@ const log = global.log
 const ADMIN_BASE_API_URL = `${process.env.ADMIN_BASE_API_URL}`
 const SERVICE_NAME = 'message-service'
 
-async function createDraft (userId) {
+async function createDraft (userId, payload) {
     let url = `${ADMIN_BASE_API_URL}/messages`
     log.info(`${SERVICE_NAME}::createDraft:url:${url}`)
     const requestHeaders = { 'vmd-userid': userId }
@@ -12,7 +12,8 @@ async function createDraft (userId) {
     return axios({
             headers: { ...requestHeaders },
             method: 'post',
-            url: url
+            url: url,
+            data: payload.sendData
         })
         .then((response) => {
             return response.data
