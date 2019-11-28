@@ -663,7 +663,7 @@ async function createDraftMessage (featureName, action){
         sendData.AttachmentsToCreate = action.data.Attachments
     }
 
-    var draftMessageResponse = await messageService.createDraft(sendData.FromUserId)
+    var draftMessageResponse = await messageService.createDraft(sendData.FromUserId, sendData)
 
     log.info(`${SERVICE_NAME}::createDraftMessage::${action.label}::sendMessage:${JSON.stringify(draftMessageResponse)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
