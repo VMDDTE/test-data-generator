@@ -662,7 +662,9 @@ async function createDraftMessage (featureName, action){
     if(action.data && action.data.Attachments && action.data.Attachments.length) {
         sendData.AttachmentsToCreate = action.data.Attachments
     }
-
+    log.info('CREATE DRAFT =====')
+    log.info(JSON.stringify({sendData}))
+    log.info('END CREATE DRAFT =====')
     var draftMessageResponse = await messageService.createDraft(sendData.FromUserId, sendData)
 
     log.info(`${SERVICE_NAME}::createDraftMessage::${action.label}::sendMessage:${JSON.stringify(draftMessageResponse)}`)
