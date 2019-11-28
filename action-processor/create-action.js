@@ -672,9 +672,9 @@ async function createDraftMessage (featureName, action){
     savedAction.response = draftMessageResponse
     log.debug(`${SERVICE_NAME}::createDraftMessage, saved action ${JSON.stringify(savedAction)}`)
 
-    var draftMessageUpdateResponse = await messageService.updateDraft(savedAction.response.Id,sendData);
-    log.debug('UPDATE RESPONSE');
-    log.debug(draftMessageUpdateResponse);
+    // var draftMessageUpdateResponse = await messageService.updateDraft(savedAction.response.Id,sendData);
+    // log.debug('UPDATE RESPONSE');
+    // log.debug(draftMessageUpdateResponse);
 
     localStorage.setItem(featureName, action.label, savedAction)
     
