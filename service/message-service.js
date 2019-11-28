@@ -8,7 +8,13 @@ async function createDraft (userId, payload) {
     let url = `${ADMIN_BASE_API_URL}/messages`
     log.info(`${SERVICE_NAME}::createDraft:url:${url}`)
     const requestHeaders = { 'vmd-userid': userId }
-
+    log.info('the whole request:')
+    log.info(JSON.stringify({
+        headers: { ...requestHeaders },
+        method: 'post',
+        url: url,
+        data: payload.sendData
+    }))
     return axios({
             headers: { ...requestHeaders },
             method: 'post',
