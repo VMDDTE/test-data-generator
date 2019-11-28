@@ -13,13 +13,13 @@ async function createDraft (userId, payload) {
         headers: { ...requestHeaders },
         method: 'post',
         url: url,
-        data: payload.sendData
+        data: payload
     }))
     return axios({
             headers: { ...requestHeaders },
             method: 'post',
             url: url,
-            data: payload.sendData
+            data: payload
         })
         .then((response) => {
             return response.data

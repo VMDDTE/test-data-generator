@@ -663,7 +663,7 @@ async function createDraftMessage (featureName, action){
         sendData.AttachmentsToCreate = action.data.Attachments
     }
     log.info('CREATE DRAFT =====')
-    log.info(JSON.stringify({sendData}))
+    log.info(JSON.stringify(sendData))
     log.info('END CREATE DRAFT =====')
     var draftMessageResponse = await messageService.createDraft(sendData.FromUserId, sendData)
 
