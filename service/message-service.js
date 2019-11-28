@@ -30,6 +30,32 @@ async function createDraft (userId, payload) {
         })
 }
 
+async function updateDraft (msgId, payload) {
+    let url = `${ADMIN_BASE_API_URL}/messages/${msgId}`
+    log.info(`${SERVICE_NAME}::updateDraft:url:${url}`)
+    const requestHeaders = { 'vmd-userid': userId }
+    log.info('the whole request:')
+    log.info(JSON.stringify({
+        headers: { ...requestHeaders },
+        method: 'put',
+        url: url,
+        data: payload
+    }))
+    return axios({
+            headers: { ...requestHeaders },
+            method: 'put',
+            url: url,
+            data: payload
+        })
+        .then((response) => {
+            return response.data
+        })
+        .catch(error => {
+            log.error(`${SERVICE_NAME}::updateDraft:error: ${error}`)
+            throw error
+        })
+}
+
 async function sendMessage (payload) {
     let url = `${ADMIN_BASE_API_URL}/messages/CreateSecure`
     log.info(`${SERVICE_NAME}::sendMessage:url:${url}`)
@@ -81,6 +107,7 @@ async function deleteMessage (messageId) {
 }
 
 module.exports.createDraft = createDraft
+module.exports.createDraft = updateDraft
 module.exports.sendMessage = sendMessage
 module.exports.sentMessage = sentMessage
 module.exports.deleteMessage = deleteMessage
