@@ -107,7 +107,7 @@ async function deleteMessage (messageId) {
 }
 
 module.exports.createDraft = createDraft
-module.exports.createDraft = updateDraft
+module.exports.updateDraft = updateDraft
 module.exports.sendMessage = sendMessage
 module.exports.sentMessage = sentMessage
 module.exports.deleteMessage = deleteMessage
