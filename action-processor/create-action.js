@@ -618,7 +618,6 @@ async function createSentMessage (featureName, action){
 }
 
 async function createDraftMessage (featureName, action){
-    console.log('in create draft message....');
     log.info(`${SERVICE_NAME}::createDraftMessage::${action.label}::creating a new draft message ${JSON.stringify(action.data)}`)
     let savedFromUser = await localStorage.getItem(featureName, action.data.FromUser)
     if (!savedFromUser) {
