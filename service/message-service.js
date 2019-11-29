@@ -23,7 +23,6 @@ async function createDraft (userId, payload) {
         })
 }
 
-
 async function sendMessage (payload) {
     let url = `${ADMIN_BASE_API_URL}/messages/CreateSecure`
     log.info(`${SERVICE_NAME}::sendMessage:url:${url}`)
