@@ -22,12 +22,6 @@ const log = global.log
 const SERVICE_NAME = 'create-action-processor'
 
 async function process (featureName, action) {
-    log.debug('IN THE PROCESS>>>> ');
-    log.debug(`${SERVICE_NAME}::${featureName}::process`)
-
-    log.debug('ACTION:');
-    log.debug(action);
-    log.debug(`${SERVICE_NAME}::${featureName}::process`)
     switch (action.type) {
     case actionTypes.ACTION_TYPE_VET:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_VET}`)
