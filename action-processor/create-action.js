@@ -515,6 +515,7 @@ async function createExternalUser (featureName, action) {
 async function createSecureMessage (featureName, action){
     log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::creating a new secure message ${JSON.stringify(action.data)}`)
     let savedFromUser = await localStorage.getItem(featureName, action.data.FromUser)
+    const organisation = await localStorage.getItem(featureName, action.data.Organisation)
     if (!savedFromUser) {
         // Check for a global user
         savedFromUser = await localStorage.getItem('global', action.data.FromUser)
@@ -530,6 +531,7 @@ async function createSecureMessage (featureName, action){
     sendData.Subject = action.data.Subject
     sendData.Message = action.data.Message
     sendData.ToUserId = savedToUser.response.Id
+    sendData.OrganisationId = organisation.response.Id
        
     sendData.RecipientIds = []
     for (const userLabel of action.data.Recipients) {
@@ -571,6 +573,7 @@ async function createSecureMessage (featureName, action){
 async function createSentMessage (featureName, action){
     log.info(`${SERVICE_NAME}::createSentMessage::${action.label}::creating a new sent message ${JSON.stringify(action.data)}`)
     let storedUser = await localStorage.getItem(featureName, action.data.FromUser)
+    const organisation = await localStorage.getItem(featureName, action.data.Organisation)
     if (!storedUser) {
         // Check for a global user
         storedUser = await localStorage.getItem('global', action.data.FromUser)
@@ -581,6 +584,7 @@ async function createSentMessage (featureName, action){
     sentDataPayload.Subject = action.data.Subject
     sentDataPayload.Message = action.data.Message
     sentDataPayload.FromUserId = fromUser.Id
+    sentDataPayload.OrganisationId = organisation.response.Id
 
     sentDataPayload.RecipientIds = []
     for (const userLabel of action.data.Recipients) {
