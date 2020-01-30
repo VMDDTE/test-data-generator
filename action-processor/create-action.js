@@ -387,7 +387,7 @@ async function createNewMarketingAuthorisationApplication (featureName, action) 
     if (!maAppList) {
         maAppList = []
     }
-    maAppList.push(responseData.Id)
+    maAppList.push(responseData.InternalReference)
     localStorage.setItem(featureName, 'maApplicationList', maAppList)
 }
 
@@ -424,7 +424,7 @@ async function createRenewalMarketingAuthorisationApplication (featureName, acti
     if (!maAppList) {
         maAppList = []
     }
-    maAppList.push(responseData.Id)
+    maAppList.push(responseData.InternalReference)
     localStorage.setItem(featureName, 'maApplicationList', maAppList)
 }
 

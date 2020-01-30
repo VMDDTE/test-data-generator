@@ -304,9 +304,8 @@ async function tearDownMarketingAuthorisationApplication (featureName) {
     log.info(`${CONTROLLER_NAME}::tearDownMarketingAuthorisationApplication:${featureName}`)
     const maAppList = localStorage.getItem(featureName, 'maApplicationList')
     if (maAppList) {
-        for (let id of maAppList) {
-            log.info(`${CONTROLLER_NAME}::about to teardown marketing authorisation application with id ${id}`)
-            await maApplicationService.deleteMarketingAuthorisationApplication(id)
+        for (let internalRef of maAppList) {
+            deleteMarketingAuthorisationApplicationByInternalReference(internalRef)
         }
     }
 }
@@ -316,10 +315,14 @@ async function tearDownDraftMarketingAuthorisationApplication (featureName) {
     const maDraftAppList = localStorage.getItem(featureName, 'maDraftApplicationList')
     if (maDraftAppList) {
         for (let internalRef of maDraftAppList) {
-            log.info(`${CONTROLLER_NAME}::about to teardown marketing authorisation application with internal reference ${internalRef}`)
-            await maApplicationService.deleteMarketingAuthorisationApplicationByInternalReference(internalRef)
+            deleteMarketingAuthorisationApplicationByInternalReference(internalRef)
         }
     }
+}
+
+async function deleteMarketingAuthorisationApplicationByInternalReference(internalRef){
+    log.info(`${CONTROLLER_NAME}::about to delete marketing authorisation application with internal reference ${internalRef}`)
+    await maApplicationService.deleteMarketingAuthorisationApplicationByInternalReference(internalRef)
 }
 
 
