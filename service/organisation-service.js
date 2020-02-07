@@ -3,6 +3,7 @@ const axios = require('axios')
 const log = global.log
 const ADMIN_BASE_API_URL = process.env.ADMIN_BASE_API_URL
 const ADMIN_SERVICE_BASE_API_URL = process.env.ADMIN_SERVICE_BASE_API_URL
+const SCHEDULE_SERVICE_BASE_API_URL = process.env.SCHEDULE_SERVICE_BASE_API_URL
 const SERVICE_NAME = 'organisation-service'
 
 async function createOrganisation (orgType, payload) {
