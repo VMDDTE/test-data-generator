@@ -100,6 +100,10 @@ async function process (featureName, action) {
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_RENEWAL_MARKETING_AUTHORISATION_APPLICATION}`)
         await createRenewalMarketingAuthorisationApplication(featureName, action)
         break
+    case actionTypes.ACTION_TYPE_VARIATION_MARKETING_AUTHORISATION_APPLICATION:
+      log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_VARIATION_MARKETING_AUTHORISATION_APPLICATION}`)
+      await createVariationMarketingAuthorisationApplication(featureName, action)
+      break
     case actionTypes.ACTION_TYPE_JOB_MARKETING_AUTHORISATION_RENEWAL:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_JOB_MARKETING_AUTHORISATION_RENEWAL}`)
         await createMarketingAuthorisationRenewalJob(featureName, action)
@@ -428,6 +432,24 @@ async function createRenewalMarketingAuthorisationApplication (featureName, acti
     localStorage.setItem(featureName, 'maApplicationList', maAppList)
 }
 
+async function createVariationMarketingAuthorisationApplication (featureName, action) {
+  log.debug(`${SERVICE_NAME}::createVariationMarketingAuthorisationApplication`)
+  let maData = action.data
+  log.info(`${SERVICE_NAME}::createVariationMarketingAuthorisationApplication::${action.label}::creating variation marketing authorisation application from ${JSON.stringify(maData)}`)
+  let responseData = await maApplicationService.createVariationMarketingAuthorisationApplication(maData)
+  log.info(`${SERVICE_NAME}::createVariationMarketingAuthorisationApplication::${action.label}::created:${JSON.stringify(responseData)}`)
+  var savedAction = localStorage.getItem(featureName, action.label)
+  savedAction.response = responseData
+  log.debug(`${SERVICE_NAME}::createVariationMarketingAuthorisationApplication, saved action ${JSON.stringify(savedAction)}`)
+  localStorage.setItem(featureName, action.label, savedAction)
+  var maAppList = localStorage.getItem(featureName, 'maApplicationList')
+  if (!maAppList) {
+    maAppList = []
+  }
+  maAppList.push(responseData.InternalReference)
+  localStorage.setItem(featureName, 'maApplicationList', maAppList)
+}
+
 async function createMarketingAuthorisationRenewalJob (featureName, action){
     log.debug(`${SERVICE_NAME}::createMarketingAuthorisationRenewalJob`)
     let data = action.data
@@ -525,14 +547,14 @@ async function createSecureMessage (featureName, action){
         // Check for a global user
         savedToUser = await localStorage.getItem('global', action.data.ToUser)
     }
-    
+
     var sendData = {}
     sendData.FromUserId = savedFromUser.response.Id // Only used to populate header, should really be a param of sendMessage
     sendData.Subject = action.data.Subject
     sendData.Message = action.data.Message
     sendData.ToUserId = savedToUser.response.Id
     sendData.OrganisationId = organisation.response.Id
-       
+
     sendData.RecipientIds = []
     for (const userLabel of action.data.Recipients) {
         let savedAction = await localStorage.getItem(featureName, userLabel)
@@ -560,7 +582,7 @@ async function createSecureMessage (featureName, action){
     savedAction.response = sendMessageResponse
     log.debug(`${SERVICE_NAME}::createSecureMessage, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(featureName, action.label, savedAction)
-    
+
     var secureMessageList = localStorage.getItem(featureName, 'secureMessageList')
     if (!secureMessageList) {
         secureMessageList = []
@@ -579,7 +601,7 @@ async function createSentMessage (featureName, action){
         storedUser = await localStorage.getItem('global', action.data.FromUser)
     }
     let fromUser = storedUser.response
-    
+
     var sentDataPayload = {}
     sentDataPayload.Subject = action.data.Subject
     sentDataPayload.Message = action.data.Message
@@ -638,10 +660,10 @@ async function createStorageRecord (featureName, action){
     let user = savedUser.response
 
     let responseData = await storageService.createStorageRecord(
-        user.Id,   
+        user.Id,
         action.data.FileName,
         action.data.ContentType,
-        action.data.Payload) 
+        action.data.Payload)
 
     var savedAction = localStorage.getItem(featureName, action.label)
     if(responseData && responseData.length){
@@ -665,7 +687,7 @@ async function createGlobalExternalUser (action) {
     if (existingUser) {
         return
     }
-    
+
     let responseData = await userService.createExternalUser(data)
     log.info(`${SERVICE_NAME}::createGlobalExternalUser::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = {}

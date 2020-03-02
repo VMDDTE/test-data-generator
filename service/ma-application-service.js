@@ -46,6 +46,20 @@ async function createRenewalMarketingAuthorisationApplication (payload) {
         })
 }
 
+async function createVariationMarketingAuthorisationApplication (payload) {
+    let url = `${ADMIN_BASE_API_URL}/MarketingAuthorisationApplication/CreateBasicVariation`
+    log.info(`${SERVICE_NAME}::createVariationMarketingAuthorisationApplication:url:${url}`)
+
+    return axios.post(url, payload)
+      .then((response) => {
+          return response.data
+      })
+      .catch(error => {
+          log.error(`${SERVICE_NAME}::createVariationMarketingAuthorisationApplication:error: ${error}`)
+          throw error
+      })
+}
+
 async function deleteMarketingAuthorisationApplication (maApplicationId) {
     let url = `${ADMIN_BASE_API_URL}/MarketingAuthorisationApplication/${maApplicationId}`
     log.info(`${SERVICE_NAME}::deleteMarketingAuthorisationApplication:url:${url}`)
@@ -78,6 +92,7 @@ module.exports = {
     createDraftMarketingAuthorisationApplication,
     createNewMarketingAuthorisationApplication,
     createRenewalMarketingAuthorisationApplication,
+    createVariationMarketingAuthorisationApplication,
     deleteMarketingAuthorisationApplication,
     deleteMarketingAuthorisationApplicationByInternalReference
 }
