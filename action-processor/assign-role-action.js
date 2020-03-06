@@ -32,7 +32,8 @@ async function createRole (namespace, action) {
 
     let savedOrgAction = await localStorage.getItem(namespace, orgIdLabel)
 
-    if(!savedOrgAction){
+
+    if(!(savedOrgAction && savedOrgAction.response)){
         savedOrgAction = await localStorage.getItem('global', orgIdLabel)
     }
     let orgId = savedOrgAction.response.Id
