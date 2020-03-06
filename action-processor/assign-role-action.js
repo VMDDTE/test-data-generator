@@ -32,7 +32,6 @@ async function createRole (namespace, action) {
 
     let savedOrgAction = await localStorage.getItem(namespace, orgIdLabel)
 
-
     if(!(savedOrgAction && savedOrgAction.response)){
         savedOrgAction = await localStorage.getItem('global', orgIdLabel)
     }
@@ -45,7 +44,6 @@ async function createRole (namespace, action) {
             savedAction = await localStorage.getItem('global', userLabel)
         let response = savedAction.response
         let userId = response.Id
-        log.debug(`::userId::${userId}`)
 
         log.info(`${SERVICE_NAME}::createRole::assigning role ${roleType} to ${userId} for organisation with id ${orgId}`)
         userList.push(userId)
