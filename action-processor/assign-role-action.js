@@ -29,16 +29,23 @@ async function createRole (namespace, action) {
     let roleData = action.data
     let users = roleData.users
     let orgIdLabel = roleData.orgId
-    let savedOrgAction = localStorage.getItem(namespace, orgIdLabel)
-    let response = savedOrgAction.response
-    let orgId = response.Id
+
+    let savedOrgAction = await localStorage.getItem(namespace, orgIdLabel)
+
+    if(!savedOrgAction){
+        savedOrgAction = await localStorage.getItem('global', orgIdLabel)
+    }
+    let orgId = savedOrgAction.response.Id
 
     var userList = []
-    let userNameSpace = action.global == 'true' ? 'global' : namespace
     for (const userLabel of users) {
-        let savedAction = await localStorage.getItem(userNameSpace, userLabel)
+        let savedAction = await localStorage.getItem(namespace, userLabel)
+        if(!savedAction)
+            savedAction = await localStorage.getItem('global', userLabel)
         let response = savedAction.response
         let userId = response.Id
+        log.debug(`::userId::${userId}`)
+
         log.info(`${SERVICE_NAME}::createRole::assigning role ${roleType} to ${userId} for organisation with id ${orgId}`)
         userList.push(userId)
     }
