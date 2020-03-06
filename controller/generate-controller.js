@@ -48,36 +48,34 @@ async function tearDownGlobal () {
 
 async function processActions (featureName, actionJson) {
     let actionRecords = actionJson.actions
-    let namespace = featureName
+
     try {
         for (const action of actionRecords) {
-            const namespace = action.global == 'true' ? 'global' : featureName
-
             // Save a copy of each action for later reference
-            localStorage.setItem(namespace, action.label, action)
+            localStorage.setItem(featureName, action.label, action)
 
             switch (action.action) {
             case actions.ACTION_CREATE:
                 log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
-                await createActionProcessor.process(namespace, action)
+                await createActionProcessor.process(featureName, action)
                 break
             case actions.ACTION_DELETE:
                 log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
-                await deleteActionProcessor.process(namespace, action)
+                await deleteActionProcessor.process(featureName, action)
             case actions.ACTION_GET:
                 log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
-                await getActionProcessor.process(namespace, action)
+                await getActionProcessor.process(featureName, action)
                 break
             case actions.ACTION_UPDATE:
                 log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
                 break
             case actions.ACTION_ASSIGN_ROLE:
                 log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
-                await roleActionProcessor.process(namespace, action)
+                await roleActionProcessor.process(featureName, action)
                 break
             case actions.ACTION_SEND_INVITE:
                 log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
-                await sendInviteActionProcessor.process(namespace, action)
+                await sendInviteActionProcessor.process(featureName, action)
                 break
             default:
                 log.debug(`${CONTROLLER_NAME}::unrecognised action ${action.action}`)
@@ -85,9 +83,9 @@ async function processActions (featureName, actionJson) {
             }
         }
     } catch (error) {
-        log.error(`${CONTROLLER_NAME}::${namespace}::processActions failed, error: ${error}`)
-        log.info(`${CONTROLLER_NAME}::${namespace}::processActions failed, tearing down ...`)
-        await tearDown(namespace)
+        log.error(`${CONTROLLER_NAME}::${featureName}::processActions failed, error: ${error}`)
+        log.info(`${CONTROLLER_NAME}::${featureName}::processActions failed, tearing down ...`)
+        await tearDown(featureName)
         throw error // fail fast and stop trying to create test data
     }
 }
