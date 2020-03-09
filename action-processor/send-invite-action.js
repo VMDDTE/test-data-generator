@@ -29,6 +29,9 @@ async function sendInvitation (namespace, action) {
     let users = roleData.users
     let orgIdLabel = roleData.orgId
     let savedOrgAction = localStorage.getItem(namespace, orgIdLabel)
+    if(!(savedOrgAction && savedOrgAction.response)){
+        savedOrgAction = await localStorage.getItem('global', orgIdLabel)
+    }
     let response = savedOrgAction.response
     let orgId = response.Id
 
@@ -62,7 +65,7 @@ async function sendInvitation (namespace, action) {
     for (userId of userList) {
         log.info(`${SERVICE_NAME}::createInvitation::about to send ${roleName} invitation to ${userId} for organisation with id ${orgId}`)
         const invitation = await invitationService
-            .createInvitation(userId, orgId, uuid.v1(), roleType.replace('Role',''))
+            .createInvitation(userId, orgId, uuid.v1(), roleName)
         savedInvitations.push(invitation.Id)
     }
 
