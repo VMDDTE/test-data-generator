@@ -305,12 +305,17 @@ async function createSubstanceQualifier (featureName, action) {
 async function createOrganisation (organisationType, featureName, action) {
     log.debug(`${SERVICE_NAME}::createOrganisation`)
     let organisationData = action.data
-    log.info(`${SERVICE_NAME}::createOrganisation::${action.label}::creating organisation from ${JSON.stringify(organisationData)}`)
     let responseData = await organisationService.createOrganisation(organisationType, organisationData)
     log.info(`${SERVICE_NAME}::createOrganisation::${action.label}::created:${JSON.stringify(responseData)}`)
+
+    log.info(`${SERVICE_NAME}::createOrganisation::${featureName}::${action.label}::creating organisation from ${JSON.stringify(organisationData)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
     savedAction.response = responseData
-    log.debug(`${SERVICE_NAME}::createOrganisation, saved action ${JSON.stringify(savedAction)}`)
+    
+    if (action.global == 'true') 
+        featureName = 'global'
+
+    log.info(`${SERVICE_NAME}::createOrganisation::${featureName}::${action.label}::setItem ${JSON.stringify(savedAction)}`)
     localStorage.setItem(featureName, action.label, savedAction)
     var organisationIdList = localStorage.getItem(featureName, 'organisationIdList')
     if (!organisationIdList) {
@@ -684,13 +689,15 @@ async function createGlobalExternalUser (action) {
     let data = action.data
     log.info(`${SERVICE_NAME}::createGlobalExternalUser::${action.label}::creating GLOBAl external user from ${JSON.stringify(data)}`)
     let existingUser = localStorage.getItem('global', action.label)
-    if (existingUser) {
+    if (existingUser && existingUser.response) {
+        log.debug(`${SERVICE_NAME}::createGlobalExternalUser::user already exists::${'global'}::${action.label}::${JSON.stringify(existingUser)}`)
         return
     }
-
+    log.info(`${SERVICE_NAME}::createGlobalExternalUser::${action.label}::creating GLOBAl external user from ${JSON.stringify(data)}`)
+    
     let responseData = await userService.createExternalUser(data)
     log.info(`${SERVICE_NAME}::createGlobalExternalUser::${action.label}::created:${JSON.stringify(responseData)}`)
-    var savedAction = {}
+    var savedAction = Object.assign({}, action)
     savedAction.response = responseData
     log.debug(`${SERVICE_NAME}::createGlobalExternalUser, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem("global", action.label, savedAction)

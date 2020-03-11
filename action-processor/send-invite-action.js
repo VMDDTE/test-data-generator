@@ -25,23 +25,15 @@ async function process (namespace, action) {
 async function sendInvitation (namespace, action) {
     let roleType = action.type
     log.debug(`${SERVICE_NAME}::sendInvitation::type:${roleType}:${JSON.stringify(action)}`)
-    let roleData = action.data
-    let users = roleData.users
-    let orgIdLabel = roleData.orgId
-    let savedOrgAction = localStorage.getItem(namespace, orgIdLabel)
-    let response = savedOrgAction.response
-    let orgId = response.Id
+
+    let org = await localStorage.getItemOrGlobal(namespace, action.data.orgId)
 
     var userList = []
-    for (const userLabel of users) {
-        let savedAction = await localStorage.getItem(namespace, userLabel)
-        if (!savedAction) {
-            // Check for a global user
-            savedAction = await localStorage.getItem('global', userLabel)
-        }
-        let response = savedAction.response
-        let userId = response.Id
-        userList.push(userId)
+    for (const userLabel of action.data.users) {
+
+        let user = await localStorage.getItemOrGlobal(namespace, userLabel)
+
+        userList.push(user.Id)
     }
 
     var roleName = ""
@@ -60,9 +52,9 @@ async function sendInvitation (namespace, action) {
     var savedInvitations = localStorage.getItem(namespace, 'invitations') || []
 
     for (userId of userList) {
-        log.info(`${SERVICE_NAME}::createInvitation::about to send ${roleName} invitation to ${userId} for organisation with id ${orgId}`)
+        log.info(`${SERVICE_NAME}::createInvitation::about to send ${roleName} invitation to ${userId} for organisation with id ${org.Id}`)
         const invitation = await invitationService
-            .createInvitation(userId, orgId, uuid.v1(), roleType.replace('Role',''))
+            .createInvitation(userId, org.Id, uuid.v1(), roleName)
         savedInvitations.push(invitation.Id)
     }
 

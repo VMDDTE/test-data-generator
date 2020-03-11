@@ -50,8 +50,24 @@ function clearAll () {
     })
 }
 
+function getItemOrGlobal (namespace, key) {
+    let savedAction = localStorage.getItem(`${namespace}_${key}`)
+    if(savedAction && savedAction.response) {
+        return savedAction.response
+    } 
+    
+   savedAction = localStorage.getItem(`global_${key}`)     // Check the global namespace
+    if(savedAction && savedAction.response){
+        return savedAction.response
+    }
+
+    log.info(`${SERVICE_NAME}::getItemOrGlobal:${namespace}, ${key}:${JSON.stringify(savedAction)}`)
+    throw (`label: ${key} is not found. Check if it is created in your data files`)
+}
+
 module.exports.init = init
 module.exports.setItem = setItem
 module.exports.getItem = getItem
 module.exports.clear = clear
 module.exports.clearAll = clearAll
+module.exports.getItemOrGlobal = getItemOrGlobal
