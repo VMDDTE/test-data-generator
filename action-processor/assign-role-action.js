@@ -26,27 +26,15 @@ async function process (namespace, action) {
 async function createRole (namespace, action) {
     let roleType = action.type
     log.debug(`${SERVICE_NAME}::createRole::type:${roleType}:${JSON.stringify(action)}`)
-    let roleData = action.data
-    let users = roleData.users
-    let orgIdLabel = roleData.orgId
 
-    let savedOrgAction = await localStorage.getItem(namespace, orgIdLabel)
-
-    if(!(savedOrgAction && savedOrgAction.response)){
-        savedOrgAction = await localStorage.getItem('global', orgIdLabel)
-    }
-    let orgId = savedOrgAction.response.Id
-
+    let org = await localStorage.getItemOrGlobal(namespace, action.data.orgId)
+    
     var userList = []
-    for (const userLabel of users) {
-        let savedAction = await localStorage.getItem(namespace, userLabel)
-        if(!savedAction)
-            savedAction = await localStorage.getItem('global', userLabel)
-        let response = savedAction.response
-        let userId = response.Id
+    for (const userLabel of action.data.users) {
 
-        log.info(`${SERVICE_NAME}::createRole::assigning role ${roleType} to ${userId} for organisation with id ${orgId}`)
-        userList.push(userId)
+        let user = await localStorage.getItemOrGlobal(namespace, userLabel)
+
+        userList.push(user.Id)
     }
 
     var roleName = ""
@@ -89,8 +77,8 @@ async function createRole (namespace, action) {
         break
     }
     for (userId of userList) {
-        log.info(`${SERVICE_NAME}::assignRoleToOrganisationForUser::about to assign role ${roleName} to ${userId} for organisation with id ${orgId}`)
-        await organisationService.assignRoleToOrganisationForUser (orgId, userId, roleName)
+        log.info(`${SERVICE_NAME}::assignRoleToOrganisationForUser::about to assign role ${roleName} to ${userId} for organisation with id ${org.Id}`)
+        await organisationService.assignRoleToOrganisationForUser (org.Id, userId, roleName)
     }
 }
 
