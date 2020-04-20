@@ -1,6 +1,7 @@
 const actionTypes = require('../common/constants')
 const orgTypes = require('../common/constants')
 const userTypes = require('../common/constants')
+const auditService = require('../service/audit-service')
 const organisationService = require('../service/organisation-service')
 const localStorage = require('../service/local-storage-service')
 const userService = require('../service/user-service')
@@ -127,6 +128,10 @@ async function process (featureName, action) {
     case actionTypes.ACTION_TYPE_STORAGE:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_STORAGE}`)
         await createStorageRecord(featureName, action)
+        break
+    case actionTypes.ACTION_TYPE_AUDIT:
+        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_AUDIT}`)
+        await createAuditRecord(featureName, action)
         break
     default:
         log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
@@ -682,6 +687,44 @@ async function createStorageRecord (featureName, action){
         storageList.push(responseData[0].Id)
         localStorage.setItem(featureName, 'StorageList', storageList)
     }
+}
+
+async function createAuditRecord(featureName, action) {
+    log.debug(`${SERVICE_NAME}::createAudit`)
+
+    const organisation = await localStorage.getItem(featureName, action.data.Organisation)
+
+    let savedUser = await localStorage.getItem(featureName, action.data.UserLabel)
+
+    if (!savedUser) {
+        // Check for a global user
+        savedUser = await localStorage.getItem('global', action.data.UserLabel)
+    }
+
+    const user = savedUser.response
+    const responseData = await auditService.createAuditLog(
+        organisation.OrganisationReference,
+        user.Id,
+        action.data.AuditedOn,
+        action.data.Type,
+        action.data.DescriptionLine1,
+        action.data.DescriptionLine2
+    )
+    const savedAction = localStorage.getItem(featureName, action.label)
+
+    savedAction.response = responseData
+
+    localStorage.setItem(featureName, action.label, savedAction)
+
+    let auditList = localStorage.getItem(featureName, 'auditList')
+
+    if (!auditList) {
+        auditList = []
+    }
+
+    auditList.push(responseData.Id)
+
+    localStorage.setItem(featureName, 'auditList', auditList)
 }
 
 async function createGlobalExternalUser (action) {
