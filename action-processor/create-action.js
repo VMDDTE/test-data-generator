@@ -694,11 +694,11 @@ async function createAuditRecord(featureName, action) {
 
     const organisation = await localStorage.getItem(featureName, action.data.Organisation)
 
-    let savedUser = await localStorage.getItem(featureName, action.data.UserLabel)
+    let savedUser = await localStorage.getItem(featureName, action.data.User)
 
     if (!savedUser) {
         // Check for a global user
-        savedUser = await localStorage.getItem('global', action.data.UserLabel)
+        savedUser = await localStorage.getItem('global', action.data.User)
     }
 
     const user = savedUser.response
