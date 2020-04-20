@@ -3,7 +3,7 @@ const log = global.log
 const ADMIN_BASE_API_URL = process.env.ADMIN_BASE_API_URL
 const SERVICE_NAME = 'audit-service'
 
-function log(method, type, message) {
+function auditLog(method, type, message) {
     log.info(`${SERVICE_NAME}::${method}:${type}:${message}`)
 }
 
@@ -17,14 +17,14 @@ async function createAuditLog(orgRef, userId, auditedOn, type, descriptionLine1,
         Type: type
     }
 
-    log(METHOD, 'url', url)
+    auditLog(METHOD, 'url', url)
 
     try {
         const { data } = await axios.post(url, payload)
 
         return data
     } catch (e) {
-        log(METHOD, 'error', e)
+        auditLog(METHOD, 'error', e)
         
         throw e
     }
@@ -34,14 +34,14 @@ async function deleteAuditLog(id) {
     const METHOD = 'deleteAuditLog';
     const url = `${ADMIN_BASE_API_URL}`
 
-    log(METHOD, 'url', url)
+    auditLog(METHOD, 'url', url)
 
     try {
         const { data } = await axios.delete(url)
 
         return data
     } catch (e) {
-        log(METHOD, 'error', e)
+        auditLog(METHOD, 'error', e)
         
         throw e
     }
