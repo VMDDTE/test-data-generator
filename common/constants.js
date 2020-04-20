@@ -30,6 +30,7 @@ const ACTION_TYPE_SECURE_MESSAGE = 'SecureMessageRecord'
 const ACTION_TYPE_SENT_MESSAGE = 'SentMessageRecord'
 const ACTION_TYPE_STORAGE = 'StorageRecord'
 const ACTION_TYPE_USER = 'UserRecord'
+const ACTION_TYPE_AUDIT = 'AuditRecord'
 
 const ACTION_CREATE = 'create'
 const ACTION_DELETE = 'delete'
