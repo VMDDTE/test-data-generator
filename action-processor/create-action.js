@@ -703,7 +703,7 @@ async function createAuditRecord(featureName, action) {
 
     const user = savedUser.response
     const responseData = await auditService.createAuditLog(
-        organisation.OrganisationReference,
+        organisation.response.OrganisationReference,
         user.Id,
         action.data.AuditedOn,
         action.data.Type,
