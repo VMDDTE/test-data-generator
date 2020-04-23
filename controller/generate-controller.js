@@ -20,6 +20,7 @@ const maApplicationService = require('../service/ma-application-service')
 const jobService = require('../service/job-service')
 const messageService = require('../service/message-service')
 const storageService = require('../service/storage-service')
+const auditService = require('../service/audit-service');
 const log = global.log
 const CONTROLLER_NAME = 'generate-controller'
 
@@ -112,6 +113,7 @@ async function tearDownEntities (featureName) {
     await tearDownRegistrationJobs(featureName)
     await tearDownRenewalMAJobs(featureName)
     await tearDownNewMAJobs(featureName)
+    await tearDownAudit(featureName)
 }
 
 async function tearDownStorageRecords (featureName) {
@@ -355,6 +357,20 @@ async function tearDownNewMAJobs (featureName) {
         for (let internalRef of maNewJobsList) {
             log.info(`${CONTROLLER_NAME}::about to teardown new ma jobs with internal reference ${internalRef}`)
             await jobService.deleteJob(internalRef)
+        }
+    }
+}
+
+async function tearDownAudit (featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownAudit:${featureName}`)
+
+    const auditList = localStorage.getItem(featureName, 'auditList')
+
+    if (auditList) {
+        for (let id of auditList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown audit with id ${id}`)
+
+            await auditService.deleteAuditLog(id)
         }
     }
 }
