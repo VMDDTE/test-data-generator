@@ -352,7 +352,7 @@ async function tearDownRenewalMAJobs (featureName) {
 
 async function tearDownNewMAJobs (featureName) {
     log.info(`${CONTROLLER_NAME}::tearDownNewMAJobs:${featureName}`)
-    const maNewJobsList = localStorage.getItem(featureName, 'maNewMAJobs')
+    const maNewJobsList = localStorage.getItem(featureName, 'maNewJobList')
     if (maNewJobsList) {
         for (let internalRef of maNewJobsList) {
             log.info(`${CONTROLLER_NAME}::about to teardown new ma jobs with internal reference ${internalRef}`)
