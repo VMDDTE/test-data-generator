@@ -19,6 +19,7 @@ const marketingAuthorisationService = require('../service/marketing-authorisatio
 const maApplicationService = require('../service/ma-application-service')
 const jobService = require('../service/job-service')
 const messageService = require('../service/message-service')
+const groupMessageService = require('../service/group-message-service')
 const storageService = require('../service/storage-service')
 const auditService = require('../service/audit-service');
 const log = global.log
@@ -108,6 +109,7 @@ async function tearDownEntities (featureName) {
     await tearDownDraftMarketingAuthorisationApplication(featureName)
     await tearDownStorageRecords(featureName)
     await tearDownMessages(featureName)
+    await tearDownGroupMessages(featureName)
     await tearDownExternalUser(featureName)
     await tearDownInvitations(featureName)
     await tearDownRegistrationJobs(featureName)
@@ -134,6 +136,17 @@ async function tearDownMessages (featureName) {
         for (let id of secureMessageList) {
             log.info(`${CONTROLLER_NAME}::about to teardown message with id ${id}`)
             await messageService.deleteMessage(id)
+        }
+    }
+}
+
+async function tearDownGroupMessages (featureName) {
+    log.info(`${CONTROLLER_NAME}::tearDownGroupMessages:${featureName}`)
+    const groupMessageList = localStorage.getItem(featureName, 'groupMessageList')
+    if (groupMessageList) {
+        for (let id of groupMessageList) {
+            log.info(`${CONTROLLER_NAME}::about to teardown group message with id ${id}`)
+            await groupMessageService.delete(id)
         }
     }
 }
