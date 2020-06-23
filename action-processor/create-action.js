@@ -721,7 +721,7 @@ async function createGroupMessage (featureName, action){
         sentDataPayload.AttachmentsToCreate = action.data.Attachments
     }
 
-    var createdGroupMessage = await groupMessageService.send(sentDataPayload, sentDataPayload.FromUserId)
+    var createdGroupMessage = await groupMessageService.create(sentDataPayload, sentDataPayload.FromUserId)
 
     log.info(`${SERVICE_NAME}::createSentGroupMessage::${action.label}::createdGroupMessage:${JSON.stringify(createdGroupMessage)}`)
     var savedAction = localStorage.getItem(featureName, action.label)

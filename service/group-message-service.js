@@ -4,7 +4,7 @@ const ADMIN_BASE_API_URL = `${process.env.ADMIN_BASE_API_URL}`
 const SERVICE_NAME = 'group-message-service'
 
 
-async function send (payload, userId) {
+async function createMessage (payload, userId) {
     let url = `${ADMIN_BASE_API_URL}/GroupMessages/`
     log.info(`${SERVICE_NAME}::sendGroupMessage:url:${url}`)
     const headers = { 'vmd-userid': userId }
@@ -38,6 +38,6 @@ async function deleteMessage (messageId) {
 }
 
 
-module.exports.send = send
+module.exports.create = createMessage
 module.exports.delete = deleteMessage
 
