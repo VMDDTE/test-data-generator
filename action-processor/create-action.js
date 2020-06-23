@@ -16,6 +16,7 @@ const maApplicationService = require('../service/ma-application-service')
 const jobService = require('../service/job-service')
 const sisService = require('../service/sis-service')
 const messageService = require('../service/message-service')
+const groupMessageService = require('../service/group-message-service')
 const storageService = require('../service/storage-service')
 const constants = require('../common/constants')
 const log = global.log
@@ -124,6 +125,10 @@ async function process (featureName, action) {
     case actionTypes.ACTION_TYPE_SENT_MESSAGE:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SENT_MESSAGE}`)
         await createSentMessage(featureName, action)
+        break
+        case actionTypes.ACTION_TYPE_GROUP_MESSAGE:
+            log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_GROUP_MESSAGE}`)
+            await createGroupMessage(featureName, action)
         break
     case actionTypes.ACTION_TYPE_STORAGE:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_STORAGE}`)
@@ -658,6 +663,74 @@ function storeMessageIdForDeletion(featureName, messageId){
     secureMessageList.push(messageId)
     localStorage.setItem(featureName, 'secureMessageList', secureMessageList)
 }
+
+function storeGroupMessageIdForDeletion(featureName, messageId){
+    var groupMessageList = localStorage.getItem(featureName, 'groupMessageList')
+    if (!groupMessageList) {
+        groupMessageList = []
+    }
+
+    groupMessageList.push(messageId)
+    localStorage.setItem(featureName, 'groupMessageList', groupMessageList)
+}
+
+async function createGroupMessage (featureName, action){
+    log.info(`${SERVICE_NAME}::createGroupMessage::${action.label}::creating a new group message ${JSON.stringify(action.data)}`)
+    
+    const organisation = await localStorage.getItem(featureName, action.data.Organisation)
+    
+    let storedFromUser = await localStorage.getItem(featureName, action.data.FromUser)
+    if (!storedFromUser) {
+        // Check for a global user
+        storedFromUser = await localStorage.getItem('global', action.data.FromUser)
+    }
+    let fromUser = storedFromUser.response
+    
+    let storedToUser = await localStorage.getItem(featureName, action.data.ToUser)
+    if (!storedToUser) {
+        // Check for a global user
+        storedToUser = await localStorage.getItem('global', action.data.ToUser)
+    }
+    let toUser = storedToUser.response
+
+    var sentDataPayload = {}
+    sentDataPayload.Subject = action.data.Subject
+    sentDataPayload.Message = action.data.Message
+    sentDataPayload.Team = action.data.Team
+    sentDataPayload.FromUserId = fromUser.Id
+    sentDataPayload.ToUserId = toUser.Id
+    sentDataPayload.OrganisationId = organisation.response.Id
+
+    sentDataPayload.RecipientIds = []
+    for (const userLabel of action.data.Recipients) {
+        let savedAction = await localStorage.getItem(featureName, userLabel)
+        if(savedAction && savedAction.response) {
+            log.info(`${SERVICE_NAME}::createGroupMessage::RecipientId ${savedAction.response.Id}`)
+            sentDataPayload.RecipientIds.push(savedAction.response.Id)
+        } else {
+            let globalUserSavedAction = await localStorage.getItem('global', userLabel)
+            if(globalUserSavedAction && globalUserSavedAction.response) {
+                log.info(`${SERVICE_NAME}::createGroupMessage::RecipientId ${globalUserSavedAction.response.Id}`)
+                sentDataPayload.RecipientIds.push(globalUserSavedAction.response.Id)
+            }
+        }
+    }
+
+    sentDataPayload.AttachmentsToCreate = []
+    if(action.data && action.data.Attachments && action.data.Attachments.length) {
+        sentDataPayload.AttachmentsToCreate = action.data.Attachments
+    }
+
+    var createdGroupMessage = await groupMessageService.send(sentDataPayload, sentDataPayload.FromUserId)
+
+    log.info(`${SERVICE_NAME}::createSentGroupMessage::${action.label}::createdGroupMessage:${JSON.stringify(createdGroupMessage)}`)
+    var savedAction = localStorage.getItem(featureName, action.label)
+    savedAction.response = createdGroupMessage
+    log.debug(`${SERVICE_NAME}::createSentGroupMessage, saved action ${JSON.stringify(savedAction)}`)
+    localStorage.setItem(featureName, action.label, savedAction)
+    storeGroupMessageIdForDeletion(featureName, createdGroupMessage.Id)
+}
+
 
 
 async function createStorageRecord (featureName, action){
