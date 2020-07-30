@@ -541,16 +541,15 @@ async function createExternalUser (featureName, action) {
     localStorage.setItem(featureName, 'externalUsersIdList', externalUsersIdList)
 
     // Now wanted to access external users (non test user), however added new array rather than altering deletion logic
-    if (!action.testUser){
+    if (action.testUser === 'true' && responseData.Email) {
+        let email = responseData.Email
+        log.info(`${SERVICE_NAME}::createExternalUser::${action.label}::saving test user ${email}`)
+        localStorage.setItem(featureName, 'testuser', { 'Email': email, 'Password': constants.DEFAULT_USER_PASSWORD })
+    } else {
+        log.info(`${SERVICE_NAME}::createExternalUser::${action.label}::adding to external users: ${responseData.Name}`)
         var externalUsers = localStorage.getItem(featureName, 'externalUsers') || []
         externalUsers.push(responseData)
         localStorage.setItem(featureName, 'externalUsers', externalUsers)
-    }
-
-    if (action.testUser === 'true' && responseData.Email) {
-        let email = responseData.Email
-        log.info(`${SERVICE_NAME}::createVet::${action.label}::saving test user ${email}`)
-        localStorage.setItem(featureName, 'testuser', { 'Email': email, 'Password': constants.DEFAULT_USER_PASSWORD })
     }
 }
 
