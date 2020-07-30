@@ -541,7 +541,7 @@ async function createExternalUser (featureName, action) {
     localStorage.setItem(featureName, 'externalUsersIdList', externalUsersIdList)
 
     // Now wanted to access external users (non test user), however added new array rather than altering deletion logic
-    if (action.testUser !== 'true'){
+    if (!action.testUser){
         var externalUsers = localStorage.getItem(featureName, 'externalUsers') || []
         externalUsers.push(responseData)
         localStorage.setItem(featureName, 'externalUsers', externalUsers)
