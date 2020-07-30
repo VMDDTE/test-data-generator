@@ -10,7 +10,7 @@ async function generate (filename, namespace) {
     await generator.generate(`./test-data/${dataFileName}`, featureName, namespace)
 }
 
-async function getTestUser (filename, namespace) {
+function getTestUser (filename, namespace) {
     const featureName = getFeatureName (filename, namespace)
     const testuser = localStorage.getItem(featureName, 'testuser')
     if (testuser) {
@@ -27,7 +27,7 @@ async function getTestUser (filename, namespace) {
     return null
 }
 
-async function getExternalUsers (filename, namespace) {
+function getExternalUsers (filename, namespace) {
     const featureName = getFeatureName (filename, namespace)
     const externalUsers = localStorage.getItem(featureName, 'externalUsers')
 
@@ -38,7 +38,7 @@ async function getExternalUsers (filename, namespace) {
     return null
 }
 
-async function getInvites (filename, namespace) {
+function getInvites (filename, namespace) {
     const featureName = getFeatureName (filename, namespace)
     const invites = localStorage.getItem(featureName, 'invitations')
     if (invites) {
@@ -48,7 +48,7 @@ async function getInvites (filename, namespace) {
     return null
 }
 
-async function clearAll () {
+function clearAll () {
     console.log(`clear all ...`)
     localStorage.clearAll()
 }
