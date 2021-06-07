@@ -1,9 +1,7 @@
 
 const axios = require('axios')
 const log = global.log
-const ADMIN_BASE_API_URL = process.env.ADMIN_BASE_API_URL
-const ADMIN_SERVICE_BASE_API_URL = process.env.ADMIN_SERVICE_BASE_API_URL
-const SCHEDULE_SERVICE_BASE_API_URL = process.env.SCHEDULE_SERVICE_BASE_API_URL
+const ADMIN_BASE_API_URL = process.env.ADMIN_BASE_API_URL // This is TestSupport
 const SERVICE_NAME = 'organisation-service'
 
 async function createOrganisation (orgType, payload) {
@@ -52,7 +50,7 @@ async function deleteOrganisation (orgId) {
 }
 
 async function rebuildRedisOrganisationsCache () {
-    let url = `${SCHEDULE_SERVICE_BASE_API_URL}/cacheRebuildTest/recache/Organisations`
+    let url = `${ADMIN_BASE_API_URL}/organisations/RebuildCache`
     log.info(`${SERVICE_NAME}::rebuildRedisOrganisationsCache:url:${url}`)
     return axios.put(url)
         .then((response) => {
