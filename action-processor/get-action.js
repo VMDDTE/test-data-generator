@@ -32,7 +32,7 @@ async function getUser (featureName, action) {
         localStorage.setItem(featureName, action.label, getAction)
 
     }catch(ex){
-        log.debug(`${SERVICE_NAME}::error getting user ${ex.message}`)
+        log.warn(`${SERVICE_NAME}::error getting user ${ex.message}`)
     }
 }
 

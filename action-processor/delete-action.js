@@ -56,9 +56,8 @@ async function deleteOrganisation (organisationType, featureName, action) {
 }
 
 async function findUserId (featureName, action) {
-    log.debug(`${SERVICE_NAME}::findUser`)
     let userData = action.data
-    log.info(`${SERVICE_NAME}::findUser::${action.label}::finding user from ${JSON.stringify(userData)}`)
+    log.info(`${SERVICE_NAME}::findUserId - actionLabel:${action.label}, Finding user from ${JSON.stringify(userData)}`)
 
     var func,parm;
     if (userData.Email){
@@ -68,16 +67,17 @@ async function findUserId (featureName, action) {
         func = userService.findUserByName
         parm = userData.Name
     }else{
-        log.error(`${SERVICE_NAME}::findUser:error: neither name nor email passed in to deleteUser`)
+        log.error(`${SERVICE_NAME}::findUserId - error: neither name nor email passed in to deleteUser`)
         return
     }
+
     return await func(parm)
     .then((response) => {
-        log.info(`${SERVICE_NAME}::findUser::${action.label}::found:${JSON.stringify(response)}`)
+        log.info(`${SERVICE_NAME}::findUserId - actionLabel:${action.label}, Found:${JSON.stringify(response)}`) 
         return response.Id
     })
     .catch(error => {
-        log.warn(`${SERVICE_NAME}::findUser:error: ${error}`)
+        log.warn(`${SERVICE_NAME}::findUserId - error: ${error}`)
     })
 }
 
