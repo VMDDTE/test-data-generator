@@ -1,11 +1,11 @@
 
 const axios = require('axios')
 const log = global.log
-const ADMIN_BASE_API_URL = process.env.ADMIN_BASE_API_URL
+const TEST_SUPPORT_BASE_API_URL = process.env.TEST_SUPPORT_BASE_API_URL
 const SERVICE_NAME = 'species-service'
 
 async function createSpecies (payload) {
-    let url = `${ADMIN_BASE_API_URL}/species`
+    let url = `${TEST_SUPPORT_BASE_API_URL}/species`
     log.info(`${SERVICE_NAME}::createSpecies:url:${url}`)
 
     return axios.post(url, payload)
@@ -19,7 +19,7 @@ async function createSpecies (payload) {
 }
 
 async function deleteSpecies (productNo) {
-    let url = `${ADMIN_BASE_API_URL}/species/productNo/${productNo}`
+    let url = `${TEST_SUPPORT_BASE_API_URL}/species/productNo/${productNo}`
     log.info(`${SERVICE_NAME}::deleteSpecies:url:${url}`)
 
     return axios.delete(url)

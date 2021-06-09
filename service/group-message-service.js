@@ -1,11 +1,11 @@
 const axios = require('axios')
 const log = global.log
-const ADMIN_BASE_API_URL = `${process.env.ADMIN_BASE_API_URL}`
+const TEST_SUPPORT_BASE_API_URL = `${process.env.TEST_SUPPORT_BASE_API_URL}`
 const SERVICE_NAME = 'group-message-service'
 
 
 async function createMessage (payload, userId) {
-    let url = `${ADMIN_BASE_API_URL}/GroupMessages/`
+    let url = `${TEST_SUPPORT_BASE_API_URL}/GroupMessages/`
     log.info(`${SERVICE_NAME}::sendGroupMessage:url:${url}`)
     const headers = { 'vmd-userid': userId }
     return axios({
@@ -24,7 +24,7 @@ async function createMessage (payload, userId) {
 }
 
 async function deleteMessage (messageId) {
-    let url = `${ADMIN_BASE_API_URL}/GroupMessages/${messageId}`
+    let url = `${TEST_SUPPORT_BASE_API_URL}/GroupMessages/${messageId}`
     log.info(`${SERVICE_NAME}::deleteGroupMessage:url:${url}`)
 
     return axios.delete(url)

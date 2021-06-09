@@ -1,11 +1,11 @@
 
 const axios = require('axios')
 const log = global.log
-const ADMIN_BASE_API_URL = `${process.env.STORAGE_API_URL}`
+const TEST_SUPPORT_BASE_API_URL = `${process.env.STORAGE_API_URL}`
 const SERVICE_NAME = 'storage-service'
 
 async function createStorageRecord(userId, fileName, contentType, payload) {
-    let url = `${ADMIN_BASE_API_URL}/storage/upload`
+    let url = `${TEST_SUPPORT_BASE_API_URL}/storage/upload`
     log.info(`${SERVICE_NAME}::createStorageRecord:url:${url}`)
     const requestHeaders = {
         'vmd-userid': userId,
@@ -30,7 +30,7 @@ async function createStorageRecord(userId, fileName, contentType, payload) {
 }
 
 async function deleteStorageRecord(storageId) {
-    let url = `${ADMIN_BASE_API_URL}/storage/delete/${storageId}`
+    let url = `${TEST_SUPPORT_BASE_API_URL}/storage/delete/${storageId}`
     log.info(`${SERVICE_NAME}::deleteStorageRecord:url:${url}`)
 
     return axios({

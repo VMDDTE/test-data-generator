@@ -1,10 +1,10 @@
 const axios = require('axios')
 const log = global.log
-const ADMIN_BASE_API_URL = process.env.ADMIN_BASE_API_URL
+const TEST_SUPPORT_BASE_API_URL = process.env.TEST_SUPPORT_BASE_API_URL
 const SERVICE_NAME = 'substance-qualifier-service'
 
 async function createSubstanceQualifier (payload) {
-    let url = `${ADMIN_BASE_API_URL}/reference/substance`
+    let url = `${TEST_SUPPORT_BASE_API_URL}/reference/substance`
     log.info(`${SERVICE_NAME}::createSubstanceQualifier:url:${url}`)
 
     return axios.post(url, payload)
@@ -18,7 +18,7 @@ async function createSubstanceQualifier (payload) {
 }
 
 async function deleteSubstanceQualifier (substanceId) {
-    let url = `${ADMIN_BASE_API_URL}/reference/substance/${substanceId}`
+    let url = `${TEST_SUPPORT_BASE_API_URL}/reference/substance/${substanceId}`
     log.info(`${SERVICE_NAME}::deleteSubstanceQualifier:url:${url}`)
 
     return axios.delete(url)

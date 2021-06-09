@@ -1,11 +1,11 @@
 
 const axios = require('axios')
 const log = global.log
-const ADMIN_BASE_API_URL = process.env.ADMIN_BASE_API_URL
+const TEST_SUPPORT_BASE_API_URL = process.env.TEST_SUPPORT_BASE_API_URL
 const SERVICE_NAME = 'product-service'
 
 async function createProduct (payload) {
-    let url = `${ADMIN_BASE_API_URL}/products`
+    let url = `${TEST_SUPPORT_BASE_API_URL}/products`
     log.info(`${SERVICE_NAME}::createProduct:url:${url}`)
 
     return axios.post(url, payload)
@@ -19,7 +19,7 @@ async function createProduct (payload) {
 }
 
 async function deleteProduct (productNo) {
-    let url = `${ADMIN_BASE_API_URL}/products/productNo/${productNo}`
+    let url = `${TEST_SUPPORT_BASE_API_URL}/products/productNo/${productNo}`
     log.info(`${SERVICE_NAME}::deleteProduct:url:${url}`)
 
     return axios.delete(url)

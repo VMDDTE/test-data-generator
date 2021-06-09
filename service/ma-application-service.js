@@ -1,11 +1,11 @@
 
 const axios = require('axios')
 const log = global.log
-const ADMIN_BASE_API_URL = process.env.ADMIN_BASE_API_URL
+const TEST_SUPPORT_BASE_API_URL = process.env.TEST_SUPPORT_BASE_API_URL
 const SERVICE_NAME = 'ma-application-service'
 
 async function createNewMarketingAuthorisationApplication (payload) {
-    let url = `${ADMIN_BASE_API_URL}/MarketingAuthorisationApplication/new`
+    let url = `${TEST_SUPPORT_BASE_API_URL}/MarketingAuthorisationApplication/new`
     log.info(`${SERVICE_NAME}::createNewMarketingAuthorisationApplication:url:${url}`)
 
     return axios.post(url, payload)
@@ -19,7 +19,7 @@ async function createNewMarketingAuthorisationApplication (payload) {
 }
 
 async function createDraftMarketingAuthorisationApplication (payload) {
-    let url = `${ADMIN_BASE_API_URL}/MarketingAuthorisationApplication/saveAsDraft`
+    let url = `${TEST_SUPPORT_BASE_API_URL}/MarketingAuthorisationApplication/saveAsDraft`
     log.info(`${SERVICE_NAME}::createDraftMarketingAuthorisationApplication:url:${url}`)
 
     return axios.post(url, payload)
@@ -33,7 +33,7 @@ async function createDraftMarketingAuthorisationApplication (payload) {
 }
 
 async function createRenewalMarketingAuthorisationApplication (payload) {
-    let url = `${ADMIN_BASE_API_URL}/MarketingAuthorisationApplication/renewal`
+    let url = `${TEST_SUPPORT_BASE_API_URL}/MarketingAuthorisationApplication/renewal`
     log.info(`${SERVICE_NAME}::createRenewalMarketingAuthorisationApplication:url:${url}`)
 
     return axios.post(url, payload)
@@ -47,7 +47,7 @@ async function createRenewalMarketingAuthorisationApplication (payload) {
 }
 
 async function createVariationMarketingAuthorisationApplication (payload) {
-    let url = `${ADMIN_BASE_API_URL}/MarketingAuthorisationApplication/CreateBasicVariation`
+    let url = `${TEST_SUPPORT_BASE_API_URL}/MarketingAuthorisationApplication/CreateBasicVariation`
     log.info(`${SERVICE_NAME}::createVariationMarketingAuthorisationApplication:url:${url}`)
 
     return axios.post(url, payload)
@@ -61,7 +61,7 @@ async function createVariationMarketingAuthorisationApplication (payload) {
 }
 
 async function deleteMarketingAuthorisationApplication (maApplicationId) {
-    let url = `${ADMIN_BASE_API_URL}/MarketingAuthorisationApplication/${maApplicationId}`
+    let url = `${TEST_SUPPORT_BASE_API_URL}/MarketingAuthorisationApplication/${maApplicationId}`
     log.info(`${SERVICE_NAME}::deleteMarketingAuthorisationApplication:url:${url}`)
 
     return axios.delete(url)
@@ -75,7 +75,7 @@ async function deleteMarketingAuthorisationApplication (maApplicationId) {
 }
 
 async function deleteMarketingAuthorisationApplicationByInternalReference (maInternalReference) {
-    let url = `${ADMIN_BASE_API_URL}/MarketingAuthorisationApplication/deleteByInternalReference/${maInternalReference}`
+    let url = `${TEST_SUPPORT_BASE_API_URL}/MarketingAuthorisationApplication/deleteByInternalReference/${maInternalReference}`
     log.info(`${SERVICE_NAME}::deleteMarketingAuthorisationApplicationByInternalReference:url:${url}`)
 
     return axios.delete(url)
