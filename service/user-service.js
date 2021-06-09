@@ -3,6 +3,7 @@ const axios = require('axios')
 const log = global.log
 const userTypes = require('../common/constants')
 const TEST_SUPPORT_BASE_API_URL = process.env.TEST_SUPPORT_BASE_API_URL
+const ORGANISATION_ADMIN_SERVICE_API_URL = process.env.ORGANISATION_ADMIN_SERVICE_API_URL
 const SERVICE_NAME = 'user-service'
 
 async function createUser (userType, payload) {
@@ -49,7 +50,7 @@ async function deleteUser (id) {
 }
 
 async function findUserByEmail (email) {
-    let url = TEST_SUPPORT_BASE_API_URL + `/users/byEmail/${email}`
+    let url = ORGANISATION_ADMIN_SERVICE_API_URL + `/users/byEmail/${email}`
     log.info(`${SERVICE_NAME}::findUserByEmail:url:${url}`)
     return axios.get(url)
         .then((response) => {
