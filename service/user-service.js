@@ -7,26 +7,26 @@ const SERVICE_NAME = 'user-service'
 
 async function findUserByEmail (email) {
     let url = ORG_ADMIN_TEST_USERS_API_URL + `/byEmail/${email}`
-    log.info(`${SERVICE_NAME}::findUserByEmail:url:${url}`)
+    log.info(`${SERVICE_NAME}::findUserByEmail - url:${url}`)
     return axios.get(url)
         .then((response) => {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::findUserByEmail:error: ${error}`)
+            log.error(`${SERVICE_NAME}::findUserByEmail - error: ${error}`)
             throw error
         })
 }
 
 async function findUserByName (name) {
     let url = `${ORG_ADMIN_TEST_USERS_API_URL}/byName/${name}`
-    log.info(`${SERVICE_NAME}::findUserByName:url:${url}`)
+    log.info(`${SERVICE_NAME}::findUserByName - url:${url}`)
     return axios.get(url)
         .then((response) => {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::findUserByName:error: ${error}`)
+            log.error(`${SERVICE_NAME}::findUserByName - error: ${error}`)
             throw error
         })
 }
