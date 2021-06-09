@@ -1,7 +1,7 @@
 
 const axios = require('axios')
 const log = global.log
-const SIS_API_URL = `${process.env.TEST_SUPPORT_BASE_API_URL}/SpecialImportApplications`
+const SIS_API_URL = `${process.env.TEST_SUPPORT_API_URL}/SpecialImportApplications`
 const SERVICE_NAME = 'sis-service'
 
 async function update (jobId, updatedBy, payload) {

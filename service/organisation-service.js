@@ -1,11 +1,11 @@
 
 const axios = require('axios')
 const log = global.log
-const TEST_SUPPORT_BASE_API_URL = process.env.TEST_SUPPORT_BASE_API_URL // This is TestSupport
+const TEST_SUPPORT_API_URL = process.env.TEST_SUPPORT_API_URL // This is TestSupport
 const SERVICE_NAME = 'organisation-service'
 
 async function createOrganisation (orgType, payload) {
-    let url = `${TEST_SUPPORT_BASE_API_URL}/organisations/create/${orgType}`
+    let url = `${TEST_SUPPORT_API_URL}/organisations/create/${orgType}`
     log.info(`${SERVICE_NAME}::createOrganisation:url:${url}`)
 
     return axios.post(url, payload)
@@ -20,7 +20,7 @@ async function createOrganisation (orgType, payload) {
 }
 
 async function updateOrganisation (payload) {
-    let url = `${TEST_SUPPORT_BASE_API_URL}/organisations/updateVetPractice`
+    let url = `${TEST_SUPPORT_API_URL}/organisations/updateVetPractice`
     log.info(`${SERVICE_NAME}::updateOrganisation:url:${url}`)
 
     return axios.put(url, payload)
@@ -35,7 +35,7 @@ async function updateOrganisation (payload) {
 }
 
 async function deleteOrganisation (orgId) {
-    let url = `${TEST_SUPPORT_BASE_API_URL}/organisations/${orgId}`
+    let url = `${TEST_SUPPORT_API_URL}/organisations/${orgId}`
     log.info(`${SERVICE_NAME}::deleteOrganisation:url:${url}`)
 
     return axios.delete(url)
@@ -50,7 +50,7 @@ async function deleteOrganisation (orgId) {
 }
 
 async function rebuildRedisOrganisationsCache () {
-    let url = `${TEST_SUPPORT_BASE_API_URL}/organisations/RebuildCache`
+    let url = `${TEST_SUPPORT_API_URL}/organisations/RebuildCache`
     log.info(`${SERVICE_NAME}::rebuildRedisOrganisationsCache:url:${url}`)
     return axios.put(url)
         .then((response) => {
@@ -63,7 +63,7 @@ async function rebuildRedisOrganisationsCache () {
 }
 
 async function findOrganisationByName (organisationType, name) {
-    let url = `${TEST_SUPPORT_BASE_API_URL}/organisations/byTypeAndName/${organisationType}/${name}`
+    let url = `${TEST_SUPPORT_API_URL}/organisations/byTypeAndName/${organisationType}/${name}`
     log.info(`${SERVICE_NAME}::findOrganisationByName:url:${url}`)
 
     return axios.get(url)
@@ -77,7 +77,7 @@ async function findOrganisationByName (organisationType, name) {
 }
 
 async function assignRoleToOrganisationForUser (orgId, userId, roleName) {
-    let url = `${TEST_SUPPORT_BASE_API_URL}/organisations/${orgId}/assignrole/${userId}/${roleName}`
+    let url = `${TEST_SUPPORT_API_URL}/organisations/${orgId}/assignrole/${userId}/${roleName}`
     log.info(`${SERVICE_NAME}::assignRoleToOrganisationForUser:url:${url}`)
 
     return axios.put(url)

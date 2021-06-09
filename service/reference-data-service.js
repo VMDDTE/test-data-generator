@@ -1,11 +1,11 @@
 
 const axios = require('axios')
 const log = global.log
-const TEST_SUPPORT_BASE_API_URL = process.env.TEST_SUPPORT_BASE_API_URL
+const TEST_SUPPORT_API_URL = process.env.TEST_SUPPORT_API_URL
 const SERVICE_NAME = 'reference-data-service'
 
 async function createReferenceData (payload) {
-    let url = `${TEST_SUPPORT_BASE_API_URL}/reference/${payload.Type}`
+    let url = `${TEST_SUPPORT_API_URL}/reference/${payload.Type}`
     log.info(`${SERVICE_NAME}::createReferenceData:url:${url}`)
 
     return axios.post(url, payload)
@@ -19,7 +19,7 @@ async function createReferenceData (payload) {
 }
 
 async function deleteReferenceData (referenceDataId) {
-    let url = `${TEST_SUPPORT_BASE_API_URL}/reference/${referenceDataId}`
+    let url = `${TEST_SUPPORT_API_URL}/reference/${referenceDataId}`
     log.info(`${SERVICE_NAME}::deleteReferenceData:url:${url}`)
 
     return axios.delete(url)

@@ -1,7 +1,7 @@
 
 const axios = require('axios')
 const log = global.log
-const JOB_API_URL = `${process.env.TEST_SUPPORT_BASE_API_URL}/jobs`
+const JOB_API_URL = `${process.env.TEST_SUPPORT_API_URL}/jobs`
 const SERVICE_NAME = 'job-service'
 
 async function createJob (type, name) {

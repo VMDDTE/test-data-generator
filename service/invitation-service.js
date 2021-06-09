@@ -1,11 +1,11 @@
 
 const axios = require('axios')
 const log = global.log
-const TEST_SUPPORT_BASE_API_URL = process.env.TEST_SUPPORT_BASE_API_URL
+const TEST_SUPPORT_API_URL = process.env.TEST_SUPPORT_API_URL
 const SERVICE_NAME = 'invitation-service'
 
 async function createInvitation (externalUserId, organisationId, reference, externalUserRole) {
-    let url = `${TEST_SUPPORT_BASE_API_URL}/Invitation`
+    let url = `${TEST_SUPPORT_API_URL}/Invitation`
 
     const payload = {
         ExternalUserId: externalUserId,
@@ -26,7 +26,7 @@ async function createInvitation (externalUserId, organisationId, reference, exte
 }
 
 async function deleteInvitation (id) {
-    let url = `${TEST_SUPPORT_BASE_API_URL}/Invitation/InvitationNo/${id}`
+    let url = `${TEST_SUPPORT_API_URL}/Invitation/InvitationNo/${id}`
     log.info(`${SERVICE_NAME}::deleteInvitation:url:${url}`)
     return axios.delete(url)
         .then((response) => {

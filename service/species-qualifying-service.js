@@ -1,11 +1,11 @@
 
 const axios = require('axios')
 const log = global.log
-const TEST_SUPPORT_BASE_API_URL = process.env.TEST_SUPPORT_BASE_API_URL
+const TEST_SUPPORT_API_URL = process.env.TEST_SUPPORT_API_URL
 const SERVICE_NAME = 'species-qualifying-service'
 
 async function createSpeciesQualifying (payload) {
-    let url = `${TEST_SUPPORT_BASE_API_URL}/reference/species`
+    let url = `${TEST_SUPPORT_API_URL}/reference/species`
     log.info(`${SERVICE_NAME}::createSpeciesQualifying:url:${url}`)
 
     return axios.post(url, payload)
@@ -19,7 +19,7 @@ async function createSpeciesQualifying (payload) {
 }
 
 async function deleteSpeciesQualifying (speciesId) {
-    let url = `${TEST_SUPPORT_BASE_API_URL}/reference/species/${speciesId}`
+    let url = `${TEST_SUPPORT_API_URL}/reference/species/${speciesId}`
     log.info(`${SERVICE_NAME}::deleteSpeciesQualifying:url:${url}`)
 
     return axios.delete(url)

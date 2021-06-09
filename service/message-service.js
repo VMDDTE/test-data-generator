@@ -1,11 +1,11 @@
 
 const axios = require('axios')
 const log = global.log
-const TEST_SUPPORT_BASE_API_URL = `${process.env.TEST_SUPPORT_BASE_API_URL}`
+const TEST_SUPPORT_API_URL = `${process.env.TEST_SUPPORT_API_URL}`
 const SERVICE_NAME = 'message-service'
 
 async function createDraft (userId) {
-    let url = `${TEST_SUPPORT_BASE_API_URL}/messages`
+    let url = `${TEST_SUPPORT_API_URL}/messages`
     log.info(`${SERVICE_NAME}::createDraft:url:${url}`)
     const requestHeaders = { 'vmd-userid': userId }
 
@@ -24,7 +24,7 @@ async function createDraft (userId) {
 }
 
 async function sendMessage (payload) {
-    let url = `${TEST_SUPPORT_BASE_API_URL}/messages/CreateSecure`
+    let url = `${TEST_SUPPORT_API_URL}/messages/CreateSecure`
     log.info(`${SERVICE_NAME}::sendMessage:url:${url}`)
     
     return axios({
@@ -42,7 +42,7 @@ async function sendMessage (payload) {
 }
 
 async function sentMessage (payload) {
-    let url = `${TEST_SUPPORT_BASE_API_URL}/messages/CreateSent`
+    let url = `${TEST_SUPPORT_API_URL}/messages/CreateSent`
     log.info(`${SERVICE_NAME}::sentMessage:url:${url}`)
     // TestSupport CreateSent not currently using headers, only payload contents
     return axios({
@@ -60,7 +60,7 @@ async function sentMessage (payload) {
 }
 
 async function deleteMessage (messageId) {
-    let url = `${TEST_SUPPORT_BASE_API_URL}/messages/${messageId}`
+    let url = `${TEST_SUPPORT_API_URL}/messages/${messageId}`
     log.info(`${SERVICE_NAME}::deleteMessage:url:${url}`)
 
     return axios.delete(url)
