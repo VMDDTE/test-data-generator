@@ -50,7 +50,10 @@ async function deleteOrganisation (organisationType, featureName, action) {
         organisationService.deleteOrganisation(response.Id)
     })
     .catch(error => {
-        log.warn(`${SERVICE_NAME}::deleteOrganisation:error: ${error}`)
+        // If 404 we dont care as trying to delete!
+        if(error.response.status !== 404){
+            log.warn(`${SERVICE_NAME}::deleteOrganisation - error: ${error}`)
+        }
     })
 
 }
@@ -77,7 +80,10 @@ async function findUserId (featureName, action) {
         return response.Id
     })
     .catch(error => {
-        log.warn(`${SERVICE_NAME}::findUserId - error: ${error}`)
+        // If 404 we dont care as trying to delete!
+        if(error.response.status !== 404){
+            log.warn(`${SERVICE_NAME}::findUserId - error: ${error}`)
+        }
     })
 }
 
