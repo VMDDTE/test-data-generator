@@ -1,8 +1,10 @@
 
 const axios = require('axios')
 const log = global.log
-const TEST_SUPPORT_API_URL = `${process.env.TEST_SUPPORT_API_URL}`
 const SERVICE_NAME = 'message-service'
+
+const TEST_SUPPORT_API_URL = `${process.env.TEST_SUPPORT_API_URL}`
+const SECURE_MESSAGING_TEST_MESSAGES_API_URL = process.env.SECURE_MESSAGING_API_URL + '/TestMessages'
 
 async function createDraft (userId) {
     let url = `${TEST_SUPPORT_API_URL}/messages`
@@ -73,7 +75,22 @@ async function deleteMessage (messageId) {
         })
 }
 
+
+async function deleteMessagesForUserId (id) {
+    let url = `${SECURE_MESSAGING_TEST_MESSAGES_API_URL}/ForUser/${id}`
+    log.info(`${SERVICE_NAME}::deleteUserMessages:url:${url}`)
+    return axios.put(url)
+        .then((response) => {
+            return response.data
+        })
+        .catch(error => {
+            log.error(`${SERVICE_NAME}::deleteUserMessages:error: ${error}`)
+            throw error
+        })
+}
+
 module.exports.createDraft = createDraft
 module.exports.sendMessage = sendMessage
 module.exports.sentMessage = sentMessage
 module.exports.deleteMessage = deleteMessage
+module.exports.deleteMessagesForUserId = deleteMessagesForUserId

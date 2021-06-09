@@ -2,6 +2,7 @@ const actionTypes = require('../common/constants')
 const orgTypes = require('../common/constants')
 const organisationService = require('../service/organisation-service')
 const userService = require('../service/user-service')
+const messageService = require('../service/message-service')
 const log = global.log
 
 const SERVICE_NAME = 'delete-action-processor'
@@ -23,7 +24,12 @@ async function process (featureName, action) {
         break
     case actionTypes.ACTION_TYPE_USER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_USER}`)
-        await deleteUser(featureName, action)
+
+        const userIdToDelete = await findUserId(featureName, action)
+        // TestSupport would previously delete any user messages before deleting user
+        await messageService.deleteMessagesForUserId(userIdToDelete)
+        await userService.deleteUser(userIdToDelete)
+
         break
     default:
         log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
@@ -47,10 +53,10 @@ async function deleteOrganisation (organisationType, featureName, action) {
 
 }
 
-async function deleteUser (featureName, action) {
-    log.debug(`${SERVICE_NAME}::deleteUser`)
+async function findUserId (featureName, action) {
+    log.debug(`${SERVICE_NAME}::findUser`)
     let userData = action.data
-    log.info(`${SERVICE_NAME}::deleteUser::${action.label}::deleting user from ${JSON.stringify(userData)}`)
+    log.info(`${SERVICE_NAME}::findUser::${action.label}::finding user from ${JSON.stringify(userData)}`)
 
     var func,parm;
     if (userData.Email){
@@ -60,16 +66,16 @@ async function deleteUser (featureName, action) {
         func = userService.findUserByName
         parm = userData.Name
     }else{
-        log.error(`${SERVICE_NAME}::deleteUser:error: neither name nor email passed in to deleteUser`)
+        log.error(`${SERVICE_NAME}::findUser:error: neither name nor email passed in to deleteUser`)
         return
     }
     return await func(parm)
     .then((response) => {
-        log.info(`${SERVICE_NAME}::deleteUser::${action.label}::found:${JSON.stringify(response)}`)
-        userService.deleteUser(response.Id)
+        log.info(`${SERVICE_NAME}::findUser::${action.label}::found:${JSON.stringify(response)}`)
+        return response.Id
     })
     .catch(error => {
-        log.warn(`${SERVICE_NAME}::deleteUser:error: ${error}`)
+        log.warn(`${SERVICE_NAME}::findUser:error: ${error}`)
     })
 }
 
