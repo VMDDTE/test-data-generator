@@ -64,6 +64,7 @@ async function processActions (featureName, actionJson) {
             case actions.ACTION_DELETE:
                 log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
                 await deleteActionProcessor.process(featureName, action)
+                break
             case actions.ACTION_GET:
                 log.info(`${CONTROLLER_NAME}::processing ${action.action}`)
                 await getActionProcessor.process(featureName, action)
