@@ -594,7 +594,7 @@ async function createSecureMessage (featureName, action){
         sendData.AttachmentsToCreate = action.data.Attachments
     }
 
-    var sendMessageResponse = await messageService.sendMessage(sendData)
+    var sendMessageResponse = await messageService.createSecure(sendData)
 
     log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::sendMessage:${JSON.stringify(sendMessageResponse)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
@@ -647,7 +647,7 @@ async function createSentMessage (featureName, action){
         sentDataPayload.AttachmentsToCreate = action.data.Attachments
     }
 
-    var createdSentMessage = await messageService.sentMessage(sentDataPayload)
+    var createdSentMessage = await messageService.createSent(sentDataPayload)
 
     log.info(`${SERVICE_NAME}::createSentMessage::${action.label}::createdSentMessage:${JSON.stringify(createdSentMessage)}`)
     var savedAction = localStorage.getItem(featureName, action.label)

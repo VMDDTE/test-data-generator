@@ -3,11 +3,10 @@ const axios = require('axios')
 const log = global.log
 const SERVICE_NAME = 'message-service'
 
-const TEST_SUPPORT_API_URL = `${process.env.TEST_SUPPORT_API_URL}`
 const SECURE_MESSAGING_TEST_MESSAGES_API_URL = process.env.SECURE_MESSAGING_API_URL + '/TestMessages'
 
 async function createDraft (userId) {
-    let url = `${TEST_SUPPORT_API_URL}/messages`
+    let url = SECURE_MESSAGING_TEST_MESSAGES_API_URL
     log.info(`${SERVICE_NAME}::createDraft:url:${url}`)
     const requestHeaders = { 'vmd-userid': userId }
 
@@ -25,8 +24,8 @@ async function createDraft (userId) {
         })
 }
 
-async function sendMessage (payload) {
-    let url = `${TEST_SUPPORT_API_URL}/messages/CreateSecure`
+async function createSecure (payload) {
+    let url = `${SECURE_MESSAGING_TEST_MESSAGES_API_URL}/CreateSecure`
     log.info(`${SERVICE_NAME}::sendMessage:url:${url}`)
     
     return axios({
@@ -43,8 +42,8 @@ async function sendMessage (payload) {
     })
 }
 
-async function sentMessage (payload) {
-    let url = `${TEST_SUPPORT_API_URL}/messages/CreateSent`
+async function createSent (payload) {
+    let url = `${SECURE_MESSAGING_TEST_MESSAGES_API_URL}/CreateSent`
     log.info(`${SERVICE_NAME}::sentMessage:url:${url}`)
     // TestSupport CreateSent not currently using headers, only payload contents
     return axios({
@@ -62,7 +61,7 @@ async function sentMessage (payload) {
 }
 
 async function deleteMessage (messageId) {
-    let url = `${TEST_SUPPORT_API_URL}/messages/${messageId}`
+    let url = `${SECURE_MESSAGING_TEST_MESSAGES_API_URL}/${messageId}`
     log.info(`${SERVICE_NAME}::deleteMessage:url:${url}`)
 
     return axios.delete(url)
@@ -90,7 +89,8 @@ async function deleteMessagesForUserId (id) {
 }
 
 module.exports.createDraft = createDraft
-module.exports.sendMessage = sendMessage
-module.exports.sentMessage = sentMessage
+module.exports.createSecure = createSecure
+module.exports.createSent = createSent
+// TestSupport/TestMesages endpoint have a send endpoint accepting a draft message id, doesnt seem to be used
 module.exports.deleteMessage = deleteMessage
 module.exports.deleteMessagesForUserId = deleteMessagesForUserId
