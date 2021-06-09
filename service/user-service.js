@@ -2,12 +2,38 @@
 const axios = require('axios')
 const log = global.log
 const userTypes = require('../common/constants')
-const TEST_SUPPORT_API_URL = process.env.TEST_SUPPORT_API_URL
-const ORG_ADMIN_API_URL = process.env.ORG_ADMIN_API_URL
+const ORG_ADMIN_TEST_USERS_API_URL = process.env.ORG_ADMIN_API_URL + '/TestUsers'
 const SERVICE_NAME = 'user-service'
 
+async function findUserByEmail (email) {
+    let url = ORG_ADMIN_TEST_USERS_API_URL + `/byEmail/${email}`
+    log.info(`${SERVICE_NAME}::findUserByEmail:url:${url}`)
+    return axios.get(url)
+        .then((response) => {
+            return response.data
+        })
+        .catch(error => {
+            log.error(`${SERVICE_NAME}::findUserByEmail:error: ${error}`)
+            throw error
+        })
+}
+
+async function findUserByName (name) {
+    let url = `${ORG_ADMIN_TEST_USERS_API_URL}/byName/${name}`
+    log.info(`${SERVICE_NAME}::findUserByName:url:${url}`)
+    return axios.get(url)
+        .then((response) => {
+            return response.data
+        })
+        .catch(error => {
+            log.error(`${SERVICE_NAME}::findUserByName:error: ${error}`)
+            throw error
+        })
+}
+
+
 async function createUser (userType, payload) {
-    let url = `${TEST_SUPPORT_API_URL}/users/${userType}`
+    let url = `${ORG_ADMIN_TEST_USERS_API_URL}/${userType}`
     // If the user type is internal then don't fail if the user already exists
     if (userType === userTypes.USER_TYPE_INTERNAL) {
         url = `${url}/false`
@@ -24,7 +50,7 @@ async function createUser (userType, payload) {
 }
 
 async function createExternalUser (payload) {
-    let url = `${TEST_SUPPORT_API_URL}/users/External`
+    let url = `${ORG_ADMIN_TEST_USERS_API_URL}/External`
     log.info(`${SERVICE_NAME}::createExternalUser:url:${url}`)
     return axios.post(url, payload)
         .then((response) => {
@@ -37,7 +63,7 @@ async function createExternalUser (payload) {
 }
 
 async function deleteUser (id) {
-    let url = TEST_SUPPORT_API_URL + `/users/${id}`
+    let url = `${ORG_ADMIN_TEST_USERS_API_URL}/${id}`
     log.info(`${SERVICE_NAME}::deleteUser:url:${url}`)
     return axios.delete(url)
         .then((response) => {
@@ -49,34 +75,8 @@ async function deleteUser (id) {
         })
 }
 
-async function findUserByEmail (email) {
-    let url = ORG_ADMIN_API_URL + `/users/byEmail/${email}`
-    log.info(`${SERVICE_NAME}::findUserByEmail:url:${url}`)
-    return axios.get(url)
-        .then((response) => {
-            return response.data
-        })
-        .catch(error => {
-            log.error(`${SERVICE_NAME}::findUserByEmail:error: ${error}`)
-            throw error
-        })
-}
-
-async function findUserByName (name) {
-    let url = TEST_SUPPORT_API_URL + `/users/byName/${name}`
-    log.info(`${SERVICE_NAME}::findUserByName:url:${url}`)
-    return axios.get(url)
-        .then((response) => {
-            return response.data
-        })
-        .catch(error => {
-            log.error(`${SERVICE_NAME}::findUserByName:error: ${error}`)
-            throw error
-        })
-}
-
-module.exports.createUser = createUser
-module.exports.deleteUser = deleteUser
-module.exports.createExternalUser = createExternalUser
 module.exports.findUserByEmail = findUserByEmail
 module.exports.findUserByName = findUserByName
+module.exports.createUser = createUser
+module.exports.createExternalUser = createExternalUser
+module.exports.deleteUser = deleteUser
