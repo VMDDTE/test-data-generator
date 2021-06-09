@@ -26,10 +26,12 @@ async function process (featureName, action) {
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_USER}`)
 
         const userIdToDelete = await findUserId(featureName, action)
-        // TestSupport would previously delete any user messages before deleting user
-        await messageService.deleteMessagesForUserId(userIdToDelete)
-        await userService.deleteUser(userIdToDelete)
-
+        // Only attempt deletion if we find a user
+        if(userIdToDelete){
+            // TestSupport would previously delete any user messages before deleting user
+            await messageService.deleteMessagesForUserId(userIdToDelete)
+            await userService.deleteUser(userIdToDelete)
+        }
         break
     default:
         log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
