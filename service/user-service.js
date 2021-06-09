@@ -13,7 +13,11 @@ async function findUserByEmail (email) {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::findUserByEmail - error: ${error}`)
+            if(error.response.status !== 404){
+                log.error(`${SERVICE_NAME}::findUserByEmail - error: ${error}`)
+            } else{
+                log.warn(`${SERVICE_NAME}::findUserByEmail - user not found`)
+            }
             throw error
         })
 }
@@ -26,7 +30,11 @@ async function findUserByName (name) {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::findUserByName - error: ${error}`)
+            if(error.response.status !== 404){
+                log.error(`${SERVICE_NAME}::findUserByName - error: ${error}`)
+            } else{
+                log.warn(`${SERVICE_NAME}::findUserByName - user not found`)
+            }
             throw error
         })
 }
