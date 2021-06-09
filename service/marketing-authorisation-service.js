@@ -1,11 +1,12 @@
 
 const axios = require('axios')
 const log = global.log
-const TEST_SUPPORT_API_URL = process.env.TEST_SUPPORT_API_URL
+const MARKETING_AUTHORISATION_TEST_MARKETING_AUTHORISATION_API_URL = process.env.MARKETING_AUTHORISATION_API_URL + '/TestMarketingAuthorisation'
+
 const SERVICE_NAME = 'marketing-authorisation-service'
 
 async function createMarketingAuthorisation (payload) {
-    let url = `${TEST_SUPPORT_API_URL}/MarketingAuthorisations/marketingAuthorisation`
+    let url = MARKETING_AUTHORISATION_TEST_MARKETING_AUTHORISATION_API_URL
     log.info(`${SERVICE_NAME}::createMarketingAuthorisation:url:${url}`)
 
     return axios.post(url, payload)
@@ -19,7 +20,7 @@ async function createMarketingAuthorisation (payload) {
 }
 
 async function deleteMarketingAuthorisation (maId) {
-    let url = `${TEST_SUPPORT_API_URL}/MarketingAuthorisations/marketingAuthorisation/${maId}`
+    let url = `${MARKETING_AUTHORISATION_TEST_MARKETING_AUTHORISATION_API_URL}/${maId}`
     log.info(`${SERVICE_NAME}::deleteMarketingAuthorisation:url:${url}`)
 
     return axios.delete(url)
