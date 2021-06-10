@@ -13,7 +13,6 @@ const substanceQualifierService = require('../service/substance-qualifier-servic
 const marketingAuthorisationService = require('../service/marketing-authorisation-service')
 const maApplicationService = require('../service/ma-application-service')
 const jobService = require('../service/job-service')
-const sisService = require('../service/sis-service')
 const messageService = require('../service/message-service')
 const groupMessageService = require('../service/group-message-service')
 const storageService = require('../service/storage-service')
@@ -80,10 +79,6 @@ async function process (featureName, action) {
     case actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_HOLDER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_HOLDER}`)
         await createOrganisation(orgTypes.ORG_TYPE_NAME_MARKETING_AUTHORISATION_HOLDER, featureName, action)
-        break
-    case actionTypes.ACTION_TYPE_SPECIAL_IMPORT_APPLICATION:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SPECIAL_IMPORT_APPLICATION}`)
-        await createSpecialImportApplication(featureName, action)
         break
     case actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION}`)
@@ -328,45 +323,6 @@ async function createOrganisation (organisationType, featureName, action) {
     }
     organisationIdList.push(responseData.Id)
     localStorage.setItem(featureName, 'organisationIdList', organisationIdList)
-}
-
-async function createSpecialImportApplication (namespace, action) {
-    log.debug(`${SERVICE_NAME}::createSpecialImportApplication`)
-    let specialImportApplicationData = action.data
-    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::creating specialImportApplication from ${JSON.stringify(specialImportApplicationData)}`)
-
-    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::about to start job`)
-    let responseData = await jobService.startJob('import', 'SpecialImports')
-    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::created:${JSON.stringify(responseData)}`)
-    var savedAction = localStorage.getItem(namespace, action.label)
-    savedAction.startJobResponse = responseData
-    log.debug(`${SERVICE_NAME}::createSpecialImportApplication, saved action ${JSON.stringify(savedAction)}`)
-    localStorage.setItem(namespace, action.label, savedAction)
-    let jobIdentifier = responseData.Identifier
-    let jobId = responseData.Id
-
-    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::about to update job state`)
-    responseData = await jobService.updateJobStatus(jobIdentifier, specialImportApplicationData.JobState)
-    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::created:${JSON.stringify(responseData)}`)
-    savedAction = localStorage.getItem(namespace, action.label)
-    savedAction.updateJobStateResponse = responseData
-    log.debug(`${SERVICE_NAME}::createSpecialImportApplication, saved action ${JSON.stringify(savedAction)}`)
-    localStorage.setItem(namespace, action.label, savedAction)
-
-    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::about to update SIS record`)
-    responseData = await sisService.update(jobId, specialImportApplicationData.JobUpdatedBy, specialImportApplicationData)
-    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::updated:${JSON.stringify(responseData)}`)
-    savedAction = localStorage.getItem(namespace, action.label)
-    savedAction.updateSisRecordResponse = responseData
-    log.debug(`${SERVICE_NAME}::createSpecialImportApplication, saved action ${JSON.stringify(savedAction)}`)
-    localStorage.setItem(namespace, action.label, savedAction)
-
-    var specialImportApplicationIdList = localStorage.getItem(namespace, 'specialImportApplicationIdList')
-    if (!specialImportApplicationIdList) {
-        specialImportApplicationIdList = []
-    }
-    specialImportApplicationIdList.push(jobIdentifier)
-    localStorage.setItem(namespace, 'specialImportApplicationIdList', specialImportApplicationIdList)
 }
 
 async function createMarketingAuthorisation (featureName, action) {
