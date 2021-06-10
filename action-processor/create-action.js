@@ -55,10 +55,6 @@ async function process (featureName, action) {
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_REFERENCE_DATA}`)
         await createReferenceData(featureName, action)
         break
-    case actionTypes.ACTION_TYPE_SUBSTANCE:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SUBSTANCE}`)
-        await createSubstance(featureName, action)
-        break
     case actionTypes.ACTION_TYPE_SUBSTANCE_QUALIFIER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SUBSTANCE_QUALIFIER}`)
         await createSubstanceQualifier(featureName, action)
@@ -241,24 +237,6 @@ async function createReferenceData (featureName, action) {
     }
     referenceDataList.push(responseData.Id)
     localStorage.setItem(featureName, 'referenceDataList', referenceDataList)
-}
-
-async function createSubstance (featureName, action) {
-    log.debug(`${SERVICE_NAME}::createSubstance`)
-    let substanceData = action.data
-    log.info(`${SERVICE_NAME}::createSubstance::${action.label}::creating substance from ${JSON.stringify(substanceData)}`)
-    let responseData = await substanceService.createSubstance(substanceData)
-    log.info(`${SERVICE_NAME}::createSubstance::${action.label}::created:${JSON.stringify(responseData)}`)
-    var savedAction = localStorage.getItem(featureName, action.label)
-    savedAction.response = responseData
-    log.debug(`${SERVICE_NAME}::createSubstance, saved action ${JSON.stringify(savedAction)}`)
-    localStorage.setItem(featureName, action.label, savedAction)
-    var substanceList = localStorage.getItem(featureName, 'substanceList')
-    if (!substanceList) {
-        substanceList = []
-    }
-    substanceList.push(responseData.ProductNo)
-    localStorage.setItem(featureName, 'substanceList', substanceList)
 }
 
 async function createSubstanceQualifier (featureName, action) {
