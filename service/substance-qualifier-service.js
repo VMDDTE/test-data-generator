@@ -1,6 +1,5 @@
 const axios = require('axios')
 const log = global.log
-const TEST_SUPPORT_API_URL = process.env.TEST_SUPPORT_API_URL
 const SERVICE_NAME = 'substance-qualifier-service'
 
 const ADMIN_TEST_REFERENCE_DATA_API_URL = process.env.ADMIN_API_URL + '/TestReferenceData'
