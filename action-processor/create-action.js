@@ -336,11 +336,11 @@ async function createSpecialImportApplication (namespace, action) {
     let specialImportApplicationData = action.data
     log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::creating specialImportApplication from ${JSON.stringify(specialImportApplicationData)}`)
 
-    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::about to create job`)
-    let responseData = await jobService.createJob('import', 'SpecialImports')
+    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::about to start job`)
+    let responseData = await jobService.startJob('import', 'SpecialImports')
     log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::created:${JSON.stringify(responseData)}`)
     var savedAction = localStorage.getItem(namespace, action.label)
-    savedAction.createJobResponse = responseData
+    savedAction.startJobResponse = responseData
     log.debug(`${SERVICE_NAME}::createSpecialImportApplication, saved action ${JSON.stringify(savedAction)}`)
     localStorage.setItem(namespace, action.label, savedAction)
     let jobIdentifier = responseData.Identifier
@@ -464,8 +464,8 @@ async function createVariationMarketingAuthorisationApplication (featureName, ac
 async function createMarketingAuthorisationRenewalJob (featureName, action){
     log.debug(`${SERVICE_NAME}::createMarketingAuthorisationRenewalJob`)
     let data = action.data
-    log.info(`${SERVICE_NAME}::createMarketingAuthorisationRenewalJob::${action.label}::creating marketing authorisation renewal job from ${JSON.stringify(data)}`)
-    let responseData = await jobService.createJob(constants.JOB_TYPE_MARKETING_AUTHORISATION_RENEWAL, featureName)
+    log.info(`${SERVICE_NAME}::createMarketingAuthorisationRenewalJob::${action.label}::starting marketing authorisation renewal job from ${JSON.stringify(data)}`)
+    let responseData = await jobService.startJob(constants.JOB_TYPE_MARKETING_AUTHORISATION_RENEWAL, featureName)
     let jobId = responseData.Id
     responseData = await jobService.updateJob(jobId, data)
     log.info(`${SERVICE_NAME}::createMarketingAuthorisationRenewalJob::${action.label}::updated:${JSON.stringify(responseData)}`)
@@ -484,8 +484,8 @@ async function createMarketingAuthorisationRenewalJob (featureName, action){
 async function createMarketingAuthorisationNewJob (featureName, action){
     log.debug(`${SERVICE_NAME}::createMarketingAuthorisationNewJob`)
     let data = action.data
-    log.info(`${SERVICE_NAME}::createMarketingAuthorisationNewJob::${action.label}::creating marketing authorisation new job from ${JSON.stringify(data)}`)
-    let responseData = await jobService.createJob(constants.JOB_TYPE_MARKETING_AUTHORISATION_NEW, featureName)
+    log.info(`${SERVICE_NAME}::createMarketingAuthorisationNewJob::${action.label}::starting marketing authorisation new job from ${JSON.stringify(data)}`)
+    let responseData = await jobService.startJob(constants.JOB_TYPE_MARKETING_AUTHORISATION_NEW, featureName)
     let jobId = responseData.Id
     responseData = await jobService.updateJob(jobId, data)
     log.info(`${SERVICE_NAME}::createMarketingAuthorisationNewJob::${action.label}::updated:${JSON.stringify(responseData)}`)
@@ -504,8 +504,8 @@ async function createMarketingAuthorisationNewJob (featureName, action){
 async function createRegistrationJob (featureName, action){
     log.debug(`${SERVICE_NAME}::createRegistrationJob`)
     let data = action.data
-    log.info(`${SERVICE_NAME}::createRegistrationJob::${action.label}::creating a new business registration job from ${JSON.stringify(data)}`)
-    let responseData = await jobService.createJob(constants.JOB_TYPE_REGISTRATION, featureName)
+    log.info(`${SERVICE_NAME}::createRegistrationJob::${action.label}::starting a new business registration job from ${JSON.stringify(data)}`)
+    let responseData = await jobService.startJob(constants.JOB_TYPE_REGISTRATION, featureName)
     let jobId = responseData.Id
     responseData = await jobService.updateJob(jobId, data)
     log.info(`${SERVICE_NAME}::createRegistrationJob::${action.label}::updated:${JSON.stringify(responseData)}`)
