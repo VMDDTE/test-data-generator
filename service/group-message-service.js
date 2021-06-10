@@ -1,12 +1,12 @@
 const axios = require('axios')
 const log = global.log
-const TEST_SUPPORT_API_URL = `${process.env.TEST_SUPPORT_API_URL}`
 const SERVICE_NAME = 'group-message-service'
 
+const SECURE_MESSAGING_TEST_SHARED_MESSAGES_API_URL = process.env.SECURE_MESSAGING_API_URL + '/TestSharedMessages'
 
-async function createMessage (payload, userId) {
-    let url = `${TEST_SUPPORT_API_URL}/GroupMessages/`
-    log.info(`${SERVICE_NAME}::sendGroupMessage:url:${url}`)
+async function createSharedMessage (payload, userId) {
+    let url = SECURE_MESSAGING_TEST_SHARED_MESSAGES_API_URL
+    log.info(`${SERVICE_NAME}::createSharedMessage - url:${url}`)
     const headers = { 'vmd-userid': userId }
     return axios({
         headers,
@@ -18,26 +18,24 @@ async function createMessage (payload, userId) {
             return response.data
         })
     .catch(error => {
-        log.error(`${SERVICE_NAME}::sendGroupMessage:error: ${error}`)
+        log.error(`${SERVICE_NAME}::createSharedMessage - error: ${error}`)
         throw error
     })
 }
 
-async function deleteMessage (messageId) {
-    let url = `${TEST_SUPPORT_API_URL}/GroupMessages/${messageId}`
-    log.info(`${SERVICE_NAME}::deleteGroupMessage:url:${url}`)
+async function deleteSharedMessage (messageId) {
+    let url = `${SECURE_MESSAGING_TEST_SHARED_MESSAGES_API_URL}/${messageId}`
+    log.info(`${SERVICE_NAME}::deleteSharedMessage - url:${url}`)
 
     return axios.delete(url)
         .then((response) => {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::deleteMessage:error: ${error}`)
+            log.error(`${SERVICE_NAME}::deleteSharedMessage - error: ${error}`)
             throw error
         })
 }
 
-
-module.exports.create = createMessage
-module.exports.delete = deleteMessage
-
+module.exports.create = createSharedMessage
+module.exports.delete = deleteSharedMessage
