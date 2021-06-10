@@ -6,20 +6,20 @@ const log = global.log
 const SERVICE_NAME = 'get-action-processor'
 
 async function process (featureName, action) {
-    log.debug(`${SERVICE_NAME}::${featureName}::process`)
+    log.debug(`${SERVICE_NAME}::Process - ${featureName}`)
     switch (action.type) {
-    case actionTypes.ACTION_TYPE_INTERNAL_USER:
-        log.info(`${SERVICE_NAME}::processing ${action.type}`)
-        await getUser(featureName, action)
-        break
-    default:
-        log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
-        break
+        case actionTypes.ACTION_TYPE_INTERNAL_USER:
+            log.info(`${SERVICE_NAME}::processing ${action.type}`)
+            await getUser(featureName, action)
+            break
+        default:
+            log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
+            break
     }
 }
 
 async function getUser (featureName, action) {
-    log.debug(`${SERVICE_NAME}::getUser::${JSON.stringify(action)}`)
+    log.debug(`${SERVICE_NAME}::getUser - Action: ${JSON.stringify(action)}`)
     let email = action.data.Email
 
     try{
@@ -32,7 +32,7 @@ async function getUser (featureName, action) {
         localStorage.setItem(featureName, action.label, getAction)
 
     }catch(ex){
-        log.debug(`${SERVICE_NAME}::error getting user ${ex.message}`)
+        log.warn(`${SERVICE_NAME}::error getting user ${ex.message}`)
     }
 }
 

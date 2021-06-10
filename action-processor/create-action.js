@@ -1,20 +1,16 @@
 const actionTypes = require('../common/constants')
 const orgTypes = require('../common/constants')
 const userTypes = require('../common/constants')
-const auditService = require('../service/audit-service')
 const organisationService = require('../service/organisation-service')
 const localStorage = require('../service/local-storage-service')
 const userService = require('../service/user-service')
 const productService = require('../service/product-service')
-const speciesService = require('../service/species-service')
 const speciesQualifyingService = require('../service/species-qualifying-service')
 const referenceDataService = require('../service/reference-data-service')
-const substanceService = require('../service/substance-service')
 const substanceQualifierService = require('../service/substance-qualifier-service')
 const marketingAuthorisationService = require('../service/marketing-authorisation-service')
 const maApplicationService = require('../service/ma-application-service')
 const jobService = require('../service/job-service')
-const sisService = require('../service/sis-service')
 const messageService = require('../service/message-service')
 const groupMessageService = require('../service/group-message-service')
 const storageService = require('../service/storage-service')
@@ -50,10 +46,6 @@ async function process (featureName, action) {
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_PRODUCT}`)
         await createProduct(featureName, action)
         break
-    case actionTypes.ACTION_TYPE_SPECIES:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SPECIES}`)
-        await createSpecies(featureName, action)
-        break
     case actionTypes.ACTION_TYPE_SPECIES_QUALIFYING:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SPECIES_QUALIFYING}`)
         await createSpeciesQualifying(featureName, action)
@@ -61,10 +53,6 @@ async function process (featureName, action) {
     case actionTypes.ACTION_TYPE_REFERENCE_DATA:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_REFERENCE_DATA}`)
         await createReferenceData(featureName, action)
-        break
-    case actionTypes.ACTION_TYPE_SUBSTANCE:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SUBSTANCE}`)
-        await createSubstance(featureName, action)
         break
     case actionTypes.ACTION_TYPE_SUBSTANCE_QUALIFIER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SUBSTANCE_QUALIFIER}`)
@@ -81,10 +69,6 @@ async function process (featureName, action) {
     case actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_HOLDER:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION_HOLDER}`)
         await createOrganisation(orgTypes.ORG_TYPE_NAME_MARKETING_AUTHORISATION_HOLDER, featureName, action)
-        break
-    case actionTypes.ACTION_TYPE_SPECIAL_IMPORT_APPLICATION:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SPECIAL_IMPORT_APPLICATION}`)
-        await createSpecialImportApplication(featureName, action)
         break
     case actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_MARKETING_AUTHORISATION}`)
@@ -133,10 +117,6 @@ async function process (featureName, action) {
     case actionTypes.ACTION_TYPE_STORAGE:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_STORAGE}`)
         await createStorageRecord(featureName, action)
-        break
-    case actionTypes.ACTION_TYPE_AUDIT:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_AUDIT}`)
-        await createAuditRecord(featureName, action)
         break
     default:
         log.debug(`${SERVICE_NAME}::unrecognised action type ${action.type}`)
@@ -222,24 +202,6 @@ async function createProduct (featureName, action) {
     localStorage.setItem(featureName, 'productList', productList)
 }
 
-async function createSpecies (featureName, action) {
-    log.debug(`${SERVICE_NAME}::createSpecies`)
-    let speciesData = action.data
-    log.info(`${SERVICE_NAME}::createSpecies::${action.label}::creating species from ${JSON.stringify(speciesData)}`)
-    let responseData = await speciesService.createSpecies(speciesData)
-    log.info(`${SERVICE_NAME}::createSpecies::${action.label}::created:${JSON.stringify(responseData)}`)
-    var savedAction = localStorage.getItem(featureName, action.label)
-    savedAction.response = responseData
-    log.debug(`${SERVICE_NAME}::createSpecies, saved action ${JSON.stringify(savedAction)}`)
-    localStorage.setItem(featureName, action.label, savedAction)
-    var speciesList = localStorage.getItem(featureName, 'speciesList')
-    if (!speciesList) {
-        speciesList = []
-    }
-    speciesList.push(responseData.ProductNo)
-    localStorage.setItem(featureName, 'speciesList', speciesList)
-}
-
 async function createSpeciesQualifying (featureName, action) {
     log.debug(`${SERVICE_NAME}::createSpeciesQualifying`)
     let speciesQualifyingData = action.data
@@ -274,24 +236,6 @@ async function createReferenceData (featureName, action) {
     }
     referenceDataList.push(responseData.Id)
     localStorage.setItem(featureName, 'referenceDataList', referenceDataList)
-}
-
-async function createSubstance (featureName, action) {
-    log.debug(`${SERVICE_NAME}::createSubstance`)
-    let substanceData = action.data
-    log.info(`${SERVICE_NAME}::createSubstance::${action.label}::creating substance from ${JSON.stringify(substanceData)}`)
-    let responseData = await substanceService.createSubstance(substanceData)
-    log.info(`${SERVICE_NAME}::createSubstance::${action.label}::created:${JSON.stringify(responseData)}`)
-    var savedAction = localStorage.getItem(featureName, action.label)
-    savedAction.response = responseData
-    log.debug(`${SERVICE_NAME}::createSubstance, saved action ${JSON.stringify(savedAction)}`)
-    localStorage.setItem(featureName, action.label, savedAction)
-    var substanceList = localStorage.getItem(featureName, 'substanceList')
-    if (!substanceList) {
-        substanceList = []
-    }
-    substanceList.push(responseData.ProductNo)
-    localStorage.setItem(featureName, 'substanceList', substanceList)
 }
 
 async function createSubstanceQualifier (featureName, action) {
@@ -333,45 +277,6 @@ async function createOrganisation (organisationType, featureName, action) {
     }
     organisationIdList.push(responseData.Id)
     localStorage.setItem(featureName, 'organisationIdList', organisationIdList)
-}
-
-async function createSpecialImportApplication (namespace, action) {
-    log.debug(`${SERVICE_NAME}::createSpecialImportApplication`)
-    let specialImportApplicationData = action.data
-    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::creating specialImportApplication from ${JSON.stringify(specialImportApplicationData)}`)
-
-    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::about to create job`)
-    let responseData = await jobService.createJob('import', 'SpecialImports')
-    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::created:${JSON.stringify(responseData)}`)
-    var savedAction = localStorage.getItem(namespace, action.label)
-    savedAction.createJobResponse = responseData
-    log.debug(`${SERVICE_NAME}::createSpecialImportApplication, saved action ${JSON.stringify(savedAction)}`)
-    localStorage.setItem(namespace, action.label, savedAction)
-    let jobIdentifier = responseData.Identifier
-    let jobId = responseData.Id
-
-    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::about to update job state`)
-    responseData = await jobService.updateJobStatus(jobIdentifier, specialImportApplicationData.JobState)
-    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::created:${JSON.stringify(responseData)}`)
-    savedAction = localStorage.getItem(namespace, action.label)
-    savedAction.updateJobStateResponse = responseData
-    log.debug(`${SERVICE_NAME}::createSpecialImportApplication, saved action ${JSON.stringify(savedAction)}`)
-    localStorage.setItem(namespace, action.label, savedAction)
-
-    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::about to update SIS record`)
-    responseData = await sisService.update(jobId, specialImportApplicationData.JobUpdatedBy, specialImportApplicationData)
-    log.info(`${SERVICE_NAME}::createSpecialImportApplication::${action.label}::updated:${JSON.stringify(responseData)}`)
-    savedAction = localStorage.getItem(namespace, action.label)
-    savedAction.updateSisRecordResponse = responseData
-    log.debug(`${SERVICE_NAME}::createSpecialImportApplication, saved action ${JSON.stringify(savedAction)}`)
-    localStorage.setItem(namespace, action.label, savedAction)
-
-    var specialImportApplicationIdList = localStorage.getItem(namespace, 'specialImportApplicationIdList')
-    if (!specialImportApplicationIdList) {
-        specialImportApplicationIdList = []
-    }
-    specialImportApplicationIdList.push(jobIdentifier)
-    localStorage.setItem(namespace, 'specialImportApplicationIdList', specialImportApplicationIdList)
 }
 
 async function createMarketingAuthorisation (featureName, action) {
@@ -468,8 +373,8 @@ async function createVariationMarketingAuthorisationApplication (featureName, ac
 async function createMarketingAuthorisationRenewalJob (featureName, action){
     log.debug(`${SERVICE_NAME}::createMarketingAuthorisationRenewalJob`)
     let data = action.data
-    log.info(`${SERVICE_NAME}::createMarketingAuthorisationRenewalJob::${action.label}::creating marketing authorisation renewal job from ${JSON.stringify(data)}`)
-    let responseData = await jobService.createJob(constants.JOB_TYPE_MARKETING_AUTHORISATION_RENEWAL, featureName)
+    log.info(`${SERVICE_NAME}::createMarketingAuthorisationRenewalJob::${action.label}::starting marketing authorisation renewal job from ${JSON.stringify(data)}`)
+    let responseData = await jobService.startJob(constants.JOB_TYPE_MARKETING_AUTHORISATION_RENEWAL, featureName)
     let jobId = responseData.Id
     responseData = await jobService.updateJob(jobId, data)
     log.info(`${SERVICE_NAME}::createMarketingAuthorisationRenewalJob::${action.label}::updated:${JSON.stringify(responseData)}`)
@@ -488,8 +393,8 @@ async function createMarketingAuthorisationRenewalJob (featureName, action){
 async function createMarketingAuthorisationNewJob (featureName, action){
     log.debug(`${SERVICE_NAME}::createMarketingAuthorisationNewJob`)
     let data = action.data
-    log.info(`${SERVICE_NAME}::createMarketingAuthorisationNewJob::${action.label}::creating marketing authorisation new job from ${JSON.stringify(data)}`)
-    let responseData = await jobService.createJob(constants.JOB_TYPE_MARKETING_AUTHORISATION_NEW, featureName)
+    log.info(`${SERVICE_NAME}::createMarketingAuthorisationNewJob::${action.label}::starting marketing authorisation new job from ${JSON.stringify(data)}`)
+    let responseData = await jobService.startJob(constants.JOB_TYPE_MARKETING_AUTHORISATION_NEW, featureName)
     let jobId = responseData.Id
     responseData = await jobService.updateJob(jobId, data)
     log.info(`${SERVICE_NAME}::createMarketingAuthorisationNewJob::${action.label}::updated:${JSON.stringify(responseData)}`)
@@ -508,8 +413,8 @@ async function createMarketingAuthorisationNewJob (featureName, action){
 async function createRegistrationJob (featureName, action){
     log.debug(`${SERVICE_NAME}::createRegistrationJob`)
     let data = action.data
-    log.info(`${SERVICE_NAME}::createRegistrationJob::${action.label}::creating a new business registration job from ${JSON.stringify(data)}`)
-    let responseData = await jobService.createJob(constants.JOB_TYPE_REGISTRATION, featureName)
+    log.info(`${SERVICE_NAME}::createRegistrationJob::${action.label}::starting a new business registration job from ${JSON.stringify(data)}`)
+    let responseData = await jobService.startJob(constants.JOB_TYPE_REGISTRATION, featureName)
     let jobId = responseData.Id
     responseData = await jobService.updateJob(jobId, data)
     log.info(`${SERVICE_NAME}::createRegistrationJob::${action.label}::updated:${JSON.stringify(responseData)}`)
@@ -594,7 +499,7 @@ async function createSecureMessage (featureName, action){
         sendData.AttachmentsToCreate = action.data.Attachments
     }
 
-    var sendMessageResponse = await messageService.sendMessage(sendData)
+    var sendMessageResponse = await messageService.createSecure(sendData)
 
     log.info(`${SERVICE_NAME}::createSecureMessage::${action.label}::sendMessage:${JSON.stringify(sendMessageResponse)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
@@ -647,7 +552,7 @@ async function createSentMessage (featureName, action){
         sentDataPayload.AttachmentsToCreate = action.data.Attachments
     }
 
-    var createdSentMessage = await messageService.sentMessage(sentDataPayload)
+    var createdSentMessage = await messageService.createSent(sentDataPayload)
 
     log.info(`${SERVICE_NAME}::createSentMessage::${action.label}::createdSentMessage:${JSON.stringify(createdSentMessage)}`)
     var savedAction = localStorage.getItem(featureName, action.label)
@@ -764,44 +669,6 @@ async function createStorageRecord (featureName, action){
         storageList.push(responseData[0].Id)
         localStorage.setItem(featureName, 'StorageList', storageList)
     }
-}
-
-async function createAuditRecord(featureName, action) {
-    log.debug(`${SERVICE_NAME}::createAudit`)
-
-    const organisation = await localStorage.getItem(featureName, action.data.Organisation)
-
-    let savedUser = await localStorage.getItem(featureName, action.data.User)
-
-    if (!savedUser) {
-        // Check for a global user
-        savedUser = await localStorage.getItem('global', action.data.User)
-    }
-
-    const user = savedUser.response
-    const responseData = await auditService.createAuditLog(
-        organisation.response.OrganisationReference,
-        user.Id,
-        action.data.AuditedOn,
-        action.data.Type,
-        action.data.DescriptionLine1,
-        action.data.DescriptionLine2
-    )
-    const savedAction = localStorage.getItem(featureName, action.label)
-
-    savedAction.response = responseData
-
-    localStorage.setItem(featureName, action.label, savedAction)
-
-    let auditList = localStorage.getItem(featureName, 'auditList')
-
-    if (!auditList) {
-        auditList = []
-    }
-
-    auditList.push(responseData.Id)
-
-    localStorage.setItem(featureName, 'auditList', auditList)
 }
 
 async function createGlobalExternalUser (action) {

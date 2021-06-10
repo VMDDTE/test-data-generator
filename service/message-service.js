@@ -1,12 +1,13 @@
 
 const axios = require('axios')
 const log = global.log
-const ADMIN_BASE_API_URL = `${process.env.ADMIN_BASE_API_URL}`
 const SERVICE_NAME = 'message-service'
 
+const SECURE_MESSAGING_TEST_MESSAGES_API_URL = process.env.SECURE_MESSAGING_API_URL + '/TestMessages'
+
 async function createDraft (userId) {
-    let url = `${ADMIN_BASE_API_URL}/messages`
-    log.info(`${SERVICE_NAME}::createDraft:url:${url}`)
+    let url = SECURE_MESSAGING_TEST_MESSAGES_API_URL
+    log.info(`${SERVICE_NAME}::createDraft - url:${url}`)
     const requestHeaders = { 'vmd-userid': userId }
 
     return axios({
@@ -18,14 +19,14 @@ async function createDraft (userId) {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::createDraft:error: ${error}`)
+            log.error(`${SERVICE_NAME}::createDraft - error: ${error}`)
             throw error
         })
 }
 
-async function sendMessage (payload) {
-    let url = `${ADMIN_BASE_API_URL}/messages/CreateSecure`
-    log.info(`${SERVICE_NAME}::sendMessage:url:${url}`)
+async function createSecure (payload) {
+    let url = `${SECURE_MESSAGING_TEST_MESSAGES_API_URL}/CreateSecure`
+    log.info(`${SERVICE_NAME}::sendMessage - url:${url}`)
     
     return axios({
         method: 'post',
@@ -36,14 +37,14 @@ async function sendMessage (payload) {
             return response.data
         })
     .catch(error => {
-        log.error(`${SERVICE_NAME}::sendMessage:error: ${error}`)
+        log.error(`${SERVICE_NAME}::sendMessage - error:${error}`)
         throw error
     })
 }
 
-async function sentMessage (payload) {
-    let url = `${ADMIN_BASE_API_URL}/messages/CreateSent`
-    log.info(`${SERVICE_NAME}::sentMessage:url:${url}`)
+async function createSent (payload) {
+    let url = `${SECURE_MESSAGING_TEST_MESSAGES_API_URL}/CreateSent`
+    log.info(`${SERVICE_NAME}::sentMessage - url:${url}`)
     // TestSupport CreateSent not currently using headers, only payload contents
     return axios({
         method: 'post',
@@ -54,26 +55,42 @@ async function sentMessage (payload) {
             return response.data
         })
     .catch(error => {
-        log.error(`${SERVICE_NAME}::sentMessage:error: ${error}`)
+        log.error(`${SERVICE_NAME}::sentMessage - error:${error}`)
         throw error
     })
 }
 
 async function deleteMessage (messageId) {
-    let url = `${ADMIN_BASE_API_URL}/messages/${messageId}`
-    log.info(`${SERVICE_NAME}::deleteMessage:url:${url}`)
+    let url = `${SECURE_MESSAGING_TEST_MESSAGES_API_URL}/${messageId}`
+    log.info(`${SERVICE_NAME}::deleteMessage - url:${url}`)
 
     return axios.delete(url)
         .then((response) => {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::deleteMessage:error: ${error}`)
+            log.error(`${SERVICE_NAME}::deleteMessage - error:${error}`)
+            throw error
+        })
+}
+
+
+async function deleteMessagesForUserId (id) {
+    let url = `${SECURE_MESSAGING_TEST_MESSAGES_API_URL}/ForUser/${id}`
+    log.info(`${SERVICE_NAME}::deleteUserMessages - url:${url}`)
+    return axios.put(url)
+        .then((response) => {
+            return response.data
+        })
+        .catch(error => {
+            log.error(`${SERVICE_NAME}::deleteUserMessages - error:${error}`)
             throw error
         })
 }
 
 module.exports.createDraft = createDraft
-module.exports.sendMessage = sendMessage
-module.exports.sentMessage = sentMessage
+module.exports.createSecure = createSecure
+module.exports.createSent = createSent
+// TestSupport/TestMesages endpoint have a send endpoint accepting a draft message id, doesnt seem to be used
 module.exports.deleteMessage = deleteMessage
+module.exports.deleteMessagesForUserId = deleteMessagesForUserId
