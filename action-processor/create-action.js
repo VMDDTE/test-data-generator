@@ -5,7 +5,6 @@ const organisationService = require('../service/organisation-service')
 const localStorage = require('../service/local-storage-service')
 const userService = require('../service/user-service')
 const productService = require('../service/product-service')
-const speciesService = require('../service/species-service')
 const speciesQualifyingService = require('../service/species-qualifying-service')
 const referenceDataService = require('../service/reference-data-service')
 const substanceService = require('../service/substance-service')
@@ -47,10 +46,6 @@ async function process (featureName, action) {
     case actionTypes.ACTION_TYPE_PRODUCT:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_PRODUCT}`)
         await createProduct(featureName, action)
-        break
-    case actionTypes.ACTION_TYPE_SPECIES:
-        log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SPECIES}`)
-        await createSpecies(featureName, action)
         break
     case actionTypes.ACTION_TYPE_SPECIES_QUALIFYING:
         log.info(`${SERVICE_NAME}::processing ${actionTypes.ACTION_TYPE_SPECIES_QUALIFYING}`)
@@ -210,24 +205,6 @@ async function createProduct (featureName, action) {
     }
     productList.push(responseData.ProductNo)
     localStorage.setItem(featureName, 'productList', productList)
-}
-
-async function createSpecies (featureName, action) {
-    log.debug(`${SERVICE_NAME}::createSpecies`)
-    let speciesData = action.data
-    log.info(`${SERVICE_NAME}::createSpecies::${action.label}::creating species from ${JSON.stringify(speciesData)}`)
-    let responseData = await speciesService.createSpecies(speciesData)
-    log.info(`${SERVICE_NAME}::createSpecies::${action.label}::created:${JSON.stringify(responseData)}`)
-    var savedAction = localStorage.getItem(featureName, action.label)
-    savedAction.response = responseData
-    log.debug(`${SERVICE_NAME}::createSpecies, saved action ${JSON.stringify(savedAction)}`)
-    localStorage.setItem(featureName, action.label, savedAction)
-    var speciesList = localStorage.getItem(featureName, 'speciesList')
-    if (!speciesList) {
-        speciesList = []
-    }
-    speciesList.push(responseData.ProductNo)
-    localStorage.setItem(featureName, 'speciesList', speciesList)
 }
 
 async function createSpeciesQualifying (featureName, action) {
