@@ -9,11 +9,9 @@ const localStorage = require('../service/local-storage-service')
 const organisationService = require('../service/organisation-service')
 const userService = require('../service/user-service')
 const productService = require('../service/product-service')
-const speciesService = require('../service/species-service')
 const invitationService = require('../service/invitation-service')
 const speciesQualifyingService = require('../service/species-qualifying-service')
 const referenceDataService = require('../service/reference-data-service')
-const substanceService = require('../service/substance-service')
 const substanceQualifierService = require('../service/substance-qualifier-service')
 const marketingAuthorisationService = require('../service/marketing-authorisation-service')
 const maApplicationService = require('../service/ma-application-service')
@@ -97,10 +95,8 @@ async function tearDownEntities (featureName) {
     await tearDownVetPractice(featureName)
     await tearDownVet(featureName)
     await tearDownProduct(featureName)
-    await tearDownSpecies(featureName)
     await tearDownSpeciesQualifying(featureName)
     await tearDownReferenceData(featureName)
-    await tearDownSubstance(featureName)
     await tearDownSubstanceQualifier(featureName)
     await tearDownOrganisation(featureName)
     await tearDownSpecialImportApplication(featureName)
@@ -210,25 +206,6 @@ async function tearDownProduct (featureName) {
     }
 }
 
-async function tearDownSpecies (featureName) {
-    log.info(`${CONTROLLER_NAME}::tearDownSpecies:${featureName}`)
-    const speciesList = localStorage.getItem(featureName, 'speciesList')
-    var deleted = []
-    if (speciesList) {
-        for (let productNo of speciesList) {
-            if (deleted.indexOf(productNo) === -1) {
-                log.info(`${CONTROLLER_NAME}::about to teardown all species for product with product no. ${productNo}`)
-                // Will delete ALL species for a specific product.
-                await speciesService.deleteSpecies(productNo)
-                // Track the species we have deleted for each product, in case the test data contained
-                // multiple species for the same product. Otherwise, we will try and delete species for a
-                // product that have already been deleted, causing an error.
-                deleted.push(productNo)
-            }
-        }
-    }
-}
-
 async function tearDownSpeciesQualifying (featureName) {
     log.info(`${CONTROLLER_NAME}::tearDownSpeciesQualifying:${featureName}`)
     const speciesQualifyingList = localStorage.getItem(featureName, 'speciesQualifyingList')
@@ -247,25 +224,6 @@ async function tearDownReferenceData (featureName) {
         for (let id of referenceDataList) {
             log.info(`${CONTROLLER_NAME}::about to teardown reference data with id ${id}`)
             await referenceDataService.deleteReferenceData(id)
-        }
-    }
-}
-
-async function tearDownSubstance (featureName) {
-    log.info(`${CONTROLLER_NAME}::tearDownSubstance:${featureName}`)
-    const substanceList = localStorage.getItem(featureName, 'substanceList')
-    var deleted = []
-    if (substanceList) {
-        for (let productNo of substanceList) {
-            if (deleted.indexOf(productNo) === -1) {
-                log.info(`${CONTROLLER_NAME}::about to teardown all substances for product with product no. ${productNo}`)
-                // Will delete ALL substance for a specific product.
-                await substanceService.deleteSubstances(productNo)
-                // Track the substance we have deleted for each product, in case the test data contained
-                // multiple substance for the same product. Otherwise, we will try and delete substance for a
-                // product that have already been deleted, causing an error.
-                deleted.push(productNo)
-            }
         }
     }
 }
