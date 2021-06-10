@@ -1,12 +1,12 @@
-
 const axios = require('axios')
 const log = global.log
-const TEST_SUPPORT_API_URL = `${process.env.STORAGE_API_URL}`
 const SERVICE_NAME = 'storage-service'
 
+const STORAGE_API_URL = `${process.env.STORAGE_API_URL}`
+
 async function createStorageRecord(userId, fileName, contentType, payload) {
-    let url = `${TEST_SUPPORT_API_URL}/storage/upload`
-    log.info(`${SERVICE_NAME}::createStorageRecord:url:${url}`)
+    let url = `${STORAGE_API_URL}/storage/upload`
+    log.info(`${SERVICE_NAME}::createStorageRecord - url:${url}`)
     const requestHeaders = {
         'vmd-userid': userId,
         'vmd-filename': fileName,
@@ -24,14 +24,14 @@ async function createStorageRecord(userId, fileName, contentType, payload) {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::createStorageRecord:error: ${error}`)
+            log.error(`${SERVICE_NAME}::createStorageRecord - error:${error}`)
             throw error
         })
 }
 
 async function deleteStorageRecord(storageId) {
-    let url = `${TEST_SUPPORT_API_URL}/storage/delete/${storageId}`
-    log.info(`${SERVICE_NAME}::deleteStorageRecord:url:${url}`)
+    let url = `${STORAGE_API_URL}/storage/delete/${storageId}`
+    log.info(`${SERVICE_NAME}::deleteStorageRecord - url:${url}`)
 
     return axios({
         method: 'delete',
@@ -41,7 +41,7 @@ async function deleteStorageRecord(storageId) {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::deleteStorageRecord:error: ${error}`)
+            log.error(`${SERVICE_NAME}::deleteStorageRecord - error:${error}`)
             throw error
         })
 }
