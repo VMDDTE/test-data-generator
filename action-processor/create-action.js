@@ -1,7 +1,6 @@
 const actionTypes = require('../common/constants')
 const orgTypes = require('../common/constants')
 const userTypes = require('../common/constants')
-const auditService = require('../service/audit-service')
 const organisationService = require('../service/organisation-service')
 const localStorage = require('../service/local-storage-service')
 const userService = require('../service/user-service')

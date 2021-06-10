@@ -21,7 +21,6 @@ const jobService = require('../service/job-service')
 const messageService = require('../service/message-service')
 const groupMessageService = require('../service/group-message-service')
 const storageService = require('../service/storage-service')
-const auditService = require('../service/audit-service');
 const log = global.log
 const CONTROLLER_NAME = 'generate-controller'
 
