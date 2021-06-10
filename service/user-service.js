@@ -2,8 +2,9 @@
 const axios = require('axios')
 const log = global.log
 const userTypes = require('../common/constants')
-const ORG_ADMIN_TEST_USERS_API_URL = process.env.ORG_ADMIN_API_URL + '/TestUsers'
 const SERVICE_NAME = 'user-service'
+
+const ORG_ADMIN_TEST_USERS_API_URL = process.env.ORG_ADMIN_API_URL + '/TestUsers'
 
 async function findUserByEmail (email) {
     let url = ORG_ADMIN_TEST_USERS_API_URL + `/byEmail/${email}`
