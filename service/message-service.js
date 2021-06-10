@@ -7,7 +7,7 @@ const SECURE_MESSAGING_TEST_MESSAGES_API_URL = process.env.SECURE_MESSAGING_API_
 
 async function createDraft (userId) {
     let url = SECURE_MESSAGING_TEST_MESSAGES_API_URL
-    log.info(`${SERVICE_NAME}::createDraft:url:${url}`)
+    log.info(`${SERVICE_NAME}::createDraft - url:${url}`)
     const requestHeaders = { 'vmd-userid': userId }
 
     return axios({
@@ -19,14 +19,14 @@ async function createDraft (userId) {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::createDraft:error: ${error}`)
+            log.error(`${SERVICE_NAME}::createDraft - error: ${error}`)
             throw error
         })
 }
 
 async function createSecure (payload) {
     let url = `${SECURE_MESSAGING_TEST_MESSAGES_API_URL}/CreateSecure`
-    log.info(`${SERVICE_NAME}::sendMessage:url:${url}`)
+    log.info(`${SERVICE_NAME}::sendMessage - url:${url}`)
     
     return axios({
         method: 'post',
@@ -37,14 +37,14 @@ async function createSecure (payload) {
             return response.data
         })
     .catch(error => {
-        log.error(`${SERVICE_NAME}::sendMessage:error: ${error}`)
+        log.error(`${SERVICE_NAME}::sendMessage - error:${error}`)
         throw error
     })
 }
 
 async function createSent (payload) {
     let url = `${SECURE_MESSAGING_TEST_MESSAGES_API_URL}/CreateSent`
-    log.info(`${SERVICE_NAME}::sentMessage:url:${url}`)
+    log.info(`${SERVICE_NAME}::sentMessage - url:${url}`)
     // TestSupport CreateSent not currently using headers, only payload contents
     return axios({
         method: 'post',
@@ -55,21 +55,21 @@ async function createSent (payload) {
             return response.data
         })
     .catch(error => {
-        log.error(`${SERVICE_NAME}::sentMessage:error: ${error}`)
+        log.error(`${SERVICE_NAME}::sentMessage - error:${error}`)
         throw error
     })
 }
 
 async function deleteMessage (messageId) {
     let url = `${SECURE_MESSAGING_TEST_MESSAGES_API_URL}/${messageId}`
-    log.info(`${SERVICE_NAME}::deleteMessage:url:${url}`)
+    log.info(`${SERVICE_NAME}::deleteMessage - url:${url}`)
 
     return axios.delete(url)
         .then((response) => {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::deleteMessage:error: ${error}`)
+            log.error(`${SERVICE_NAME}::deleteMessage - error:${error}`)
             throw error
         })
 }
@@ -77,13 +77,13 @@ async function deleteMessage (messageId) {
 
 async function deleteMessagesForUserId (id) {
     let url = `${SECURE_MESSAGING_TEST_MESSAGES_API_URL}/ForUser/${id}`
-    log.info(`${SERVICE_NAME}::deleteUserMessages:url:${url}`)
+    log.info(`${SERVICE_NAME}::deleteUserMessages - url:${url}`)
     return axios.put(url)
         .then((response) => {
             return response.data
         })
         .catch(error => {
-            log.error(`${SERVICE_NAME}::deleteUserMessages:error: ${error}`)
+            log.error(`${SERVICE_NAME}::deleteUserMessages - error:${error}`)
             throw error
         })
 }
