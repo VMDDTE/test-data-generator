@@ -1,13 +1,12 @@
-
 const axios = require('axios')
 const log = global.log
 const userTypes = require('../common/constants')
-const SERVICE_NAME = 'user-service'
+const SERVICE_NAME = 'admin-test-users'
 
-const ORG_ADMIN_TEST_USERS_API_URL = process.env.ORG_ADMIN_API_URL + '/TestUsers'
+const ADMIN_TEST_USERS_API_URL = process.env.ADMIN_API_URL + '/TestUsers'
 
 async function findUserByEmail (email) {
-    let url = ORG_ADMIN_TEST_USERS_API_URL + `/byEmail/${email}`
+    let url = ADMIN_TEST_USERS_API_URL + `/byEmail/${email}`
     log.info(`${SERVICE_NAME}::findUserByEmail - url:${url}`)
     return axios.get(url)
         .then((response) => {
@@ -24,7 +23,7 @@ async function findUserByEmail (email) {
 }
 
 async function findUserByName (name) {
-    let url = `${ORG_ADMIN_TEST_USERS_API_URL}/byName/${name}`
+    let url = `${ADMIN_TEST_USERS_API_URL}/byName/${name}`
     log.info(`${SERVICE_NAME}::findUserByName - url:${url}`)
     return axios.get(url)
         .then((response) => {
@@ -42,7 +41,7 @@ async function findUserByName (name) {
 
 
 async function createUser (userType, payload) {
-    let url = `${ORG_ADMIN_TEST_USERS_API_URL}/${userType}`
+    let url = `${ADMIN_TEST_USERS_API_URL}/${userType}`
     // If the user type is internal then don't fail if the user already exists
     if (userType === userTypes.USER_TYPE_INTERNAL) {
         url = `${url}/false`
@@ -59,7 +58,7 @@ async function createUser (userType, payload) {
 }
 
 async function createExternalUser (payload) {
-    let url = `${ORG_ADMIN_TEST_USERS_API_URL}/External`
+    let url = `${ADMIN_TEST_USERS_API_URL}/External`
     log.info(`${SERVICE_NAME}::createExternalUser:url:${url}`)
     return axios.post(url, payload)
         .then((response) => {
@@ -72,7 +71,7 @@ async function createExternalUser (payload) {
 }
 
 async function deleteUser (id) {
-    let url = `${ORG_ADMIN_TEST_USERS_API_URL}/${id}`
+    let url = `${ADMIN_TEST_USERS_API_URL}/${id}`
     log.info(`${SERVICE_NAME}::deleteUser:url:${url}`)
     return axios.delete(url)
         .then((response) => {
